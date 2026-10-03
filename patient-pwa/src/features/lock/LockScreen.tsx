@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Button, LoadingState } from '../../ui';
 import { PinField } from './components/PinField';
+import { useAutoLock } from './autoLock';
 import { useLock } from './useLock';
 import styles from './LockScreen.module.css';
 
@@ -74,6 +75,7 @@ function UnlockPin({ lock }: { lock: ReturnType<typeof useLock> }) {
 /** Covers the whole app until the encrypted database is unlocked. */
 export function LockScreen() {
   const lock = useLock();
+  useAutoLock(lock.status === 'unlocked');
   if (lock.status === 'unlocked') return null;
   return (
     <div className={styles.cover} role="dialog" aria-modal="true" aria-label="Blokada aplikacji">
