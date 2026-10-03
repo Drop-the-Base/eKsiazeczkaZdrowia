@@ -99,6 +99,10 @@ describe('transport (doctor ↔ relay ↔ patient)', () => {
     const received = new Promise<ShareSnapshot>((r) => doctor.onSnapshot(r));
     const phone = socketFactory();
     const patient = await connect(url, doctor.qrPayload, phone);
+    cleanups.push(
+      () => patient.disconnect(),
+      () => doctor.close(),
+    );
 
     let dropped = false;
     await patient.sendSnapshot(demoSnapshot(), () => {
