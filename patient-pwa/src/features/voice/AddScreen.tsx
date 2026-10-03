@@ -60,6 +60,9 @@ export function AddScreen() {
           <Button variant="secondary" onClick={() => setSheet('exam')}>
             Wyniki badań
           </Button>
+          <Button variant="secondary" onClick={() => navigate('/zdjecia')}>
+            Zdjęcie
+          </Button>
           <Button variant="secondary" onClick={() => navigate('/dzis')}>
             Leki na dziś
           </Button>
