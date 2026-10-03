@@ -44,6 +44,11 @@ function UnlockPin({ lock }: { lock: ReturnType<typeof useLock> }) {
   return (
     <form className={styles.card} onSubmit={submit}>
       <h1 className={styles.title}>Wpisz PIN</h1>
+      {lock.biometricOn && (
+        <Button block onClick={lock.unlockBiometric} disabled={lock.busy}>
+          Odblokuj odciskiem palca lub twarzą
+        </Button>
+      )}
       <PinField label="PIN" value={pin} onChange={setPin} autoFocus />
       {lock.error && (
         <p className={styles.error} role="alert">

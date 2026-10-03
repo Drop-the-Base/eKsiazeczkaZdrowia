@@ -1,12 +1,16 @@
 import { createDb } from './createDb';
 import { HealthDatabase } from './database';
 import { initDemoData, loadDemoData } from './demo';
+import { createBiometric } from './biometric';
 import { createVault } from './vault';
 
 const dexie = new HealthDatabase();
 
 /** Database key from the PIN (only in memory). The lock screen sets it up and unlocks it. */
 export const vault = createVault(dexie);
+
+/** Optional fingerprint / face unlock (passkey with PRF), on top of the PIN. */
+export const biometric = createBiometric(dexie, vault);
 
 /** The only way the app touches the local database. Returns domain types from `@ez/shared`. */
 export const db = createDb(dexie, vault);
@@ -53,3 +57,4 @@ export async function importBackup(file: unknown, password: string): Promise<Imp
 }
 export { newId } from './ids';
 export { PIN_PATTERN, WrongPinError, type VaultStatus } from './vault';
+export { biometricSupported, BiometricUnavailableError } from './biometric';
