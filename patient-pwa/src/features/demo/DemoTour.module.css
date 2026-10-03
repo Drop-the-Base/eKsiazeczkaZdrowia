@@ -3,15 +3,25 @@
    to the page; the light follows the element). Sheets stay above it, so "Pokaż mi" results
    are visible and usable. */
 
-.dim,
-.panel {
+.dim {
   position: fixed;
+  inset: 0;
   z-index: 50;
   background: rgb(15 23 42 / 0.55);
 }
 
-.dim {
+.mask {
+  position: fixed;
   inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.maskPath {
+  fill: rgb(15 23 42 / 0.55);
+  pointer-events: auto;
 }
 
 .ring {
@@ -276,4 +286,16 @@
 .hintIcon {
   font-size: var(--font-size-md);
   color: var(--color-primary);
+}
+
+@media print {
+  .dim,
+  .mask,
+  .ring,
+  .card,
+  .reopen,
+  .inputBlocker,
+  .hintBadge {
+    display: none;
+  }
 }
