@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { WebSocket } from 'ws';
 import {
   connect,
-  createDemoData,
+  createDemoSnapshot,
   createSession,
   type ShareSnapshot,
   type SocketLike,
@@ -41,40 +41,12 @@ function socketFactory() {
 }
 
 function demoSnapshot(): ShareSnapshot {
-  const now = '2026-10-03T18:00:00.000Z';
-  const d = createDemoData(now);
+  const snapshot = createDemoSnapshot('2026-10-03T18:00:00.000Z');
+  // ~200 KB photo → several 64 KB chunks
+  const photo = { id: 'p1', takenAt: snapshot.createdAt, category: 'skin' as const };
   return {
-    summary: {
-      since: '2026-09-03',
-      medsStarted: [],
-      medsStopped: [],
-      medsChanged: [],
-      adherence: { taken: 60, skipped: 2 },
-      symptoms: [],
-      newExams: [],
-      newPhotos: [],
-      visitNoteItems: d.visitNoteItems,
-    },
-    profile: d.profile,
-    medications: d.medications,
-    intakes: d.intakes,
-    symptoms: d.symptoms,
-    diagnoses: d.diagnoses,
-    exams: d.exams,
-    // ~200 KB photo → several 64 KB chunks
-    photos: [
-      {
-        id: 'p1',
-        takenAt: now,
-        category: 'skin',
-        thumbnailDataUrl: `data:image/jpeg;base64,${'A'.repeat(200_000)}`,
-      },
-    ],
-    documents: d.documents.map(({ content: _content, ...meta }) => meta),
-    visitNoteItems: d.visitNoteItems,
-    visits: d.visits,
-    range: { from: '2026-07-01', to: '2026-10-03' },
-    createdAt: now,
+    ...snapshot,
+    photos: [{ ...photo, thumbnailDataUrl: `data:image/jpeg;base64,${'A'.repeat(200_000)}` }],
   };
 }
 

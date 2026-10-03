@@ -4,6 +4,9 @@ import { useNow } from '../session/useNow';
 import { useQrImage } from './useQrImage';
 import styles from './Screens.module.css';
 
+/** Link to the patient simulator: in dev, or with `?dev` (e.g. a demo without a phone). */
+const showSimulator = import.meta.env.DEV || new URLSearchParams(window.location.search).has('dev');
+
 export function QrScreen() {
   const { qrPayload, expiresAt } = useSession();
   const qr = useQrImage(qrPayload);
@@ -20,6 +23,16 @@ export function QrScreen() {
         {qr.error && <p className={styles.error}>{qr.error}</p>}
         {!qr.src && !qr.error && <p className={styles.muted}>Generowanie kodu…</p>}
       </div>
+      {showSimulator && qrPayload && (
+        <a
+          className={styles.devLink}
+          href={`?symulator#${encodeURIComponent(qrPayload)}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Symulator pacjenta (bez telefonu)
+        </a>
+      )}
       {expiresAt && (
         <p className={styles.muted}>
           Kod ważny jeszcze {formatRemaining(expiresAt, now)}; potem odświeży się sam.
