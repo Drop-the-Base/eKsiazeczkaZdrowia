@@ -44,3 +44,14 @@ export function groupBySeries<T extends PhotoMeta>(
     return latest(b).localeCompare(latest(a));
   });
 }
+
+/** Pełne dni między zdjęciami (kolejność dowolna). */
+export function daysBetween(a: string, b: string): number {
+  return Math.round(Math.abs(new Date(b).getTime() - new Date(a).getTime()) / 86_400_000);
+}
+
+/** Wybór do porównania: maks. 2, trzecie kliknięcie zastępuje najstarszy wybór. */
+export function toggleCompare(selected: string[], id: string): string[] {
+  if (selected.includes(id)) return selected.filter((x) => x !== id);
+  return [...selected, id].slice(-2);
+}
