@@ -38,3 +38,4 @@ Zmergowane taski (dopisuje agent A po każdym merge, patrz `CLAUDE.md`).
 - [x] [A34] Zmiana nazwy na „Prywatna Karta Zdrowia” (manifest, tytuł, README) · issue #148 · 2026-10-03 19:32 · atrapy: brak
 - [x] [A33] Slajdy (max 10): treść + zrzuty ekranu · issue #72 · 2026-10-03 19:41 · atrapy: [członkowie zespołu] do uzupełnienia; zrzut lekarza ze starą nazwą do czasu B39
 - [x] [prośba #160] Profil: pozycja „Kopia zapasowa” · issue #160 · 2026-10-03 19:44 · atrapy: brak
+- [x] [prośba #169] Profil: pozycja „Zabezpieczenia” · issue #169 · 2026-10-03 19:56 · atrapy: brak
