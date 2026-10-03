@@ -1,7 +1,7 @@
 import { createReadStream } from 'node:fs';
 import { stat } from 'node:fs/promises';
 import type { ServerResponse } from 'node:http';
-import { extname, join, normalize, sep } from 'node:path';
+import { extname, join, resolve, sep } from 'node:path';
 
 const MIME: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
@@ -28,9 +28,11 @@ export function resolveStaticPath(root: string, urlPath: string): string | null 
   } catch {
     return null;
   }
-  if (decoded.includes('\0')) return null;
-  const file = normalize(join(root, decoded));
-  return file === root || file.startsWith(root + sep) ? file : null;
+  if (decoded.includes('\0') || decoded.includes('\\')) return null;
+  // `resolve` normalises separators and drive letters, so the check also holds on Windows.
+  const base = resolve(root);
+  const file = resolve(base, `.${decoded}`);
+  return file === base || file.startsWith(base + sep) ? file : null;
 }
 
 async function isFile(path: string): Promise<boolean> {
