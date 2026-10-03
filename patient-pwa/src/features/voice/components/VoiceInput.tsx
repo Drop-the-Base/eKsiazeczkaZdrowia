@@ -46,7 +46,7 @@ export function VoiceInput({
   const shown = speech.listening && speech.partial ? appendTranscript(text, speech.partial) : text;
 
   return (
-    <form className={styles.voice} onSubmit={submit}>
+    <form className={styles.voice} onSubmit={submit} data-tour="voice">
       {pendingStart && !speech.noticeSeen && (
         <div className={styles.notice} role="note">
           <p>

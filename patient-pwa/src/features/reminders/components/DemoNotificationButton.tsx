@@ -24,7 +24,7 @@ export function DemoNotificationButton() {
             .catch(() => setMessage(RESULT_TEXT.unsupported))
         }
       >
-        🔔 Pokaż przypomnienie (demo)
+        Pokaż przypomnienie
       </Button>
       {message && <p role="status">{message}</p>}
     </div>

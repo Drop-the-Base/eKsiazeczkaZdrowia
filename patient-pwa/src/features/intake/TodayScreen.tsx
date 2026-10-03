@@ -8,7 +8,7 @@ export function TodayScreen() {
   return (
     <>
       <PageHeader title="Leki na dziś" back="/profil" />
-      <div className={styles.content}>
+      <div className={styles.content} data-tour="today">
         <TodayIntakes />
         {isDemo && <DemoNotificationButton />}
       </div>

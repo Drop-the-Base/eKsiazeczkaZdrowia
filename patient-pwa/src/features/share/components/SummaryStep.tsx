@@ -22,7 +22,7 @@ export function SummaryStep({ onContinue }: Props) {
   }
   const selected = share.selected;
   return (
-    <div className={styles.step}>
+    <div className={styles.step} data-tour="share-sections">
       <p className={styles.lead}>
         Lekarz zobaczy to podsumowanie od {formatDate(share.since ?? '')} oraz Twoją historię.
         Odznacz to, czego nie chcesz pokazywać.

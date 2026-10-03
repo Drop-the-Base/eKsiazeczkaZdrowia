@@ -16,7 +16,7 @@ export function SecurityScreen() {
   return (
     <>
       <PageHeader title="Zabezpieczenia" />
-      <div className={styles.content}>
+      <div className={styles.content} data-tour="security">
         <p className={styles.lead}>
           Dane są zaszyfrowane kluczem z Twojego PIN-u. Aplikacja blokuje się sama po kilku minutach
           w tle.

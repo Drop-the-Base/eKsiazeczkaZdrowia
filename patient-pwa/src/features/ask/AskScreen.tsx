@@ -89,7 +89,9 @@ export function AskScreen() {
               który zamieni je na wyszukiwanie. Odpowiedź powstaje na Twoim telefonie – Twoje dane
               nie opuszczają urządzenia.
             </p>
-            <Button onClick={acceptNotice}>Rozumiem, zapytaj</Button>
+            <Button onClick={acceptNotice} data-tour="confirm">
+              Rozumiem, zapytaj
+            </Button>
           </Card>
         )}
 

@@ -63,7 +63,7 @@ export function TimelineScreen() {
                 </Chip>
               ))}
             </div>
-            <Card className={styles.timeline}>
+            <Card className={styles.timeline} data-tour="timeline">
               <Timeline data={d} range={range} highlight={selected} onSelect={setSelected} />
             </Card>
           </>

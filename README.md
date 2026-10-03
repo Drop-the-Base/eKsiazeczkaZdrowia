@@ -65,7 +65,7 @@ Zrzut ekranu z klikaniem (sprawdzanie ekranów bez ręcznego klikania; puppeteer
 
 ```bash
 npm run build -w patient-pwa && npx vite preview --port 4173 -c patient-pwa/vite.config.ts patient-pwa &
-node scripts/shot.mjs "http://localhost:4173/demo/leki" out.png "click:+ Dodaj" "type:input[type=search]|ibupr" "wait:1000"
+node scripts/shot.mjs "http://localhost:4173/demo/leki?bez-przewodnika" out.png "click:+ Dodaj" "type:input[type=search]|ibupr" "wait:1000"
 ```
 
 ## Slajdy

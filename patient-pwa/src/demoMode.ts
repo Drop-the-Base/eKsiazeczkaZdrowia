@@ -6,7 +6,8 @@ export const DOCTOR_DEMO_PATH = '/demo/lekarz';
 /** Set automatically in the demo, shown on the security step. */
 export const DEMO_PIN = '1234';
 
-const path = window.location.pathname;
+// Guarded so pure modules that read DEMO_PIN can be tested in Node.
+const path = typeof window === 'undefined' ? '' : window.location.pathname;
 export const isDemo =
   (path === DEMO_BASE || path.startsWith(`${DEMO_BASE}/`)) && !path.startsWith(DOCTOR_DEMO_PATH);
 
