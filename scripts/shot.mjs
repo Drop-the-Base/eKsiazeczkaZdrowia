@@ -1,12 +1,12 @@
 // Zrzut ekranu PWA z kliknięciami (puppeteer-core + zainstalowany Chrome).
 // Użycie: node scripts/shot.mjs <url> <plik.png> [krok...]
-//   krok: "click:Tekst przycisku" | "type:selektor|tekst" | "wait:ms"
+//   krok: "click:fragment tekstu" | "exact:Cały tekst przycisku" | "type:selektor|tekst" | "wait:ms"
 import puppeteer from 'puppeteer-core';
 
 const [url, out, ...steps] = process.argv.slice(2);
 if (!url || !out) {
   console.error(
-    'Użycie: node scripts/shot.mjs <url> <plik.png> [click:Tekst|type:sel|tekst|wait:ms]...',
+    'Użycie: node scripts/shot.mjs <url> <plik.png> [click:tekst|exact:tekst|type:sel|tekst|wait:ms]...',
   );
   process.exit(1);
 }
@@ -25,6 +25,12 @@ try {
     const [kind, arg = ''] = step.split(/:(.*)/s);
     if (kind === 'click') {
       const el = await page.waitForSelector(`::-p-text(${arg})`, { timeout: 5000 });
+      await el.click();
+    } else if (kind === 'exact') {
+      const el = await page.waitForSelector(
+        `::-p-xpath(//*[self::button or self::summary or self::a][normalize-space()=${JSON.stringify(arg)}])`,
+        { timeout: 5000 },
+      );
       await el.click();
     } else if (kind === 'type') {
       const [sel = '', text = ''] = arg.split(/\|(.*)/s);

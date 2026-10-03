@@ -23,6 +23,11 @@ describe('isCurrent', () => {
     expect(isCurrent(med({ endDate: '2026-10-02' }), today)).toBe(false);
     expect(isCurrent(med({ startDate: '2026-10-04' }), today)).toBe(false);
   });
+
+  it('a medication stopped today (with a reason) is no longer current', () => {
+    expect(isCurrent(med({ endDate: today, stopReason: 'mdłości' }), today)).toBe(false);
+    expect(isCurrent(med({ endDate: '2026-10-04', stopReason: 'mdłości' }), today)).toBe(true);
+  });
 });
 
 describe('groupMedications', () => {

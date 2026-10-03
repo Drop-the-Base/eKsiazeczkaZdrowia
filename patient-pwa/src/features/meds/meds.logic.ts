@@ -16,9 +16,13 @@ export const CATEGORY_COLOR: Record<MedicationCategory, string> = {
   supplement: 'var(--color-supplement)',
 };
 
-/** Lek jest aktualny, jeśli już się zaczął i nie ma daty końca albo kończy się dziś lub później. */
+/**
+ * Lek jest aktualny, jeśli już się zaczął i nie ma daty końca albo kończy się dziś lub później.
+ * Wyjątek: odstawiony (z powodem) dziś – pacjent właśnie go odstawił, więc już nie jest aktualny.
+ */
 export function isCurrent(m: Medication, today: IsoDate): boolean {
-  return m.startDate <= today && (m.endDate === undefined || m.endDate >= today);
+  if (m.startDate > today || m.endDate === undefined) return m.startDate <= today;
+  return m.stopReason ? m.endDate > today : m.endDate >= today;
 }
 
 export interface GroupedMedications {
@@ -33,7 +37,7 @@ export function groupMedications(meds: Medication[], today: IsoDate): GroupedMed
   const stopped: Medication[] = [];
   for (const m of meds) {
     if (isCurrent(m, today)) current[m.category].push(m);
-    else if (m.endDate !== undefined && m.endDate < today) stopped.push(m);
+    else if (m.endDate !== undefined && m.endDate <= today) stopped.push(m);
   }
   for (const c of CATEGORY_ORDER) current[c].sort(byName);
   stopped.sort((a, b) => (b.endDate ?? '').localeCompare(a.endDate ?? ''));

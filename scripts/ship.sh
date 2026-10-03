@@ -10,8 +10,17 @@ PR="${1:-}"
 for attempt in 1 2 3 4 5; do
   git fetch -q origin
   if ! git rebase -q origin/main; then
-    echo "KONFLIKT przy rebase – rozwiąż (tylko swoje pliki) albo zapytaj użytkownika." >&2
-    exit 1
+    # Konflikt tylko w package-lock.json: wersja z main + `npm install` dopisuje nasze paczki.
+    while [ "$(git diff --name-only --diff-filter=U)" = "package-lock.json" ]; do
+      git checkout --ours package-lock.json
+      npm install --no-audit --no-fund >/dev/null 2>&1
+      git add package-lock.json
+      GIT_EDITOR=true git rebase --continue >/dev/null 2>&1 && break
+    done
+    if [ -d "$(git rev-parse --git-path rebase-merge)" ] || [ -d "$(git rev-parse --git-path rebase-apply)" ]; then
+      echo "KONFLIKT przy rebase – rozwiąż (tylko swoje pliki) albo zapytaj użytkownika." >&2
+      exit 1
+    fi
   fi
   npm install --no-audit --no-fund >/dev/null 2>&1
   if ! npm run build >/tmp/ship-build.log 2>&1; then
