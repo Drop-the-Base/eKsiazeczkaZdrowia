@@ -22,6 +22,15 @@ export function lockNow(): void {
   window.location.reload();
 }
 
+/** After any unlock in the demo: a reload may unlock automatically again. */
+export function clearDemoLock(): void {
+  try {
+    sessionStorage.removeItem(DEMO_LOCKED_KEY);
+  } catch {
+    // storage blocked
+  }
+}
+
 /** Locks when the app comes back from the background after `LOCK_AFTER_MS`. */
 export function useAutoLock(enabled: boolean): void {
   useEffect(() => {

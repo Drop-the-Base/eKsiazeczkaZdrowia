@@ -6,6 +6,7 @@ import {
   vault,
   WrongPinError,
 } from '../../db';
+import { clearDemoLock } from './autoLock';
 import { validateNewPin } from './lock.logic';
 
 /** Lock state of the encrypted database and the actions of the lock screen. */
@@ -53,15 +54,14 @@ export function useLock() {
   const unlock = (pin: string) =>
     void run(async () => {
       await vault.unlock(pin);
-      try {
-        sessionStorage.removeItem('demo-locked');
-      } catch {
-        // storage blocked
-      }
+      clearDemoLock();
     }, 'Nie udało się odblokować');
   const wipe = () => void run(() => vault.wipe(), 'Nie udało się usunąć danych');
   const unlockBiometric = () =>
-    void run(() => biometric.unlock(), 'Odblokowanie biometryczne nie powiodło się. Wpisz PIN.');
+    void run(async () => {
+      await biometric.unlock();
+      clearDemoLock();
+    }, 'Odblokowanie biometryczne nie powiodło się. Wpisz PIN.');
 
   return { status, error, busy, setup, unlock, wipe, biometricOn, unlockBiometric };
 }
