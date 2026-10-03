@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import { Card, EmptyState, ErrorState, LoadingState, PageHeader } from '../../ui';
+import { SHARE_PATH } from '../share';
 import { NoteForm } from './components/NoteForm';
 import { NoteRow } from './components/NoteRow';
 import { useVisitList } from './useVisitList';
@@ -10,6 +12,10 @@ export function VisitListScreen() {
     <>
       <PageHeader title="Wizyta" />
       <div className={styles.content}>
+        <Link to={SHARE_PATH} className={styles.share}>
+          Udostępnij lekarzowi
+          <span className={styles.shareHint}>Podsumowanie i historia przez kod QR, szyfrowane</span>
+        </Link>
         <Card>
           <h2 className={styles.heading}>Powiem lekarzowi</h2>
           <NoteForm />

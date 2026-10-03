@@ -16,3 +16,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B12] Symulator pacjenta + test end-to-end w dwóch kartach · issue #27 · 2026-10-03 18:04 · atrapy: summary w createDemoSnapshot uproszczone do B15
 - [x] [B13] Lista „powiem lekarzowi” + pływający przycisk · issue #29 · 2026-10-03 18:07 · atrapy: pole tekstowe zamiast VoiceInput (A16)
 - [x] [B15] buildVisitSummary(db, od) – lokalnie, bez LLM · issue #34 · 2026-10-03 18:10 · atrapy: brak
+- [x] [B16] Ekran podsumowania przed wysłaniem (odznaczanie sekcji) · issue #36 · 2026-10-03 18:14 · atrapy: przycisk „Dalej” nieaktywny do B17, zdjęcia bez miniatur do B17
