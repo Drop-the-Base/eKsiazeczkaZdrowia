@@ -1,0 +1,62 @@
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+.lead {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+.error {
+  margin: 0;
+  color: var(--color-danger);
+}
+.manual summary {
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+.manual[open] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.textarea {
+  width: 100%;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: ui-monospace, monospace;
+  font-size: var(--font-size-sm);
+}
+.codeBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-soft);
+}
+.codeLabel {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+.code {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  font-variant-numeric: tabular-nums;
+}
+.progress {
+  width: 100%;
+  height: 12px;
+  accent-color: var(--color-primary);
+}
+.success {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  text-align: center;
+}

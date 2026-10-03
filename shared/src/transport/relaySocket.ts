@@ -6,7 +6,7 @@ export interface SocketLike {
   readonly readyState: number;
   send(data: string): void;
   close(code?: number): void;
-  addEventListener(type: 'open' | 'close', cb: () => void): void;
+  addEventListener(type: 'open' | 'close' | 'error', cb: () => void): void;
   addEventListener(type: 'message', cb: (ev: { data: unknown }) => void): void;
 }
 
@@ -59,6 +59,8 @@ export function openRelaySocket(url: string, opts: TransportOptions, h: Handlers
       const msg = parseServerMessage(ev.data);
       if (msg) h.onMessage(msg);
     });
+    // Always followed by 'close', which handles it; without a listener Node's `ws` would throw.
+    s.addEventListener('error', () => undefined);
     s.addEventListener('close', () => {
       if (closed || s !== socket) return;
       const delay = RETRY_DELAYS_MS[attempt];

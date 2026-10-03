@@ -303,6 +303,9 @@ export interface PatientConnection {
     onProgress?: (sent: number, total: number) => void,
   ): Promise<void>;
   onStatus(cb: (status: TransportStatus) => void): () => void;
+  /** Leaves the session: the phone disconnects, the doctor keeps the data until the visit ends. */
+  disconnect(): void;
+  /** Ends the session for both sides: the doctor's tab forgets the data. */
   close(): void;
 }
 

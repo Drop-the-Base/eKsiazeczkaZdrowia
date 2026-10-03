@@ -30,6 +30,7 @@ export function SummaryStep({ onContinue }: Props) {
       <SummaryPreview
         full={share.full}
         photoCount={share.photoCount ?? 0}
+        photosFailed={share.photosFailed ?? 0}
         sections={share.sections}
         onToggle={share.toggle}
       />
