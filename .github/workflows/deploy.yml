@@ -4,9 +4,8 @@
 # Server env (LLM_HOST, LLM_PORT, LLM_API_KEY) lives in ~/ez/.env on Mikrus, not in GitHub.
 name: deploy
 
+# Manual only (Actions -> deploy -> Run workflow): agents push to main too often to deploy on every push.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 concurrency:
