@@ -20,3 +20,4 @@ Zmergowane taski (dopisuje agent A po każdym merge, patrz `CLAUDE.md`).
 - [x] [A15] Badania: ręczne dodawanie wyników z normami · issue #32 · 2026-10-03 18:23 · atrapy: brak
 - [x] [A16] SpeechEngine + VoiceInput (Web Speech, zawsze z polem tekstowym) · issue #35 · 2026-10-03 18:27 · atrapy: brak
 - [x] [A18] <Timeline>: oś i tory leków · issue #39 · 2026-10-03 18:33 · atrapy: brak (tory badań/objawów/wizyt/zdjęć: A19)
+- [x] [A19] <Timeline>: badania, objawy, wizyty, zdjęcia, potwierdzenia · issue #41 · 2026-10-03 18:38 · atrapy: brak

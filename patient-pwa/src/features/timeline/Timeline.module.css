@@ -8,6 +8,8 @@
   gap: 2px;
   font-size: 0.75rem;
   color: var(--color-text, #1b1f24);
+  overflow-x: clip;
+  padding-right: 10px; /* znaczniki z dziś nie są ucięte o połowę */
 }
 
 .row {
@@ -101,7 +103,7 @@
   opacity: 0.35;
 }
 
-.doseMark {
+.dotMark {
   position: absolute;
   top: 6px;
   width: 12px;
@@ -114,7 +116,7 @@
   z-index: 1;
 }
 
-.skipped {
+.hollow {
   background: var(--color-surface, #fff);
 }
 
@@ -125,4 +127,108 @@
 .empty {
   margin: 8px 0;
   color: var(--tl-muted);
+}
+
+.visitLine {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  border-left: 2px dashed var(--tl-muted);
+  opacity: 0.5;
+}
+
+.examMark {
+  position: absolute;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  padding: 0;
+  border: 2px solid var(--tl-muted);
+  background: var(--color-surface, #fff);
+  transform: rotate(45deg);
+  cursor: pointer;
+  z-index: 1;
+}
+
+.outOfRange {
+  border-color: var(--color-text, #1b1f24);
+  background: var(--color-text, #1b1f24);
+}
+
+.examLabel {
+  position: absolute;
+  top: -15px;
+  left: 6px;
+  transform: rotate(-45deg);
+  transform-origin: left top;
+  white-space: nowrap;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--color-text, #1b1f24);
+  pointer-events: none;
+}
+
+.examLabelLeft {
+  left: auto;
+  right: 6px;
+  top: 4px;
+  transform: rotate(-45deg) translateX(-100%);
+  transform-origin: left top;
+}
+
+.symptomMark {
+  position: absolute;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-danger, #b42318);
+  cursor: pointer;
+  z-index: 1;
+}
+
+.visitMark {
+  position: absolute;
+  top: 3px;
+  width: 18px;
+  height: 18px;
+  margin-left: -9px;
+  padding: 0;
+  border: 2px solid var(--color-primary, #0f766e);
+  border-radius: 4px;
+  background: var(--color-primary-soft, #d9f0ed);
+  cursor: pointer;
+  z-index: 1;
+}
+
+.photoMark {
+  position: absolute;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  padding: 0;
+  border: 1px solid var(--tl-border);
+  border-radius: 4px;
+  background: var(--color-surface-muted, #eef1f4) center / cover no-repeat;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.docMark {
+  position: absolute;
+  top: 4px;
+  width: 12px;
+  height: 16px;
+  margin-left: -6px;
+  padding: 0;
+  border: 2px solid var(--tl-muted);
+  border-radius: 2px 6px 2px 2px;
+  background: var(--color-surface, #fff);
+  cursor: pointer;
+  z-index: 1;
 }

@@ -31,7 +31,7 @@ export function DevTimeline() {
             exams: demo.exams,
             visits: demo.visits,
             photos: [],
-            documents: [],
+            documents: demo.documents.map(({ content: _content, ...meta }) => meta),
           }}
           range={rangeFor(preset, todayIso(), earliest)}
           highlight={selected}
