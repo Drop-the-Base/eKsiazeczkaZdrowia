@@ -18,8 +18,18 @@ export default defineConfig({
         theme_color: '#0f766e',
         icons: [{ src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }],
       },
+      workbox: {
+        // Te ścieżki obsługuje serwer (aplikacja lekarza, LLM, przekaźnik) – SW PWA nie może ich podmieniać.
+        navigateFallbackDenylist: [/^\/lekarz/, /^\/llm/, /^\/relay/, /^\/health/],
+      },
     }),
   ],
-  server: { port: 5173 },
+  server: {
+    port: 5173,
+    proxy: {
+      '/relay': { target: 'ws://localhost:8787', ws: true },
+      '/llm': 'http://localhost:8787',
+    },
+  },
   preview: { port: 4173 },
 });
