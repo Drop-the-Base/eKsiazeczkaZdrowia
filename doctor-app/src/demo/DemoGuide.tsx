@@ -4,6 +4,7 @@ import { useDemoPhone } from './DemoPhone';
 import { useQrChannel } from './useQrChannel';
 import { PATIENT_DEMO_PATH } from './demoMode';
 import { GUIDE_TOTAL, QR_STEP, VERIFY_STEP, VIEW_STEPS, type GuideStep } from './steps';
+import { resolveGuideKeyAction } from './guide.logic';
 import { useSpot, type Spot } from './useSpot';
 import styles from './DemoGuide.module.css';
 
@@ -138,6 +139,49 @@ export function DemoGuide() {
   }
 
   const lastView = stage === 'view' && view === VIEW_STEPS.length - 1;
+
+  // Navigate guide steps via keyboard ArrowLeft / ArrowRight
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      const action = resolveGuideKeyAction(
+        e.key,
+        {
+          open,
+          stage,
+          isBusy: phone.busy,
+          hasQrPayload: Boolean(qrPayload),
+          view,
+          lastView,
+        },
+        e.target,
+      );
+
+      if (!action) return;
+      e.preventDefault();
+
+      switch (action) {
+        case 'simulate':
+          if (qrPayload) void phone.simulate(qrPayload);
+          break;
+        case 'confirm':
+          confirmCode();
+          break;
+        case 'nextView':
+          setView((v) => v + 1);
+          break;
+        case 'prevView':
+          setView((v) => v - 1);
+          break;
+        case 'close':
+          setOpen(false);
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [open, stage, phone, qrPayload, view, lastView, confirmCode]);
+
   return (
     <>
       <Mask spot={spot} />
@@ -183,6 +227,7 @@ export function DemoGuide() {
             className={styles.back}
             disabled={stage !== 'view' || view === 0}
             onClick={() => setView((v) => v - 1)}
+            title={stage === 'view' && view > 0 ? 'Wstecz (←)' : undefined}
           >
             Wstecz
           </button>
@@ -192,12 +237,18 @@ export function DemoGuide() {
               className={styles.next}
               disabled={!qrPayload || phone.busy}
               onClick={() => qrPayload && void phone.simulate(qrPayload)}
+              title={qrPayload && !phone.busy ? 'Symuluj telefon pacjentki (→)' : undefined}
             >
               {phone.busy ? 'Łączenie…' : 'Symuluj telefon pacjentki'}
             </button>
           )}
           {stage === 'verify' && (
-            <button type="button" className={styles.next} onClick={confirmCode}>
+            <button
+              type="button"
+              className={styles.next}
+              onClick={confirmCode}
+              title="Kody są zgodne (→)"
+            >
               Kody są zgodne
             </button>
           )}
@@ -206,6 +257,7 @@ export function DemoGuide() {
               type="button"
               className={styles.next}
               onClick={() => (lastView ? setOpen(false) : setView((v) => v + 1))}
+              title={lastView ? 'Zakończ (→)' : 'Dalej (→)'}
             >
               {lastView ? 'Zakończ' : 'Dalej'}
             </button>

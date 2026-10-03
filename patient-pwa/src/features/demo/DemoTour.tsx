@@ -3,6 +3,7 @@ import { DOCTOR_DEMO_PATH, restartDemo } from '../../demoMode';
 import { Button, todayIso } from '../../ui';
 import { dismissBeforeVisit } from '../visit-list';
 import type { TourStep } from './steps';
+import { isEditableTarget } from './tour.logic';
 import { useTour, type Spot } from './useTour';
 import styles from './DemoTour.module.css';
 
@@ -110,6 +111,33 @@ export function DemoTour() {
     };
   }, [cardShown]);
 
+  // Navigate tour steps via keyboard ArrowLeft / ArrowRight
+  useEffect(() => {
+    if (!tour.open || tour.showing) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      if (isEditableTarget(e.target)) return;
+
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        if (step.full && last) {
+          tour.close();
+        } else {
+          tour.next();
+        }
+      } else if (e.key === 'ArrowLeft') {
+        if (index > 0) {
+          e.preventDefault();
+          tour.back();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [tour.open, tour.showing, step.full, last, index, tour.next, tour.back, tour.close]);
+
   if (!tour.open) {
     return (
       <button type="button" className={styles.reopen} onClick={tour.reopen}>
@@ -129,7 +157,9 @@ export function DemoTour() {
           <div className={styles.actions}>
             {index === 0 ? (
               <>
-                <Button onClick={tour.next}>Rozpocznij prezentację</Button>
+                <Button onClick={tour.next} title="Rozpocznij prezentację (→)">
+                  Rozpocznij prezentację
+                </Button>
                 <Button variant="secondary" onClick={tour.close}>
                   Pomiń przewodnik
                 </Button>
@@ -137,7 +167,9 @@ export function DemoTour() {
               </>
             ) : (
               <>
-                <Button onClick={tour.close}>Przejdź do aplikacji</Button>
+                <Button onClick={tour.close} title="Przejdź do aplikacji (→)">
+                  Przejdź do aplikacji
+                </Button>
                 <Button variant="secondary" onClick={restartDemo}>
                   Uruchom ponownie
                 </Button>
@@ -218,7 +250,12 @@ export function DemoTour() {
           </div>
         )}
         <div className={styles.nav}>
-          <Button variant="ghost" onClick={tour.back} className={styles.back}>
+          <Button
+            variant="ghost"
+            onClick={tour.back}
+            className={styles.back}
+            title={index > 0 ? 'Wstecz (←)' : undefined}
+          >
             Wstecz
           </Button>
           {step.showMe && (
@@ -234,7 +271,11 @@ export function DemoTour() {
               {tour.showing ? 'Trwa demonstracja…' : 'Zademonstruj'}
             </Button>
           )}
-          <Button onClick={tour.next} className={styles.next}>
+          <Button
+            onClick={tour.next}
+            className={styles.next}
+            title={last ? 'Zakończ (→)' : 'Dalej (→)'}
+          >
             {last ? 'Zakończ' : 'Dalej'}
           </Button>
         </div>
