@@ -35,6 +35,11 @@
   padding: var(--space-3) var(--space-4);
 }
 
+.cardLeft {
+  right: auto;
+  left: var(--space-5);
+}
+
 @media (max-width: 700px) {
   .card {
     left: var(--space-2);
