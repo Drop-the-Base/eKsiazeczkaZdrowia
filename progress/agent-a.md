@@ -7,3 +7,4 @@ Zmergowane taski (dopisuje agent A po każdym merge, patrz `CLAUDE.md`).
 - [x] [A03] Wspólne komponenty ui/ i tokeny designu · issue #8 · 2026-10-03 17:40 · atrapy: brak
 - [x] [A04] README: uruchomienie lokalne i na telefonie · issue #10 · 2026-10-03 17:42 · atrapy: sekcja tunelu czeka na B06; dodatkowo scripts/ship.sh
 - [x] [A05] Profil: dane, alergie, grupa krwi · issue #15 · 2026-10-03 17:46 · atrapy: brak
+- [x] [A06] Diagnozy aktualne i przebyte · issue #16 · 2026-10-03 17:49 · atrapy: brak

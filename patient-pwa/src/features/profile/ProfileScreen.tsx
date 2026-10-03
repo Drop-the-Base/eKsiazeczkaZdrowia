@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button, EmptyState, LoadingState, PageHeader } from '../../ui';
 import { DemoDataCard } from './components/DemoDataCard';
+import { DiagnosesSection } from './components/DiagnosesSection';
 import { ProfileCard } from './components/ProfileCard';
 import { ProfileSheet } from './components/ProfileSheet';
 import { useProfile } from './useProfile';
@@ -23,6 +24,7 @@ export function ProfileScreen() {
             <Button onClick={() => setEditing(true)}>Uzupełnij profil</Button>
           </EmptyState>
         )}
+        <DiagnosesSection />
         <DemoDataCard />
       </div>
       <ProfileSheet
