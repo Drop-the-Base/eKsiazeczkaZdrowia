@@ -2,6 +2,8 @@
 export interface Signal<T> {
   on(cb: (value: T) => void): () => void;
   emit(value: T): void;
+  /** Forgets the last value (e.g. patient data at the end of a visit). */
+  clear(): void;
   readonly value: T | undefined;
 }
 
@@ -19,6 +21,9 @@ export function createSignal<T>(): Signal<T> {
     emit(value) {
       last = { value };
       for (const cb of [...subs]) cb(value);
+    },
+    clear() {
+      last = undefined;
     },
     get value() {
       return last?.value;
