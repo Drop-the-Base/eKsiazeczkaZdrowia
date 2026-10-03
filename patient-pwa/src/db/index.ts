@@ -1,17 +1,21 @@
-import { HealthDatabase } from './database';
 import { createDb } from './createDb';
+import { HealthDatabase } from './database';
 import { initDemoData, loadDemoData } from './demo';
+import { createVault } from './vault';
 
 const dexie = new HealthDatabase();
 
+/** Database key from the PIN (only in memory). The lock screen sets it up and unlocks it. */
+export const vault = createVault(dexie);
+
 /** The only way the app touches the local database. Returns domain types from `@ez/shared`. */
-export const db = createDb(dexie);
+export const db = createDb(dexie, vault);
 
 /**
  * Demo data on start (see `initDemoData`). Screens read through `useLiveQuery`,
  * so they re-render once this finishes; await it only if you need the data up front.
  */
-export const dbReady: Promise<void> = initDemoData(dexie, {
+export const dbReady: Promise<void> = initDemoData(dexie, db, vault, {
   search: window.location.search,
   autoLoad: import.meta.env.DEV || import.meta.env.VITE_DEMO === '1',
   now: new Date().toISOString(),
@@ -25,8 +29,10 @@ export const dbReady: Promise<void> = initDemoData(dexie, {
 dbReady.catch((err: unknown) => console.error('Nie udało się wczytać danych demo', err));
 
 /** Replaces all data with the "Pani Anna" demo (e.g. a "Wczytaj demo" button). */
-export const resetDemoData = (): Promise<void> => loadDemoData(dexie, new Date().toISOString());
+export const resetDemoData = (): Promise<void> => loadDemoData(dexie, db, new Date().toISOString());
 
 export type { Db, MedicationsApi } from './createDb';
 export type { DatedEntityApi } from './entityApi';
+export { deriveKey, KDF_PARAMS, type KdfParams } from './kdf';
 export { newId } from './ids';
+export { PIN_PATTERN, WrongPinError, type VaultStatus } from './vault';
