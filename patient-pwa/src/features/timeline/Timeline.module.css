@@ -1,0 +1,128 @@
+/* Wszystkie zmienne z fallbackiem: komponent działa też w aplikacji lekarza. */
+.timeline {
+  --tl-label: 96px;
+  --tl-border: var(--color-border, #e3e6ea);
+  --tl-muted: var(--color-text-muted, #5f6b7a);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.75rem;
+  color: var(--color-text, #1b1f24);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: var(--tl-label) 1fr;
+  align-items: center;
+  min-height: 28px;
+}
+
+.label {
+  overflow: hidden;
+  padding-right: 6px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.axis {
+  position: relative;
+  height: 20px;
+  border-bottom: 1px solid var(--tl-border);
+}
+
+.tick {
+  position: absolute;
+  bottom: 2px;
+  transform: translateX(-50%);
+  color: var(--tl-muted);
+  white-space: nowrap;
+}
+
+.track {
+  position: relative;
+  height: 24px;
+}
+
+.grid {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--tl-border);
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-weight: 600;
+  color: var(--tl-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.68rem;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.bar {
+  position: absolute;
+  top: 4px;
+  height: 16px;
+  padding: 0 4px;
+  border: 0;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 0.68rem;
+  text-align: left;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.ongoing {
+  border-radius: 4px 0 0 4px;
+}
+
+.highlight {
+  outline: 3px solid var(--color-text, #1b1f24);
+  outline-offset: 1px;
+  z-index: 1;
+}
+
+.asNeeded {
+  top: 11px;
+  height: 2px;
+  padding: 0;
+  opacity: 0.35;
+}
+
+.doseMark {
+  position: absolute;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  padding: 0;
+  border: 2px solid;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.skipped {
+  background: var(--color-surface, #fff);
+}
+
+.barLabel {
+  white-space: nowrap;
+}
+
+.empty {
+  margin: 8px 0;
+  color: var(--tl-muted);
+}

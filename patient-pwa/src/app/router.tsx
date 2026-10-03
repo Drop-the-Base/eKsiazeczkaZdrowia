@@ -1,5 +1,6 @@
 import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 import { AppShell } from './AppShell';
+import { DevTimeline } from './DevTimeline';
 import { DevUi } from './DevUi';
 import { Placeholder } from './Placeholder';
 import { featureRoutes } from './registry';
@@ -19,6 +20,7 @@ export const router = createBrowserRouter([
       ...featureRoutes.map(({ path, element }) => ({ path, element })),
       ...placeholderRoutes,
       { path: '/dev/ui', element: <DevUi /> },
+      { path: '/dev/timeline', element: <DevTimeline /> },
       { path: '*', element: <Placeholder title="Nie znaleziono" owner="A" /> },
     ],
   },
