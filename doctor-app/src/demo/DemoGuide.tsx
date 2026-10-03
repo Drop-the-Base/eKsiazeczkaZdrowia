@@ -9,6 +9,16 @@ import { useSpot, type Spot } from './useSpot';
 import styles from './DemoGuide.module.css';
 
 const RING_PADDING = 6;
+/** Card width and its gap to the screen edge (DemoGuide.module.css): the strip it occupies on the right. */
+const CARD_STRIP = 400 + 24;
+
+/** The card stands on the right; when the lit element reaches under it, it moves to the left. */
+function cardSide(spot: Spot | null): 'left' | 'right' {
+  if (!spot) return 'right';
+  const underCard = spot.left + spot.width > window.innerWidth - CARD_STRIP;
+  const roomOnLeft = spot.left > CARD_STRIP;
+  return underCard && roomOnLeft ? 'left' : 'right';
+}
 
 /** Dims everything except the lit element and takes the clicks there; the hole stays clickable. */
 function Mask({ spot }: { spot: Spot | null }) {
@@ -98,7 +108,10 @@ export function DemoGuide() {
   return (
     <>
       <Mask spot={spot} />
-      <aside className={styles.card} aria-label="Przewodnik demo">
+      <aside
+        className={cardSide(spot) === 'left' ? `${styles.card} ${styles.cardLeft}` : styles.card}
+        aria-label="Przewodnik demo"
+      >
         <div className={styles.header}>
           <span className={styles.progress}>
             Krok {index + 1} z {GUIDE_TOTAL}
