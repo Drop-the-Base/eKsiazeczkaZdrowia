@@ -28,6 +28,12 @@ export function ProfileScreen() {
         )}
         <List>
           <ListItem
+            title="Leki na dziś"
+            subtitle="Potwierdź: wziąłem / pominąłem"
+            trailing="›"
+            onClick={() => navigate('/dzis')}
+          />
+          <ListItem
             title="Leki i suplementy"
             subtitle="Wszystko, co przyjmujesz"
             trailing="›"
