@@ -95,6 +95,17 @@ describe('axisTicks', () => {
     const years = axisTicks({ from: '2022-12-03', to: '2026-10-03' });
     expect(years.map((t) => t.label)).toEqual(['2023', '2024', '2025', '2026']);
   });
+
+  it('gets denser when zoomed in, over the whole range', () => {
+    const half = { from: '2026-04-01', to: '2026-10-03' };
+    const weeks = axisTicks(half, 4);
+    expect(weeks[0]!.label).toBe('6.4');
+    expect(weeks.length).toBeGreaterThan(25);
+    const days = axisTicks(half, 26);
+    expect(days[0]!.label).toBe('1.4');
+    expect(days.at(-1)!.label).toBe('3.10');
+    expect(axisTicks({ from: '2022-12-03', to: '2026-10-03' }, 8)[0]!.label).toBe('2023');
+  });
 });
 
 describe('doses', () => {

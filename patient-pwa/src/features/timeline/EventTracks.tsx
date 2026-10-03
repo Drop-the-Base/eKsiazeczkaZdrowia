@@ -4,11 +4,17 @@ import { cx, GroupHeader, Lane, Marker, type Grid, type Select } from './parts';
 import { documentMarks, examLanes, photoMarks, symptomLanes, visitMarks } from './timeline.logic';
 import styles from './Timeline.module.css';
 
-/** Etykiety tylko co ~15% szerokości – przy długim zakresie nie nachodzą na siebie (pełne dane w tooltipie). */
-function withSpacedLabels<T extends { left: number }>(marks: T[]): (T & { showLabel: boolean })[] {
+/**
+ * Etykiety tylko co ~15% widocznej szerokości – przy długim zakresie nie nachodzą na siebie
+ * (pełne dane w tooltipie); po przybliżeniu pokazuje się ich więcej.
+ */
+function withSpacedLabels<T extends { left: number }>(
+  marks: T[],
+  zoom: number,
+): (T & { showLabel: boolean })[] {
   let last = -Infinity;
   return marks.map((m) => {
-    const showLabel = m.left - last >= 15;
+    const showLabel = (m.left - last) * zoom >= 15;
     if (showLabel) last = m.left;
     return { ...m, showLabel };
   });
@@ -36,24 +42,31 @@ export function EventTracks({ data, range, grid, highlight, onSelect }: Props) {
       {exams.length > 0 && <GroupHeader label="Badania" />}
       {exams.map((lane) => (
         <Lane key={lane.name} label={lane.name} grid={grid}>
-          {withSpacedLabels(lane.marks).map(({ item, left, label, outOfRange, showLabel }) => (
-            <Marker
-              key={item.id}
-              refTo={{ entity: 'exam', id: item.id }}
-              title={`${item.name} ${formatDate(item.date)}: ${item.results
-                .map((r) => `${r.name} ${r.value} ${r.unit}`)
-                .join(', ')}`}
-              className={cx(styles.examMark, outOfRange && styles.outOfRange)}
-              style={{ left: `${left}%` }}
-              {...common}
-            >
-              {showLabel && (
-                <span className={cx(styles.examLabel, left > 65 && styles.examLabelLeft)}>
-                  {label}
-                </span>
-              )}
-            </Marker>
-          ))}
+          {withSpacedLabels(lane.marks, grid.zoom).map(
+            ({ item, left, label, outOfRange, showLabel }) => (
+              <Marker
+                key={item.id}
+                refTo={{ entity: 'exam', id: item.id }}
+                title={`${item.name} ${formatDate(item.date)}: ${item.results
+                  .map((r) => `${r.name} ${r.value} ${r.unit}`)
+                  .join(', ')}`}
+                className={cx(styles.examMark, outOfRange && styles.outOfRange)}
+                style={{ left: `${left}%` }}
+                {...common}
+              >
+                {showLabel && (
+                  <span
+                    className={cx(
+                      styles.examLabel,
+                      (100 - left) * grid.zoom < 35 && styles.examLabelLeft,
+                    )}
+                  >
+                    {label}
+                  </span>
+                )}
+              </Marker>
+            ),
+          )}
         </Lane>
       ))}
 

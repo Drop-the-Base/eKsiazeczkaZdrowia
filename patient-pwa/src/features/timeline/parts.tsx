@@ -17,6 +17,8 @@ export const cx = (...names: (string | false | undefined)[]) => names.filter(Boo
 export interface Grid {
   ticks: Tick[];
   visits: number[];
+  /** Skala osi (1 = cały zakres w karcie) – odstępy etykiet liczone w % toru. */
+  zoom: number;
 }
 
 export function Lane({
@@ -49,8 +51,10 @@ export function Lane({
 export function GroupHeader({ label, color }: { label: string; color?: string }) {
   return (
     <div className={styles.group}>
-      {color && <span className={styles.dot} style={{ background: color }} />}
-      {label}
+      <span className={styles.groupLabel}>
+        {color && <span className={styles.dot} style={{ background: color }} />}
+        {label}
+      </span>
     </div>
   );
 }
@@ -81,6 +85,7 @@ export function Marker({
         isHighlighted(highlight, refTo.entity, refTo.id) && styles.highlight,
       )}
       style={style}
+      data-highlighted={isHighlighted(highlight, refTo.entity, refTo.id) || undefined}
       title={title}
       aria-label={title}
       onClick={() => onSelect?.(refTo)}

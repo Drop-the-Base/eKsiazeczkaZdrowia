@@ -6,10 +6,55 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  --tl-bg: var(--color-surface, #fff);
+  position: relative;
   font-size: 0.75rem;
   color: var(--color-text, #1b1f24);
-  overflow-x: clip;
-  padding-right: 10px; /* znaczniki z dziś nie są ucięte o połowę */
+}
+
+/* Jeden kontener przewijania dla osi i wszystkich torów; pinch obsługuje useTimelineZoom. */
+.scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
+}
+
+/* Tor = szerokość dopasowana × zoom; padding = TRACK_END_PAD (znaczniki z dziś nie są ucięte). */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-sizing: border-box;
+  width: calc(var(--tl-label) + (100% - var(--tl-label) - 10px) * var(--tl-zoom, 1) + 10px);
+  padding-right: 10px;
+}
+
+.zoom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  display: flex;
+  gap: 4px;
+}
+
+.zoomButton {
+  width: 28px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--tl-border);
+  border-radius: 6px;
+  background: var(--tl-bg);
+  color: var(--color-text, #1b1f24);
+  font-size: 0.9rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.zoomButton:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 
 .row {
@@ -19,12 +64,25 @@
   min-height: 28px;
 }
 
+/* Kolumna etykiet zostaje widoczna przy przewijaniu toru. */
 .label {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  align-self: stretch;
+  line-height: 28px;
+  background: var(--tl-bg);
   overflow: hidden;
   padding-right: 6px;
   white-space: nowrap;
   text-overflow: ellipsis;
   font-weight: 500;
+}
+
+/* Pusty róg nad etykietami (tu są przyciski skali) – bez tła, żeby nie zasłaniał pierwszej daty. */
+.axisCorner {
+  position: sticky;
+  left: 0;
 }
 
 .axis {
@@ -55,10 +113,15 @@
 }
 
 .group {
-  display: flex;
+  margin-top: 8px;
+}
+
+.groupLabel {
+  position: sticky;
+  left: 0;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-top: 8px;
   font-weight: 600;
   color: var(--tl-muted);
   text-transform: uppercase;
@@ -125,6 +188,9 @@
 }
 
 .empty {
+  position: sticky;
+  left: 0;
+  width: max-content;
   margin: 8px 0;
   color: var(--tl-muted);
 }
