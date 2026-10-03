@@ -53,10 +53,11 @@ export function VisitListScreen() {
           </EmptyState>
         ) : (
           <ol className={styles.list} aria-label="Do omówienia">
-            {list.active.map((item) => (
+            {list.active.map((item, i, all) => (
               <NoteRow
                 key={item.id}
                 item={item}
+                dataTour={i === all.length - 1 ? 'note-new' : undefined}
                 onToggle={(d) => void list.toggle(item.id, d)}
                 onRemove={() => void list.remove(item.id)}
               />

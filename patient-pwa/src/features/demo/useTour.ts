@@ -60,6 +60,10 @@ export function useTour() {
   const [showing, setShowing] = useState(false);
   const [error, setError] = useState<string>();
   const step = STEPS[state.index] ?? STEPS[0]!;
+  // Id of the step whose demonstration has finished: its light follows the result.
+  const [shownStep, setShownStep] = useState<string>();
+  const after = shownStep === step.id ? step.targetAfterShowMe : undefined;
+  const target = after ?? step.target;
 
   useEffect(() => saveState(state), [state]);
 
@@ -74,16 +78,19 @@ export function useTour() {
     setSpot(null);
     // Wait for the step's screen: the previous one may have an element with the same name.
     const onScreen = !step.path || pathname === step.path;
-    if (!state.open || !step.target || !onScreen) return;
+    if (!state.open || !target || !onScreen) return;
     let scrolled = false;
     const tick = () => {
-      let next = spotOf(step.target);
+      let next = spotOf(target);
       if (next && !scrolled) {
-        // Instant, so the light appears straight in its place instead of travelling there.
+        // A new step: instant, so the light appears straight in its place instead of travelling
+        // there. A demonstration result: smooth, so the eye follows the light to it.
         scrolled = true;
-        window.scrollBy({ top: next.top - TARGET_TOP, behavior: 'instant' });
-        next = spotOf(step.target);
+        window.scrollBy({ top: next.top - TARGET_TOP, behavior: after ? 'smooth' : 'instant' });
+        next = spotOf(target);
       }
+      // The result is saved a moment later: until it shows, keep the light on the step's element.
+      if (!next && after) next = spotOf(step.target);
       setSpot((prev) => (sameSpot(prev, next) ? prev : next));
     };
     // Every frame: the light shows up in the same paint as the element (data loads a moment later).
@@ -94,7 +101,7 @@ export function useTour() {
     };
     loop();
     return () => cancelAnimationFrame(frame);
-  }, [state.open, step, pathname]);
+  }, [state.open, step, target, after, pathname]);
 
   const go = useCallback((index: number) => {
     setError(undefined);
@@ -107,6 +114,7 @@ export function useTour() {
     setError(undefined);
     try {
       await runShowMe(step.showMe);
+      setShownStep(step.id);
     } catch (err) {
       setError(
         err instanceof Error
