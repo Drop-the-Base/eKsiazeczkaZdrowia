@@ -1,6 +1,6 @@
-/** `prywatna-karta-zdrowia-kopia-2026-10-03.json` */
+/** `eksiazeczka-kopia-2026-10-03.json` */
 export function backupFileName(today: string): string {
-  return `prywatna-karta-zdrowia-kopia-${today}.json`;
+  return `eksiazeczka-kopia-${today}.json`;
 }
 
 export function validateNewPassword(

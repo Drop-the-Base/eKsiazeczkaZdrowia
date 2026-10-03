@@ -1,4 +1,4 @@
-# Prywatna Karta Zdrowia – zasady dla agentów
+# eKsiazeczkaZdrowia – zasady dla agentów
 
 Plan, architektura, model danych i opis tasków: **`TASKS.md`** (źródło prawdy). Ten plik mówi, **jak** pracujemy.
 

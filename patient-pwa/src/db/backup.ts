@@ -100,7 +100,7 @@ export async function decryptBackup(file: unknown, password: string): Promise<Ba
     typeof f.kdf?.memoryKiB !== 'number' ||
     typeof f.kdf.iterations !== 'number'
   ) {
-    throw new Error('To nie jest plik kopii zapasowej Prywatna Karta Zdrowia');
+    throw new Error('To nie jest plik kopii zapasowej eKsiazeczkaZdrowia');
   }
   const key = await deriveKey(password, fromBase64Url(f.salt), f.kdf);
   let plain: ArrayBuffer;

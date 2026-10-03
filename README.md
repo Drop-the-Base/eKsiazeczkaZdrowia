@@ -1,4 +1,4 @@
-# Prywatna Karta Zdrowia
+# eKsiazeczkaZdrowia
 
 Prywatna oś czasu zdrowia na telefonie pacjenta, uzupełniana głosem, którą w kilka sekund można bezpiecznie pokazać dowolnemu lekarzowi. HackYeah 2026, Sport & Healthcare.
 
@@ -79,7 +79,7 @@ node scripts/shot.mjs "http://localhost:4173/demo/leki?bez-przewodnika" out.png 
 
 ## Slajdy
 
-`docs/slides/prywatna-karta-zdrowia.pdf` (10 slajdów, 1280×720) z `docs/slides/index.html`. Odświeżenie zrzutów i PDF:
+`docs/slides/eksiazeczka-zdrowia.pdf` (10 slajdów, 1280×720) z `docs/slides/index.html`. Odświeżenie zrzutów i PDF:
 
 ```bash
 npm run build && PORT=8799 npm start &       # serwer z PWA, aplikacją lekarza i przekaźnikiem

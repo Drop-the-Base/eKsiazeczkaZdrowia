@@ -5,7 +5,7 @@ import { openBytes, sealBytes } from './cipher';
 import type { HealthDatabase } from './database';
 import type { Vault } from './vault';
 
-const RP_NAME = 'Prywatna Karta Zdrowia';
+const RP_NAME = 'eKsiazeczkaZdrowia';
 const random = (n: number) => crypto.getRandomValues(new Uint8Array(n));
 
 export class BiometricUnavailableError extends Error {

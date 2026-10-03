@@ -1,4 +1,4 @@
-// docs/slides/index.html → docs/slides/prywatna-karta-zdrowia.pdf (10 stron 1280×720).
+// docs/slides/index.html → docs/slides/eksiazeczka-zdrowia.pdf (10 stron 1280×720).
 // Użycie: node scripts/slides/build-pdf.mjs [--png] (z --png także podgląd każdej strony).
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import puppeteer from 'puppeteer-core';
@@ -13,13 +13,13 @@ try {
   await page.setViewport({ width: 1280, height: 720 });
   await page.goto(pathToFileURL(`${dir}index.html`).href, { waitUntil: 'networkidle0' });
   await page.pdf({
-    path: `${dir}prywatna-karta-zdrowia.pdf`,
+    path: `${dir}eksiazeczka-zdrowia.pdf`,
     width: '1280px',
     height: '720px',
     printBackground: true,
   });
   const count = await page.$$eval('.slide', (s) => s.length);
-  console.log(`PDF: ${count} slajdów → docs/slides/prywatna-karta-zdrowia.pdf`);
+  console.log(`PDF: ${count} slajdów → docs/slides/eksiazeczka-zdrowia.pdf`);
   if (process.argv.includes('--png')) {
     const slides = await page.$$('.slide');
     for (const [i, s] of slides.entries()) {
