@@ -1,13 +1,14 @@
 import 'fake-indexeddb/auto';
 import { afterEach, describe, expect, it } from 'vitest';
 import type { Medication, Profile } from '@ez/shared';
-import { HealthDatabase } from './database';
-import { createDb } from './createDb';
+import type { HealthDatabase } from './database';
+import { openTestDb } from './testDb';
 
 let dexie: HealthDatabase;
-function freshDb() {
-  dexie = new HealthDatabase(`test-${Math.random()}`);
-  return createDb(dexie);
+async function freshDb() {
+  const t = await openTestDb();
+  dexie = t.dexie;
+  return t.db;
 }
 afterEach(async () => {
   await dexie.delete();
@@ -26,7 +27,7 @@ const med = (over: Partial<Medication> = {}): Omit<Medication, 'id'> => ({
 
 describe('db', () => {
   it('adds, gets, updates and removes a record', async () => {
-    const db = freshDb();
+    const db = await freshDb();
     const added = await db.medications.add(med());
     expect(added.id).toMatch(/^[0-9a-f-]{36}$/);
     expect(await db.medications.get(added.id)).toEqual(added);
@@ -45,12 +46,12 @@ describe('db', () => {
   });
 
   it('throws when updating a missing record', async () => {
-    const db = freshDb();
+    const db = await freshDb();
     await expect(db.symptoms.update('missing', { name: 'x' })).rejects.toThrow();
   });
 
   it('lists sorted by date and filters inclusively by range', async () => {
-    const db = freshDb();
+    const db = await freshDb();
     for (const startedAt of [
       '2026-09-03T10:00:00.000Z',
       '2026-09-01T23:30:00.000Z',
@@ -67,7 +68,7 @@ describe('db', () => {
   });
 
   it('finds medications active within a range', async () => {
-    const db = freshDb();
+    const db = await freshDb();
     await db.medications.add(
       med({ name: 'stary', startDate: '2026-01-01', endDate: '2026-02-01' }),
     );
@@ -81,7 +82,7 @@ describe('db', () => {
   });
 
   it('keeps a single profile', async () => {
-    const db = freshDb();
+    const db = await freshDb();
     expect(await db.profile.get()).toBeUndefined();
     const p: Profile = {
       id: 'p1',

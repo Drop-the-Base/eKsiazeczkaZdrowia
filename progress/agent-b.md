@@ -29,3 +29,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B24] shared/dict: ATC, ICD-10, tłumaczenia EN/DE/ES · issue #52 · 2026-10-03 18:55 · atrapy: brak
 - [x] [B25] Ekran „Za granicą”: podsumowanie offline + PDF · issue #54 · 2026-10-03 18:58 · atrapy: brak
 - [x] [prośba #137] post-visit: createReminder z reminders · issue #137 · 2026-10-03 19:00 · atrapy: brak
+- [x] [B27] Szyfrowanie bazy AES-256-GCM, klucz z PIN-u (Argon2id) · issue #58 · 2026-10-03 19:06 · atrapy: brak (auto-blokada po czasie w B28)
