@@ -31,6 +31,7 @@ export async function createSession(
   status.emit('connecting');
 
   let sessionKey: Key | undefined;
+  let patientKey: string | undefined;
   let resume: { sessionId: string; resumeToken: string } | undefined;
   let incoming: Incoming | undefined;
   let finished = false;
@@ -121,7 +122,12 @@ export async function createSession(
       if (!p) throw new Error('Niepoprawna wiadomość od pacjenta');
       switch (p.kind) {
         case 'hello': {
-          if (sessionKey) return; // a resumed phone may repeat it; the key is fixed per session
+          if (p.patientPublicKey === patientKey) return; // a resumed phone repeats its hello
+          // A new phone key (first hello, or the patient page was reloaded): new session key and code,
+          // nothing received under the previous key is kept.
+          patientKey = p.patientPublicKey;
+          incoming = undefined;
+          snapshot.clear();
           sessionKey = await deriveSessionKey(keys, p.patientPublicKey);
           code.emit(await verificationCode(keys.publicKey, p.patientPublicKey));
           status.emit('connected');

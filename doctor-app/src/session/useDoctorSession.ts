@@ -93,7 +93,8 @@ export function useDoctorSession(): DoctorSessionApi {
           }),
           s.onVerificationCode((code) => {
             patientJoined = true;
-            setState((st) => ({ ...st, code }));
+            // A new code (also after the patient's page reloaded) must be checked again; earlier data is dropped.
+            setState((st) => ({ ...st, code, verified: false, snapshot: undefined }));
           }),
           s.onSnapshot((snapshot) => setState((st) => ({ ...st, snapshot }))),
         );

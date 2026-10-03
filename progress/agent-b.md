@@ -34,3 +34,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B33] Szlif designu ekranów B i widoku lekarza · issue #73 · 2026-10-03 19:13 · atrapy: brak
 - [x] [B14] Kod weryfikacyjny na telefonie i u lekarza · issue #31 · 2026-10-03 19:17 · atrapy: brak
 - [x] [B26] Druk / PDF widoku lekarza · issue #56 · 2026-10-03 19:20 · atrapy: brak
+- [x] [B36] Pacjent może dołączyć ponownie po odświeżeniu strony · issue #101 · 2026-10-03 19:22 · atrapy: brak

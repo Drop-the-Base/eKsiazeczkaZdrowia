@@ -106,6 +106,20 @@ describe('relay', () => {
     expect(await patient.next()).toEqual({ type: 'session-ended', reason: 'expired' });
   });
 
+  it('lets a new patient connection replace a disconnected one', async () => {
+    const url = await startServer();
+    const { doctor, patient, sessionId } = await pair(url);
+    const second = await connect(url);
+    second.send({ type: 'join-session', sessionId });
+    expect(await second.next()).toMatchObject({ type: 'error', code: 'session-full' });
+    patient.ws.close();
+    expect(await doctor.next()).toEqual({ type: 'peer-disconnected' });
+    const third = await connect(url);
+    third.send({ type: 'join-session', sessionId });
+    expect(await third.next()).toMatchObject({ type: 'joined' });
+    expect(await doctor.next()).toEqual({ type: 'peer-joined' });
+  });
+
   it('lets a dropped patient resume the session', async () => {
     const url = await startServer();
     const { doctor, patient, sessionId, patientToken } = await pair(url);
