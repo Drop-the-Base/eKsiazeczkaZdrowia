@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { exportBackup, MIN_PASSWORD } from '../../db';
 import { todayIso } from '../../ui';
 import { backupFileName, validateNewPassword } from './backup.logic';
+import { scheduleNextExportReminder } from './exportReminder';
 
 export type ExportState =
   { step: 'form'; error?: string } | { step: 'working' } | { step: 'done'; fileName: string };
@@ -25,6 +26,7 @@ export function useExport() {
       a.download = fileName;
       a.click();
       setTimeout(() => URL.revokeObjectURL(url), 10_000);
+      await scheduleNextExportReminder();
       setState({ step: 'done', fileName });
     } catch (err) {
       setState({

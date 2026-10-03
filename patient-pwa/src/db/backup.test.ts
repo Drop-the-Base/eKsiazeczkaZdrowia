@@ -1,7 +1,7 @@
 import 'fake-indexeddb/auto';
 import { afterEach, describe, expect, it } from 'vitest';
 import { createDemoData } from '@ez/shared';
-import { decodeRecord, decryptBackup, exportBackup } from './backup';
+import { decodeRecord, decryptBackup, exportBackup, restoreBackup } from './backup';
 import type { HealthDatabase } from './database';
 import { loadDemoData } from './demo';
 import { openTestDb } from './testDb';
@@ -45,5 +45,35 @@ describe('backup export', () => {
     await expect(decryptBackup({ hello: 1 }, 'dlugie-haslo')).rejects.toThrow(
       'To nie jest plik kopii',
     );
+  });
+
+  it('moves everything to another device with a different PIN', async () => {
+    const a = await openTestDb('1111');
+    dexie = a.dexie;
+    await loadDemoData(a.dexie, a.db, now);
+    await a.db.photos.add({
+      blob: new Blob(['skora'], { type: 'image/jpeg' }),
+      takenAt: now,
+      category: 'skin',
+    });
+    const file = JSON.parse(
+      JSON.stringify(await exportBackup(a.db, 'dlugie-haslo', now)),
+    ) as unknown;
+
+    const b = await openTestDb('2222');
+    await b.db.symptoms.add({ name: 'stary wpis', startedAt: now, source: 'manual' });
+    const summary = await restoreBackup(b.dexie, b.db, await decryptBackup(file, 'dlugie-haslo'));
+    expect(summary.medications).toBe((await a.db.medications.list()).length);
+    expect((await b.db.profile.get())?.name).toBe('Anna Kowalska');
+    expect((await b.db.symptoms.list()).some((s) => s.name === 'stary wpis')).toBe(false);
+    expect(await b.db.medications.get('demo-med-mushroom')).toEqual(
+      await a.db.medications.get('demo-med-mushroom'),
+    );
+    const photo = (await b.db.photos.list())[0];
+    expect(await photo?.blob.text()).toBe('skora');
+    // stored under device B's key
+    b.vault.lock();
+    await expect(b.vault.unlock('1111')).rejects.toThrow();
+    await b.dexie.delete();
   });
 });

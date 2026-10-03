@@ -1,9 +1,9 @@
 // Encrypted backup file: everything in the database (with photos and files) under a key from the
 // patient's password (Argon2id → AES-256-GCM). The file is useless without the password.
-import { toBase64Url, fromBase64Url } from '@ez/shared';
+import { fromBase64Url, toBase64Url, type Profile } from '@ez/shared';
 import { openBytes, sealBytes } from './cipher';
 import type { Db } from './createDb';
-import { ENTITY_TABLES } from './database';
+import { ENTITY_TABLES, type HealthDatabase } from './database';
 import { deriveKey, type KdfParams } from './kdf';
 import { BLOB_FIELDS } from './vault';
 
@@ -118,4 +118,35 @@ export async function decryptBackup(file: unknown, password: string): Promise<Ba
     if (!Array.isArray(payload[table])) throw new Error('Plik kopii jest niekompletny');
   }
   return payload as BackupPayload;
+}
+
+export type ImportSummary = Record<
+  'medications' | 'exams' | 'symptoms' | 'photos' | 'visits',
+  number
+>;
+
+/**
+ * Replaces everything in this database with the backup. Records are written through the normal API,
+ * so they are encrypted with this device's PIN key.
+ */
+export async function restoreBackup(
+  dexie: HealthDatabase,
+  db: Db,
+  payload: BackupPayload,
+): Promise<ImportSummary> {
+  await Promise.all(dexie.entityTables().map((t) => t.clear()));
+  const [profile] = payload.profile;
+  if (profile) await db.profile.save(decodeRecord(profile) as unknown as Profile);
+  for (const table of ENTITY_TABLES) {
+    if (table === 'profile') continue;
+    const api = db[table] as unknown as { put(record: unknown): Promise<void> };
+    for (const record of payload[table]) await api.put(decodeRecord(record));
+  }
+  return {
+    medications: payload.medications.length,
+    exams: payload.exams.length,
+    symptoms: payload.symptoms.length,
+    photos: payload.photos.length,
+    visits: payload.visits.length,
+  };
 }

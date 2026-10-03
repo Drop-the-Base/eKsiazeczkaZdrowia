@@ -21,3 +21,30 @@
   color: var(--color-primary);
   font-weight: 600;
 }
+.heading {
+  margin: var(--space-3) 0 0;
+  font-size: var(--font-size-lg);
+}
+.error {
+  margin: 0;
+  color: var(--color-danger);
+}
+.file {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+.check input {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--color-danger);
+}

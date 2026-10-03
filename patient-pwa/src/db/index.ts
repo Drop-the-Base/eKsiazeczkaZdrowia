@@ -35,10 +35,21 @@ export type { Db, MedicationsApi } from './createDb';
 export type { DatedEntityApi } from './entityApi';
 export { deriveKey, KDF_PARAMS, type KdfParams } from './kdf';
 export { checkPassword, MIN_PASSWORD, type BackupFile } from './backup';
-import { exportBackup as exportBackupOf } from './backup';
+import {
+  decryptBackup,
+  exportBackup as exportBackupOf,
+  restoreBackup,
+  type ImportSummary,
+} from './backup';
+export type { ImportSummary } from './backup';
 
 /** Encrypted backup of everything, with the patient's password. */
 export const exportBackup = (password: string): ReturnType<typeof exportBackupOf> =>
   exportBackupOf(db, password, new Date().toISOString());
+
+/** Reads a backup file (parsed JSON) with its password and replaces all data on this device. */
+export async function importBackup(file: unknown, password: string): Promise<ImportSummary> {
+  return restoreBackup(dexie, db, await decryptBackup(file, password));
+}
 export { newId } from './ids';
 export { PIN_PATTERN, WrongPinError, type VaultStatus } from './vault';
