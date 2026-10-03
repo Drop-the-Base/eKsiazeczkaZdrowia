@@ -19,7 +19,7 @@ export function useImport() {
       try {
         parsed = JSON.parse(await file.text());
       } catch {
-        throw new Error('To nie jest plik kopii zapasowej eKsiazeczkaZdrowia');
+        throw new Error('To nie jest plik kopii zapasowej Prywatna Karta Zdrowia');
       }
       const summary = await importBackup(parsed, password);
       await scheduleNextExportReminder();

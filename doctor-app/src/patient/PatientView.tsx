@@ -51,7 +51,7 @@ export function PatientView({ snapshot }: { snapshot: ShareSnapshot }) {
   return (
     <div className={styles.view}>
       <p className={styles.printHeader}>
-        eKsiazeczkaZdrowia · dane przekazane z telefonu pacjenta{' '}
+        Prywatna Karta Zdrowia · dane przekazane z telefonu pacjenta{' '}
         {formatDateTime(snapshot.createdAt)} · wydrukowano{' '}
         {formatDateTime(new Date().toISOString())}
       </p>

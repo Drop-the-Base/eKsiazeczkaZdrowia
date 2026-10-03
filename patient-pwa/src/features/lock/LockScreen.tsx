@@ -108,7 +108,7 @@ export function LockScreen() {
           />
           <path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" strokeWidth="2" />
         </svg>
-        <span>eKsiazeczkaZdrowia</span>
+        <span>Prywatna Karta Zdrowia</span>
       </div>
       {lock.status === 'checking' && <LoadingState />}
       {lock.status === 'no-pin' && <SetupPin lock={lock} />}
