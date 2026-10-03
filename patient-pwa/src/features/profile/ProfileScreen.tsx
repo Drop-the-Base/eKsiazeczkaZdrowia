@@ -39,6 +39,12 @@ export function ProfileScreen() {
             trailing="›"
             onClick={() => navigate('/leki')}
           />
+          <ListItem
+            title="Objawy"
+            subtitle="Samopoczucie i dolegliwości"
+            trailing="›"
+            onClick={() => navigate('/objawy')}
+          />
         </List>
         <DiagnosesSection />
         <DemoDataCard />
