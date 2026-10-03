@@ -257,6 +257,13 @@
   margin-top: var(--space-4);
 }
 
+.deviceNote {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
 .handover {
   flex-basis: 100%;
   margin: 0;

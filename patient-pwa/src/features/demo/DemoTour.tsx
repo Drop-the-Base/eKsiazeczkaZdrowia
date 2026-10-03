@@ -204,6 +204,10 @@ export function DemoTour() {
                   Pomiń przewodnik
                 </Button>
                 <DoctorLink>Otwórz widok lekarza (nowa karta)</DoctorLink>
+                <p className={styles.deviceNote}>
+                  Zalecane oglądanie na komputerze: widok pacjenta i lekarza można otworzyć w dwóch
+                  kartach obok siebie.
+                </p>
               </>
             ) : (
               <>
