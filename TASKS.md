@@ -87,7 +87,7 @@ Konkurencja do slajdu: mojeIKP, Bearable (`play.google.com/store/apps/dev?id=897
 ```
 ┌──────────────────────┐   sygnalizacja: tylko „kto z kim”     ┌────────────────────────┐
 │  PWA pacjenta        │ ◄────────────►  SERWER  ◄───────────► │  Aplikacja lekarza     │
-│  (telefon)           │   (Node + WebSocket, nic nie zapisuje) │  (przeglądarka)        │
+│  (telefon)           │   (Node + WebSocket, nic nie zapisuje) │  (webowa, przeglądarka)│
 │  zaszyfrowana baza   │                                        │  QR z kluczem publ.    │
 │  lokalna, głos, OCR  │                                        │  dane tylko w pamięci  │
 └──────────┬───────────┘                                        └──────────▲─────────────┘
@@ -107,6 +107,15 @@ Konkurencja do slajdu: mojeIKP, Bearable (`play.google.com/store/apps/dev?id=897
 7. Koniec wizyty / timeout → serwer usuwa sesję, lekarz czyści pamięć.
 
 **Hosting:** do ustalenia. Serwer musi działać ciągle (WebSockety) i mieć HTTPS/WSS (kamera i mikrofon w PWA). Awaryjnie: serwer na laptopie + tunel.
+
+**Aplikacja lekarza = aplikacja webowa (nie desktopowa).** Lekarz otwiera adres w zwykłej przeglądarce na komputerze w gabinecie: bez instalacji, bez konta, bez zgody informatyka przychodni.
+
+**Bezpieczeństwo danych u lekarza**
+- Dane pacjenta są **tylko w pamięci otwartej karty przeglądarki**: nie zapisujemy ich w `localStorage`, IndexedDB, ciasteczkach ani cache service workera, a aplikacja lekarza nie ma service workera.
+- Nic nie trafia na serwer: dane przychodzą P2P z telefonu pacjenta.
+- Dane znikają przy: „Zakończ wizytę”, zamknięciu lub odświeżeniu karty, wygaśnięciu sesji (timeout).
+- Nagłówki: `Cache-Control: no-store`, ścisły Content-Security-Policy (brak zewnętrznych skryptów), żeby nic nie wyciekło przez cache ani obce skrypty.
+- **Uczciwie, czego to nie chroni** (na pytanie jury): lekarz może zrobić zdjęcie ekranu albo wydrukować PDF, bo widzi dane z założenia; złośliwe rozszerzenie przeglądarki na komputerze lekarza może czytać stronę. To ten sam poziom zaufania co pokazanie lekarzowi papierowej teczki, tylko bez zostawiania kopii.
 
 **Produkt docelowo = aplikacja mobilna. Na hackathon = PWA hostowana w sieci**, bo łatwiej ją pokazać i uruchomić na każdym telefonie bez instalacji ze sklepu.
 
@@ -135,7 +144,7 @@ Droga do aplikacji mobilnej (roadmapa na slajd): ta sama aplikacja opakowana np.
 
 **Stack (wszędzie TypeScript)**
 - `patient-pwa/`: React + Vite + `vite-plugin-pwa`, Dexie, WebCrypto, `html5-qrcode`, Web Speech API (`pl-PL`), MediaRecorder, Tesseract.js (OCR, `pol`), Web Share Target (import z IKP), `hash-wasm` (Argon2id).
-- `doctor-app/`: React + Vite, `qrcode`, druk do PDF.
+- `doctor-app/`: aplikacja webowa (React + Vite), `qrcode`, druk do PDF; bez service workera i bez trwałego zapisu.
 - `server/`: Node + `ws` (sygnalizacja) + endpointy LLM (pytanie → filtr, notatka → zmiany).
 - `shared/`: typy, protokół, transport, krypto, słowniki (i18n, ICD-10, ATC).
 - `data/`: skrypt przetwarzający Rejestr Produktów Leczniczych do kompaktowego JSON.
@@ -230,7 +239,7 @@ Priorytet: **M** = must (jest w happy path) · **S** = should (wyróżnik) · **
 **B: połączenie z lekarzem**
 - [ ] **T1.7** (M) Serwer `ws`: `create-session`, `join-session`, przekazywanie `offer/answer/ice`, wygasanie sesji, nic nie zapisuje na dysku.
 - [ ] **T1.8** (M) `shared/transport/`: RTCPeerConnection + DataChannel, JSON w kawałkach z potwierdzeniem; STUN + TURN.
-- [ ] **T1.9** (M) Aplikacja lekarza: ekran z QR (odświeżany po wygaśnięciu), status połączenia.
+- [ ] **T1.9** (M) Aplikacja webowa lekarza: ekran z QR (odświeżany po wygaśnięciu), status połączenia.
 - [ ] **T1.10** (M) Strona dev „symulator pacjenta” + test end-to-end na danych demo w dwóch kartach.
 - [ ] **T1.11** (M) Lista **„powiem lekarzowi”**: pływający przycisk z każdego ekranu, dodawanie tekstem (głos po oddaniu `VoiceInput` przez A), odhaczanie „omówione”.
 - [ ] **T1.12** (S) **Podpisywanie ofert:** klucze ECDSA z parowania (publiczny klucz lekarza w QR), podpis SDP (z odciskiem DTLS) po obu stronach, weryfikacja; odrzucenie połączenia przy złym podpisie.
@@ -250,7 +259,7 @@ Priorytet: **M** = must (jest w happy path) · **S** = should (wyróżnik) · **
 
 **B: wizyta i za granicą**
 - [ ] **T2.6** (M) **Udostępnij lekarzowi** (ekran pacjenta): wybór zakresu → skan QR → `connect` + `sendSnapshot`; zmniejszanie zdjęć; status „przesłano”.
-- [ ] **T2.7** (M) **Widok lekarza:** nagłówek (pacjent, wiek, alergie, choroby), aktualne leki, **„Pacjent chce powiedzieć”** wysoko, oś czasu (`<Timeline>` od A), galeria zdjęć, badania, poprzednie wizyty. Czytelny w 30 s. Koniec sesji: przycisk + timeout, czyszczenie pamięci.
+- [ ] **T2.7** (M) **Widok lekarza:** nagłówek (pacjent, wiek, alergie, choroby), aktualne leki, **„Pacjent chce powiedzieć”** wysoko, oś czasu (`<Timeline>` od A), galeria zdjęć, badania, poprzednie wizyty. Czytelny w 30 s. Koniec sesji: przycisk + timeout, czyszczenie pamięci. Dane **tylko w pamięci karty** (bez `localStorage` / IndexedDB / cache), nagłówki `no-store` + CSP.
 - [ ] **T2.8** (M) **Po wizycie:** `VoiceInput mode="postVisit"` → endpoint `POST /llm/visit-note` → `{ stopMeds[], newMeds[], followUpDate? }` → lista zmian z checkboxami → zatwierdź → leki zaktualizowane (z powodem), `createReminder` na kontrolę, nagranie usunięte.
 - [ ] **T2.9** (M) Lista „powiem lekarzowi” **pokazuje się automatycznie przed wizytą** (gdy zbliża się data kontroli).
 - [ ] **T2.10** (M) **Za granicą:** podsumowanie **offline** (alergie, aktualne leki przez substancję czynną + ATC, choroby + ICD-10) w EN/DE/ES; słowniki w `shared/dict/`; widok na ekranie + PDF.
@@ -308,6 +317,7 @@ Priorytet: **M** = must (jest w happy path) · **S** = should (wyróżnik) · **
 | „Czym różnicie się od IKP?” | Sekcja 2: oficjalne vs. faktyczne + objawy + głos + widok dla lekarza |
 | „Czy to wyrób medyczny?” | Nie: zapisujemy i porządkujemy; informacje o lekach to fakty z ulotki, **bez automatycznych ostrzeżeń** |
 | Nagrywanie lekarza | Notatka to pacjent mówiący po wizycie, nagranie usuwane po transkrypcji |
+| Dane pacjenta na komputerze lekarza | Aplikacja webowa trzyma je tylko w pamięci karty, kasuje po wizycie; nie chroni przed zrzutem ekranu (lekarz i tak widzi dane z założenia) |
 | Utrata telefonu | Zaszyfrowana kopia z hasłem + przypomnienia o eksporcie |
 
 ## 9. Do rozkminienia
