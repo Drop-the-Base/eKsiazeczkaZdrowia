@@ -2,13 +2,15 @@ import { isOutOfRange, type ShareSnapshot, type TimelineRef } from '@ez/shared';
 import { formatDate, formatNumber } from '../../format';
 import { describeDose, isOmitted } from '../patient.logic';
 import { localDay, rangeFlag } from './timeline.logic';
-import styles from './Right.module.css';
+import styles from './Sections.module.css';
 
 type Props = { snapshot: ShareSnapshot; onSelect: (ref: TimelineRef) => void };
 
 const DAY_MS = 24 * 3600 * 1000;
+const MAX_SYMPTOMS = 3;
+const MAX_EXAMS = 2;
 
-/** Compact "what changed since the last visit" bar (T2.6b). Clicking an item highlights it on the timeline. */
+/** A few lines of "what changed since the last visit" (T2.6b); a click leads to the section / the timeline. */
 export function SinceLastVisit({ snapshot, onSelect }: Props) {
   const s = snapshot.summary;
   const item = (ref: TimelineRef, text: string, strong?: boolean) => (
@@ -27,8 +29,9 @@ export function SinceLastVisit({ snapshot, onSelect }: Props) {
         x.name.trim().toLowerCase() === name.trim().toLowerCase() &&
         localDay(x.startedAt) >= s.since,
     )?.id;
+  const rest = (n: number) => (n > 0 ? <span className={styles.muted}>i {n} więcej</span> : null);
 
-  const rows: { label: string; content: JSX.Element[] | string }[] = [];
+  const rows: { label: string; content: React.ReactNode }[] = [];
   if (!isOmitted(snapshot, 'medications')) {
     const meds = [
       ...s.medsStarted.map((m) =>
@@ -59,8 +62,9 @@ export function SinceLastVisit({ snapshot, onSelect }: Props) {
     rows.push({
       label: 'Objawy',
       content:
-        s.symptoms.length > 0
-          ? s.symptoms.map((x) => {
+        s.symptoms.length > 0 ? (
+          <>
+            {s.symptoms.slice(0, MAX_SYMPTOMS).map((x) => {
               const parts = [`${x.name} ×${x.count}`];
               if (x.maxSeverity) parts.push(`maks. ${x.maxSeverity}/5`);
               parts.push(`od ${formatDate(x.firstAt)}`);
@@ -76,16 +80,21 @@ export function SinceLastVisit({ snapshot, onSelect }: Props) {
               ) : (
                 <span key={x.name}>{parts.join(', ')}</span>
               );
-            })
-          : 'brak',
+            })}
+            {rest(s.symptoms.length - MAX_SYMPTOMS)}
+          </>
+        ) : (
+          'brak'
+        ),
     });
   }
   if (!isOmitted(snapshot, 'exams')) {
     rows.push({
       label: 'Nowe badania',
       content:
-        s.newExams.length > 0
-          ? s.newExams.map((e) => {
+        s.newExams.length > 0 ? (
+          <>
+            {s.newExams.slice(0, MAX_EXAMS).map((e) => {
               const out = e.results
                 .filter(isOutOfRange)
                 .map((r) => `${r.name} ${formatNumber(r.value)}${rangeFlag(r)}`);
@@ -94,19 +103,26 @@ export function SinceLastVisit({ snapshot, onSelect }: Props) {
                 `${e.name} ${formatDate(e.date)}${out.length > 0 ? `: ${out.join(', ')}` : ''}`,
                 out.length > 0,
               );
-            })
-          : 'brak',
+            })}
+            {rest(s.newExams.length - MAX_EXAMS)}
+          </>
+        ) : (
+          'brak'
+        ),
     });
   }
   if (!isOmitted(snapshot, 'photos') && s.newPhotos.length > 0) {
     rows.push({
       label: 'Nowe zdjęcia',
-      content: s.newPhotos.map((p) => item({ entity: 'photo', id: p.id }, formatDate(p.takenAt))),
+      content: item(
+        { entity: 'photo', id: s.newPhotos[0]!.id },
+        `${s.newPhotos.length} (od ${formatDate(s.newPhotos[0]!.takenAt)})`,
+      ),
     });
   }
 
   return (
-    <section className={styles.since} aria-label="Od ostatniej wizyty">
+    <section className={styles.box} aria-label="Od ostatniej wizyty">
       <h2 className={styles.title}>Od ostatniej wizyty ({formatDate(s.since)})</h2>
       <dl className={styles.rows}>
         {rows.map((r) => (

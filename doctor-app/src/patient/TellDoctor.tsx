@@ -2,23 +2,16 @@ import type { ShareSnapshot } from '@ez/shared';
 import { isOmitted } from './patient.logic';
 import styles from './PatientView.module.css';
 
-/** The patient's agenda, first thing in the left column. */
+/** The patient's agenda – the first thing the doctor reads. */
 export function TellDoctor({ snapshot }: { snapshot: ShareSnapshot }) {
   const items = snapshot.visitNoteItems.filter((n) => !n.discussed);
+  if (isOmitted(snapshot, 'visitNotes')) return <p className={styles.muted}>nie udostępniono</p>;
+  if (items.length === 0) return <p className={styles.muted}>brak</p>;
   return (
-    <section className={styles.block}>
-      <h2 className={styles.blockTitle}>Pacjent chce powiedzieć</h2>
-      {isOmitted(snapshot, 'visitNotes') ? (
-        <p className={styles.muted}>nie udostępniono</p>
-      ) : items.length === 0 ? (
-        <p className={styles.muted}>brak</p>
-      ) : (
-        <ol className={styles.agenda}>
-          {items.map((n) => (
-            <li key={n.id}>{n.text}</li>
-          ))}
-        </ol>
-      )}
-    </section>
+    <ol className={styles.agenda}>
+      {items.map((n) => (
+        <li key={n.id}>{n.text}</li>
+      ))}
+    </ol>
   );
 }
