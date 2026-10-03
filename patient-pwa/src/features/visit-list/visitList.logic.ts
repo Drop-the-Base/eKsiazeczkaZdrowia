@@ -2,9 +2,8 @@ import type { VisitNoteItem } from '@ez/shared';
 
 export const MAX_NOTE_LENGTH = 500;
 
-// "powiem lekarzowi, że …" / "zapytać lekarza o …" said or typed out of habit.
-const PREFIX =
-  /^(?:powiem|powiedzieć|powiedz|zapytam|zapytać|zapytaj)\s+lekarz(?:owi|a)\s*,?\s*(?:(?:że|o)(?:\s+|$))?/i;
+// "powiem lekarzowi, że …" said or typed out of habit; questions ("zapytać lekarza o …") stay whole.
+const PREFIX = /^(?:powiem|powiedzieć|powiedz)\s+lekarzowi\s*,?\s*(?:że(?:\s+|$))?/i;
 
 export type NoteParse = { ok: true; text: string } | { ok: false; error: string };
 

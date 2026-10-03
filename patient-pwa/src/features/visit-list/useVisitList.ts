@@ -27,13 +27,14 @@ export function useVisitList() {
   };
 }
 
-/** Form state for adding one note; `submit` resolves to true when saved. */
+/** Saving one note; `submit` resolves to true when saved. */
 export function useAddVisitNote() {
-  const [text, setText] = useState('');
   const [error, setError] = useState<string>();
   const [saving, setSaving] = useState(false);
+  /** Bumped after each save, used as a `key` to reset the input. */
+  const [savedCount, setSavedCount] = useState(0);
 
-  const submit = useCallback(async (): Promise<boolean> => {
+  const submit = useCallback(async (text: string): Promise<boolean> => {
     const parsed = parseNoteText(text);
     if (!parsed.ok) {
       setError(parsed.error);
@@ -43,7 +44,7 @@ export function useAddVisitNote() {
     setError(undefined);
     try {
       await addVisitNote(parsed.text, 'manual', new Date().toISOString());
-      setText('');
+      setSavedCount((n) => n + 1);
       return true;
     } catch {
       setError('Nie udało się zapisać. Spróbuj ponownie.');
@@ -51,7 +52,7 @@ export function useAddVisitNote() {
     } finally {
       setSaving(false);
     }
-  }, [text]);
+  }, []);
 
-  return { text, setText, error, saving, submit };
+  return { error, saving, savedCount, submit };
 }
