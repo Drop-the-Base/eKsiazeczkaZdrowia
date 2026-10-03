@@ -10,3 +10,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B06] HTTPS w dev: tunel dla telefonu · issue #13 · 2026-10-03 17:46 · atrapy: brak
 - [x] [prośba #89] resolveStaticPath na Windowsie · issue #89 · 2026-10-03 17:48 · atrapy: brak
 - [x] [B08] Przekaźnik WebSocket: sesje, przekazywanie, wygasanie · issue #19 · 2026-10-03 17:50 · atrapy: brak
+- [x] [B09] shared/crypto: ECDH → HKDF → AES-256-GCM + kod weryfikacyjny · issue #21 · 2026-10-03 17:52 · atrapy: brak
