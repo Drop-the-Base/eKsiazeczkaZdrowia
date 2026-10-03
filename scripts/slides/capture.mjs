@@ -60,20 +60,29 @@ try {
     await sleep(800);
   });
 
-  // Lekarz: QR na komputerze + symulator telefonu (dane demo, ta sama szyfrowana droga).
+  // Lekarz: /demo/lekarz, przewodnik gra telefon pacjentki (dane Pani Anny, ta sama szyfrowana droga).
   const doctor = await browser.newPage();
   await doctor.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
-  await doctor.goto(`${BASE}/lekarz/?dev`, { waitUntil: 'networkidle2' });
-  const link = await doctor.waitForSelector('::-p-text(Symulator pacjenta)', { timeout: 10000 });
-  const href = await link.evaluate((a) => a.href);
-  console.log('  sesja lekarza gotowa');
-  const sim = await browser.newPage();
-  await sim.goto(href, { waitUntil: 'networkidle2' });
-  await (await sim.waitForSelector(xpButton('Wyślij dane demo'), { timeout: 15000 })).click();
+  await doctor.goto(`${BASE}/demo/lekarz/`, { waitUntil: 'networkidle2' });
+  // Klikanie poza podświetleniem jest wyłączone, więc przyciski przewodnika wciskamy z poziomu strony.
+  const guide = (label) =>
+    doctor.evaluate((text) => {
+      const b = [...document.querySelectorAll('aside[aria-label="Przewodnik demo"] button')].find(
+        (el) => el.textContent?.trim() === text,
+      );
+      if (!b) throw new Error(`brak przycisku ${text}`);
+      b.click();
+    }, label);
+  await doctor.waitForSelector('aside[aria-label="Przewodnik demo"]', { timeout: 10000 });
+  await sleep(1500);
+  await guide('Symuluj telefon pacjentki');
   console.log('  symulator wysłał dane');
-  await doctor.bringToFront();
-  await (await doctor.waitForSelector(xpButton('Kody się zgadzają'), { timeout: 15000 })).click();
-  await sleep(4000);
+  await doctor.waitForSelector('[data-tour="code"]', { timeout: 15000 });
+  await sleep(500);
+  await guide('Kody się zgadzają');
+  await sleep(2500);
+  await guide('Zamknij przewodnik');
+  await sleep(1500);
   await doctor.screenshot({ path: `${OUT}lekarz.png` });
   console.log('✓ lekarz');
 } finally {

@@ -25,7 +25,7 @@ export function TopBar() {
         </button>
       )}
       {live && (
-        <button type="button" className={styles.end} onClick={end}>
+        <button type="button" className={styles.end} onClick={end} data-tour="end-visit">
           Zakończ wizytę
         </button>
       )}

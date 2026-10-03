@@ -13,6 +13,8 @@ import { serveStatic } from './static.js';
 
 /** Doctor app is served under this prefix (its Vite `base`), the patient PWA at the root. */
 export const DOCTOR_BASE = '/lekarz/';
+/** The same doctor app in demo mode (guide + simulated phone); its assets still load from DOCTOR_BASE. */
+export const DOCTOR_DEMO_BASE = '/demo/lekarz/';
 
 export interface AppOptions {
   patientDist: string;
@@ -57,14 +59,18 @@ export function createApp(opts: AppOptions): Server {
       res.writeHead(405, COMMON_HEADERS);
       return void res.end();
     }
-    if (path === DOCTOR_BASE.slice(0, -1)) {
-      res.writeHead(301, { ...COMMON_HEADERS, Location: DOCTOR_BASE });
-      return void res.end();
+    for (const base of [DOCTOR_BASE, DOCTOR_DEMO_BASE]) {
+      if (path === base.slice(0, -1)) {
+        res.writeHead(301, { ...COMMON_HEADERS, Location: base });
+        return void res.end();
+      }
     }
 
-    const [root, subPath, headers] = path.startsWith(DOCTOR_BASE)
-      ? [opts.doctorDist, path.slice(DOCTOR_BASE.length - 1), DOCTOR_HEADERS]
-      : [opts.patientDist, path, COMMON_HEADERS];
+    const [root, subPath, headers] = path.startsWith(DOCTOR_DEMO_BASE)
+      ? [opts.doctorDist, '/', DOCTOR_HEADERS]
+      : path.startsWith(DOCTOR_BASE)
+        ? [opts.doctorDist, path.slice(DOCTOR_BASE.length - 1), DOCTOR_HEADERS]
+        : [opts.patientDist, path, COMMON_HEADERS];
 
     serveStatic(res, root, subPath, headers, method)
       .then((served) => {

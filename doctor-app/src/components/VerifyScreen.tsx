@@ -7,7 +7,7 @@ export function VerifyScreen({ code }: { code: string }) {
   return (
     <section className={styles.center}>
       <h1 className={styles.title}>Sprawdź kod z telefonu pacjenta</h1>
-      <p className={styles.code} aria-label="Kod weryfikacyjny">
+      <p className={styles.code} aria-label="Kod weryfikacyjny" data-tour="code">
         {code}
       </p>
       <p className={styles.lead}>
