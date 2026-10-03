@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, EmptyState, List, ListItem, LoadingState, PageHeader } from '../../ui';
+import { lockNow } from '../lock';
 import { DemoDataCard } from './components/DemoDataCard';
 import { DiagnosesSection } from './components/DiagnosesSection';
 import { ProfileCard } from './components/ProfileCard';
@@ -66,6 +67,9 @@ export function ProfileScreen() {
         </List>
         <DiagnosesSection />
         <DemoDataCard />
+        <Button variant="secondary" block onClick={lockNow}>
+          🔒 Zablokuj aplikację
+        </Button>
       </div>
       <ProfileSheet
         open={editing}
