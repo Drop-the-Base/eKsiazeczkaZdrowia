@@ -1,4 +1,5 @@
 import { PageHeader } from '../../ui';
+import { DemoNotificationButton } from '../reminders';
 import { TodayIntakes } from './components/TodayIntakes';
 import styles from './TodayScreen.module.css';
 
@@ -8,6 +9,7 @@ export function TodayScreen() {
       <PageHeader title="Leki na dziś" />
       <div className={styles.content}>
         <TodayIntakes />
+        <DemoNotificationButton />
       </div>
     </>
   );

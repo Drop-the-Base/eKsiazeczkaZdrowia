@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { TimelineRef } from '@ez/shared';
 import { Card, Chip, EmptyState, LoadingState, PageHeader, todayIso } from '../../ui';
+import { DueReminders } from '../reminders';
 import { SelectionSheet } from './components/SelectionSheet';
 import { TodayCard } from './components/TodayCard';
 import { Timeline } from './Timeline';
@@ -43,6 +44,7 @@ export function TimelineScreen() {
     <>
       <PageHeader title="Oś czasu" />
       <div className={styles.content}>
+        <DueReminders />
         <TodayCard medications={d.medications} intakes={d.intakes} />
         {empty ? (
           <EmptyState title="Twoja oś czasu jest pusta">
