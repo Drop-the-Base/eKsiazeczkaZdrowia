@@ -49,7 +49,8 @@ export function MedicationForm({ medication, mode = 'edit', onSaved }: Props) {
     try {
       if (changing) {
         const date = changeDate > medication.startDate ? changeDate : medication.startDate;
-        onSaved(await changeMedication(medication, form, reason, date), true);
+        // Zmiana dawki to nie nowy lek – bez pytania „czy bierzesz coś jeszcze”.
+        onSaved(await changeMedication(medication, form, reason, date), false);
       } else {
         onSaved(await saveMedication(form, medication), !medication);
       }
