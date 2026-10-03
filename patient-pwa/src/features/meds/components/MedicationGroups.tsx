@@ -36,6 +36,7 @@ export function MedicationGroups({ current, stopped, onOpen }: Props) {
                   subtitle={`${describeSchedule(m.schedule)} · od ${formatDate(m.startDate)}`}
                   trailing={onOpen ? '›' : undefined}
                   onClick={onOpen ? () => onOpen(m) : undefined}
+                  dataTour={m.rplId ? 'med-item-rpl' : 'med-item'}
                 />
               ))}
             </List>

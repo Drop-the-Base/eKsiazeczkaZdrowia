@@ -1,4 +1,5 @@
 import type { ShowMe } from './steps';
+import styles from './DemoTour.module.css';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -16,6 +17,25 @@ export async function waitForTarget(target: string, timeoutMs = 3000): Promise<H
 function setText(field: HTMLTextAreaElement, text: string): void {
   Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')?.set?.call(field, text);
   field.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+/**
+ * Shows an animated cursor ripple at the center of `el`, clicks it, then waits
+ * for the animation to finish before returning.
+ */
+async function clickWithEffect(el: HTMLElement): Promise<void> {
+  const rect = el.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const dot = document.createElement('div');
+  dot.className = styles.clickDot ?? '';
+  dot.style.left = `${cx}px`;
+  dot.style.top = `${cy}px`;
+  document.body.appendChild(dot);
+  await sleep(80); // small pause so the dot is visible before the click fires
+  el.click();
+  await sleep(550); // wait for animation to finish
+  dot.remove();
 }
 
 function animateZoom(
@@ -49,48 +69,115 @@ function animateZoom(
  */
 export async function runShowMe(action: ShowMe): Promise<void> {
   if ('action' in action) {
-    const scroller = await waitForTarget('timeline-scroller');
-    if (!scroller) throw new Error('Nie znaleziono osi czasu');
+    if (action.action === 'timeline-zoom-scroll') {
+      const scroller = await waitForTarget('timeline-scroller');
+      if (!scroller) throw new Error('Nie znaleziono osi czasu');
 
-    // 1. Płynne przybliżenie (zoom in)
-    await animateZoom(scroller, 1, 2.2, 1200);
-    await sleep(400);
+      // 1. Płynne przybliżenie (zoom in)
+      await animateZoom(scroller, 1, 2.2, 1200);
+      await sleep(400);
 
-    // 2. Płynne przewinięcie w lewo
-    const scrollDistance = Math.min(350, Math.max(160, scroller.clientWidth * 0.7));
-    scroller.scrollBy({ left: -scrollDistance, behavior: 'smooth' });
-    await sleep(1300);
+      // 2. Płynne przewinięcie w lewo
+      const scrollDistance = Math.min(350, Math.max(160, scroller.clientWidth * 0.7));
+      scroller.scrollBy({ left: -scrollDistance, behavior: 'smooth' });
+      await sleep(1300);
 
-    // 3. Płynne przewinięcie w prawo
-    scroller.scrollBy({ left: scrollDistance, behavior: 'smooth' });
-    await sleep(1300);
+      // 3. Płynne przewinięcie w prawo
+      scroller.scrollBy({ left: scrollDistance, behavior: 'smooth' });
+      await sleep(1300);
 
-    // 4. Pauza przed oddaleniem
-    await sleep(400);
+      // 4. Pauza przed oddaleniem
+      await sleep(400);
 
-    // 5. Płynne oddalenie (zoom out) do pełnego dopasowania
-    await animateZoom(scroller, 2.2, 1, 1100);
-    await sleep(300);
+      // 5. Płynne oddalenie (zoom out) do pełnego dopasowania
+      await animateZoom(scroller, 2.2, 1, 1100);
+      await sleep(300);
+      return;
+    }
+
+    if (action.action === 'meds-detail') {
+      const medItem = (await waitForTarget('med-item-rpl', 500)) ?? (await waitForTarget('med-item', 500));
+      if (!medItem) throw new Error('Nie znaleziono listy leków');
+      medItem.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      await sleep(200);
+      await clickWithEffect(medItem.querySelector('button') ?? medItem);
+      await sleep(3000);
+      const backdrop = await waitForTarget('sheet-backdrop');
+      if (backdrop) await clickWithEffect(backdrop);
+      await sleep(400);
+      return;
+    }
+
+    if (action.action === 'today-confirm') {
+      const takeBtn = await waitForTarget('dose-take');
+      if (!takeBtn) throw new Error('Nie znaleziono dawki na dziś');
+      takeBtn.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      await sleep(400);
+      await clickWithEffect(takeBtn);
+      await sleep(1500);
+      return;
+    }
+
+    if (action.action === 'share-toggle') {
+      const checkbox = await waitForTarget('share-toggle-symptoms');
+      if (!checkbox) throw new Error('Nie znaleziono sekcji do wykluczenia');
+      checkbox.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      await sleep(400);
+      await clickWithEffect(checkbox);
+      await sleep(1200);
+      await clickWithEffect(checkbox);
+      await sleep(500);
+      return;
+    }
+
+    if (action.action === 'abroad-es') {
+      const esBtn = await waitForTarget('lang-es');
+      if (!esBtn) throw new Error('Nie znaleziono wyboru języka');
+      const enBtn = await waitForTarget('lang-en');
+      if (esBtn.getAttribute('aria-pressed') === 'true' && enBtn) {
+        await clickWithEffect(enBtn);
+        await sleep(400);
+      }
+      await clickWithEffect(esBtn);
+      await sleep(500);
+      window.scrollBy({ top: 250, behavior: 'smooth' });
+      await sleep(1400);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      await sleep(400);
+      return;
+    }
+
+    if (action.action === 'security-fill') {
+      const fillBtn = await waitForTarget('demo-fill-pin');
+      if (!fillBtn) throw new Error('Nie znaleziono przycisku uzupełnienia PIN');
+      fillBtn.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      await sleep(400);
+      await clickWithEffect(fillBtn);
+      await sleep(1500);
+      return;
+    }
     return;
   }
   if ('press' in action) {
     const button = await waitForTarget(action.press);
     if (!button) throw new Error('Nie znaleziono przycisku na ekranie');
-    button.click();
+    await clickWithEffect(button);
     return;
   }
-  const form = await waitForTarget('voice');
-  const field = form?.querySelector('textarea');
-  if (!(form instanceof HTMLFormElement) || !field)
-    throw new Error('Nie znaleziono pola tekstowego');
-  field.scrollIntoView({ block: 'center', behavior: 'instant' });
-  for (let i = 2; i < action.say.length; i += 2) {
-    setText(field, action.say.slice(0, i));
-    await sleep(20);
+  if ('say' in action) {
+    const form = await waitForTarget('voice');
+    const field = form?.querySelector('textarea');
+    if (!(form instanceof HTMLFormElement) || !field)
+      throw new Error('Nie znaleziono pola tekstowego');
+    field.scrollIntoView({ block: 'center', behavior: 'instant' });
+    for (let i = 2; i < action.say.length; i += 2) {
+      setText(field, action.say.slice(0, i));
+      await sleep(20);
+    }
+    setText(field, action.say);
+    await sleep(350);
+    form.requestSubmit();
+    const confirm = await waitForTarget('confirm', 800);
+    if (confirm) await clickWithEffect(confirm);
   }
-  setText(field, action.say);
-  await sleep(350);
-  form.requestSubmit();
-  const confirm = await waitForTarget('confirm', 800);
-  confirm?.click();
 }

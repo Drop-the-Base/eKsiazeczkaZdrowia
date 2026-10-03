@@ -11,9 +11,10 @@ type ItemProps = {
   leading?: ReactNode;
   trailing?: ReactNode;
   onClick?: () => void;
+  dataTour?: string;
 };
 
-export function ListItem({ title, subtitle, leading, trailing, onClick }: ItemProps) {
+export function ListItem({ title, subtitle, leading, trailing, onClick, dataTour }: ItemProps) {
   const body = (
     <>
       {leading && <span className={styles.leading}>{leading}</span>}
@@ -25,7 +26,7 @@ export function ListItem({ title, subtitle, leading, trailing, onClick }: ItemPr
     </>
   );
   return (
-    <li className={styles.item}>
+    <li className={styles.item} data-tour={dataTour}>
       {onClick ? (
         <button type="button" className={styles.row} onClick={onClick}>
           {body}

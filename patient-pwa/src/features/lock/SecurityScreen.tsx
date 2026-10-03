@@ -57,6 +57,7 @@ export function SecurityScreen() {
                     type="button"
                     className={styles.demoFill}
                     onClick={() => setPin(DEMO_PIN)}
+                    data-tour="demo-fill-pin"
                   >
                     Uzupełnij
                   </button>

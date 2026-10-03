@@ -22,7 +22,7 @@ export function BottomSheet({ open, onClose, title, children }: Props) {
   if (!open) return null;
 
   return createPortal(
-    <div className={styles.backdrop} onClick={onClose}>
+    <div className={styles.backdrop} onClick={onClose} data-tour="sheet-backdrop">
       <div
         className={styles.sheet}
         role="dialog"

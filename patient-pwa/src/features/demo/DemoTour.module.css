@@ -173,6 +173,7 @@
 .nav {
   margin-top: auto;
   display: flex;
+  align-items: center;
   gap: var(--space-2);
   padding-top: var(--space-2);
   border-top: 1px solid var(--color-border);
@@ -180,6 +181,24 @@
 
 .back {
   margin-right: auto;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+.retryBtn {
+  min-height: 44px;
+  width: 44px;
+  min-width: 44px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .next {
@@ -298,4 +317,23 @@
   .hintBadge {
     display: none;
   }
+}
+
+@keyframes clickPulse {
+  0% { transform: translate(-50%, -50%) scale(0.3); opacity: 1; }
+  60% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.9; }
+  100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+}
+
+/* Ripple where the demo "clicks"; created by showMe.ts on document.body. */
+.clickDot {
+  position: fixed;
+  z-index: 9999;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.9) 0%, rgba(99, 102, 241, 0) 70%);
+  border: 2.5px solid rgba(99, 102, 241, 0.95);
+  pointer-events: none;
+  animation: clickPulse 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { DOCTOR_DEMO_PATH, restartDemo } from '../../demoMode';
 import { Button, todayIso } from '../../ui';
 import { dismissBeforeVisit } from '../visit-list';
@@ -91,15 +91,60 @@ function Mask({ spot }: { spot: Spot | null }) {
   );
 }
 
+function RetryIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+      <path d="M3 3v5h5" />
+    </svg>
+  );
+}
+
 /** Demo guide: the app greyed out, one element lit, a card with what to look at and why. */
 export function DemoTour() {
   const tour = useTour();
   const [collapsed, setCollapsed] = useState(false);
+  const [demonstrated, setDemonstrated] = useState<Set<string>>(() => new Set());
   const { step, index, total } = tour;
   const last = index === total - 1;
+  const isDemonstrated = !step.showMe || demonstrated.has(step.id);
 
   useEffect(() => dismissBeforeVisit(DEMO_FOLLOW_UP, todayIso()), []);
   useEffect(() => setCollapsed(false), [index]);
+
+  const runDemo = useCallback(async () => {
+    if (!step.showMe || tour.showing) return;
+    setCollapsed(true);
+    try {
+      await tour.showMe();
+      setDemonstrated((prev) => new Set(prev).add(step.id));
+    } finally {
+      setCollapsed(false);
+    }
+  }, [step.showMe, step.id, tour.showing, tour.showMe]);
+
+  const handlePrimaryNext = useCallback(async () => {
+    if (tour.showing) return;
+    if (!isDemonstrated) {
+      await runDemo();
+    } else {
+      if (step.full && last) {
+        tour.close();
+      } else {
+        tour.next();
+      }
+    }
+  }, [tour.showing, isDemonstrated, runDemo, step.full, last, tour.close, tour.next]);
 
   // Narrow screen: the card covers the bottom, so the page gets room to scroll the lit element up.
   const cardShown = tour.open && !step.full;
@@ -121,11 +166,7 @@ export function DemoTour() {
 
       if (e.key === 'ArrowRight') {
         e.preventDefault();
-        if (step.full && last) {
-          tour.close();
-        } else {
-          tour.next();
-        }
+        void handlePrimaryNext();
       } else if (e.key === 'ArrowLeft') {
         if (index > 0) {
           e.preventDefault();
@@ -136,7 +177,7 @@ export function DemoTour() {
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [tour.open, tour.showing, step.full, last, index, tour.next, tour.back, tour.close]);
+  }, [tour.open, tour.showing, index, tour.back, handlePrimaryNext]);
 
   if (!tour.open) {
     return (
@@ -189,12 +230,14 @@ export function DemoTour() {
       {tour.showing && (
         <>
           <div className={styles.inputBlocker} aria-hidden="true" />
-          <div className={styles.hintBadge} role="status" aria-live="polite">
-            <span className={styles.hintIcon} aria-hidden="true">
-              ↔
-            </span>
-            Możesz przybliżać oś (+ / −) i przewijać ją w poziomie
-          </div>
+          {step.id === 'timeline' && (
+            <div className={styles.hintBadge} role="status" aria-live="polite">
+              <span className={styles.hintIcon} aria-hidden="true">
+                ↔
+              </span>
+              Możesz przybliżać oś (+ / −) i przewijać ją w poziomie
+            </div>
+          )}
         </>
       )}
       <Mask spot={tour.spot} />
@@ -253,31 +296,42 @@ export function DemoTour() {
           <Button
             variant="ghost"
             onClick={tour.back}
+            disabled={tour.showing}
             className={styles.back}
             title={index > 0 ? 'Wstecz (←)' : undefined}
           >
             Wstecz
           </Button>
-          {step.showMe && (
+          <div className={styles.navActions}>
+            {step.showMe && isDemonstrated && (
+              <Button
+                variant="secondary"
+                disabled={tour.showing}
+                onClick={runDemo}
+                className={styles.retryBtn}
+                title="Zademonstruj ponownie"
+                aria-label="Zademonstruj ponownie"
+              >
+                <RetryIcon />
+              </Button>
+            )}
             <Button
-              variant="secondary"
+              onClick={handlePrimaryNext}
               disabled={tour.showing}
-              onClick={async () => {
-                setCollapsed(true);
-                await tour.showMe();
-                setCollapsed(false);
-              }}
+              className={styles.next}
+              title={
+                tour.showing
+                  ? undefined
+                  : !isDemonstrated
+                    ? 'Zademonstruj (→)'
+                    : last
+                      ? 'Zakończ (→)'
+                      : 'Dalej (→)'
+              }
             >
-              {tour.showing ? 'Trwa demonstracja…' : 'Zademonstruj'}
+              {tour.showing ? 'Trwa demonstracja…' : isDemonstrated && last ? 'Zakończ' : 'Dalej'}
             </Button>
-          )}
-          <Button
-            onClick={tour.next}
-            className={styles.next}
-            title={last ? 'Zakończ (→)' : 'Dalej (→)'}
-          >
-            {last ? 'Zakończ' : 'Dalej'}
-          </Button>
+          </div>
         </div>
       </aside>
     </>
