@@ -24,3 +24,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B20] Widok lekarza: tylko pamięć, koniec sesji, nagłówki, wąski ekran · issue #44 · 2026-10-03 18:37 · atrapy: brak
 - [x] [B21] Serwer: POST /llm/visit-note → zmiany w lekach · issue #46 · 2026-10-03 18:40 · atrapy: reguły zamiast LLM (B38 po A23)
 - [x] [B22] Ekran „Po wizycie”: notatka → zmiany do zatwierdzenia · issue #48 · 2026-10-03 18:45 · atrapy: createReminder (A26) → zapis do db.reminders
+- [x] [B23] Lista „powiem lekarzowi” pokazuje się przed wizytą · issue #50 · 2026-10-03 18:48 · atrapy: brak
