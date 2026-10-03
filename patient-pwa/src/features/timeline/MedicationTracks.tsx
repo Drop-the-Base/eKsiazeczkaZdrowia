@@ -64,7 +64,7 @@ export function MedicationTracks({
                 highlight={highlight}
                 onSelect={onSelect}
               >
-                {!bar.asNeeded && bar.width >= 20 && (
+                {!bar.asNeeded && bar.width * grid.zoom >= 20 && (
                   <span className={styles.barLabel}>{bar.label}</span>
                 )}
               </Marker>

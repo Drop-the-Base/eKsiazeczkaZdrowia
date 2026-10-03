@@ -174,12 +174,13 @@ const MONTHS = ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', '
 const MAX_TICKS = 7;
 
 /**
- * Podziałka dopasowana do długości zakresu: dni (≤ 10), poniedziałki (≤ 62),
- * co n-ty miesiąc (≤ 2 lata), dalej lata. Iteracja po kalendarzu – zmiana czasu nie przesuwa dni.
+ * Podziałka dopasowana do widocznego odcinka (zakres / `zoom`): dni (≤ 10), poniedziałki (≤ 62),
+ * co n-ty miesiąc (≤ 2 lata), dalej lata – zawsze dla całego zakresu, bo oś się przewija.
+ * Iteracja po kalendarzu – zmiana czasu nie przesuwa dni.
  */
-export function axisTicks(range: DateRange): Tick[] {
+export function axisTicks(range: DateRange, zoom = 1): Tick[] {
   const b = boundsOf(range);
-  const days = Math.round((b.end - b.start) / DAY_MS);
+  const days = Math.round((b.end - b.start) / DAY_MS) / zoom;
   const first = new Date(b.start);
   const ticks: Tick[] = [];
   const push = (d: Date, label: string) => {
