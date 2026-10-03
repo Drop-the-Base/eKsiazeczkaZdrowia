@@ -99,3 +99,4 @@ Zmergowane taski (dopisuje agent po każdym merge, patrz `CLAUDE.md`).
 - [x] [D19] Demo: nawigacja kroków klawiszami strzałek (ArrowLeft / ArrowRight) · issue #207 · 2026-10-03 22:48 · atrapy: brak
 - [x] [D18] Demo: wymóg demonstracji przed przejściem dalej, przycisk „Zademonstruj ponownie” oraz nowe akcje w kolejnych krokach · issue #204 · 2026-10-03 22:54 · atrapy: brak
 - [x] [D12] Demo: sprawdzenie i weryfikacja odblokowania biometrycznego (PIN 1234) · issue #195 · 2026-10-03 23:39 · atrapy: brak
+- [x] [D13] Demo: po „Pokaż mi” podświetlenie przechodzi na nowy kontent · issue #196 · 2026-10-03 23:44 · atrapy: brak

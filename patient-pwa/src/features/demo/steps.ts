@@ -20,6 +20,8 @@ export interface TourStep {
   path?: string;
   /** `data-tour` of the element to light up. */
   target?: string;
+  /** `data-tour` of what "Pokaż mi" produced: the light moves there once the demonstration ends. */
+  targetAfterShowMe?: string;
   title: string;
   text: string[];
   /** Bold line under the text. */
@@ -95,6 +97,7 @@ export const STEPS: TourStep[] = [
       'Pytania i obserwacje można zapisać w dowolnym momencie, przycisk jest dostępny na każdym ekranie. Przed wizytą kontrolną aplikacja automatycznie wyświetla listę.',
     ],
     showMe: { say: 'po nowym leku kręci mi się w głowie' },
+    targetAfterShowMe: 'note-new',
     why: 'Lista spraw jest przygotowana przed wizytą, więc żadna z nich nie zostaje pominięta.',
   },
   {

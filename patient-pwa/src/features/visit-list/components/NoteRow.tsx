@@ -6,11 +6,12 @@ type Props = {
   item: VisitNoteItem;
   onToggle: (discussed: boolean) => void;
   onRemove: () => void;
+  dataTour?: string;
 };
 
-export function NoteRow({ item, onToggle, onRemove }: Props) {
+export function NoteRow({ item, onToggle, onRemove, dataTour }: Props) {
   return (
-    <li className={styles.row}>
+    <li className={styles.row} data-tour={dataTour}>
       <label className={styles.check}>
         <input
           type="checkbox"
