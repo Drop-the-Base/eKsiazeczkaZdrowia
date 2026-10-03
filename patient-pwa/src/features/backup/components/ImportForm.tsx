@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { DEMO_BACKUP_PASSWORD, isDemo } from '../../../demoMode';
 import { Button, Card, LoadingState, TextField } from '../../../ui';
 import { useImport } from '../useImport';
 import styles from '../BackupScreen.module.css';
@@ -36,6 +37,20 @@ export function ImportForm() {
           onChange={(e) => setFile(e.target.files?.[0])}
         />
       </label>
+      {isDemo && (
+        <div className={styles.demoHint}>
+          <span>
+            Hasło do testów demo: <strong>{DEMO_BACKUP_PASSWORD}</strong>
+          </span>
+          <button
+            type="button"
+            className={styles.demoFill}
+            onClick={() => setPassword(DEMO_BACKUP_PASSWORD)}
+          >
+            Uzupełnij
+          </button>
+        </div>
+      )}
       <TextField
         label="Hasło kopii"
         type="password"

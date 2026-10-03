@@ -7,6 +7,8 @@ export const DOCTOR_DEMO_PATH = '/demo/lekarz';
 export const DEMO_QR_CHANNEL = 'pkz-demo-qr';
 /** Set automatically in the demo, shown on the security step. */
 export const DEMO_PIN = '1234';
+/** Suggested backup password in demo mode. */
+export const DEMO_BACKUP_PASSWORD = 'demo1234';
 
 // Guarded so pure modules that read DEMO_PIN can be tested in Node.
 const path = typeof window === 'undefined' ? '' : window.location.pathname;
