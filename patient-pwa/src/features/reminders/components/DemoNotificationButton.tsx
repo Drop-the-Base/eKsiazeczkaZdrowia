@@ -5,7 +5,8 @@ import { showMedicationNotification } from '../reminders';
 const RESULT_TEXT = {
   shown: 'Wysłano powiadomienie „Czas na lek”. Wybierz je, aby wrócić do aplikacji.',
   denied: 'Brak zgody na powiadomienia w przeglądarce.',
-  unsupported: 'Ta przeglądarka nie obsługuje powiadomień aplikacji. Zainstaluj aplikację w przeglądarce Chrome.',
+  unsupported:
+    'Ta przeglądarka nie obsługuje powiadomień aplikacji. Zainstaluj aplikację w przeglądarce Chrome.',
 };
 
 /**

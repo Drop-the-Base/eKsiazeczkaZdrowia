@@ -26,7 +26,9 @@ export function VisitListScreen() {
         )}
         <Link to={SHARE_PATH} className={styles.share}>
           Udostępnij lekarzowi
-          <span className={styles.shareHint}>Podsumowanie i historia leczenia, szyfrowane połączenie przez kod QR</span>
+          <span className={styles.shareHint}>
+            Podsumowanie i historia leczenia, szyfrowane połączenie przez kod QR
+          </span>
         </Link>
         <div className={styles.links}>
           <Link to={POST_VISIT_PATH} className={styles.secondaryLink}>

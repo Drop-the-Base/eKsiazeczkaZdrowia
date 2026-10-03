@@ -153,7 +153,9 @@ export function AbroadScreen() {
     <>
       <PageHeader title="Za granicą" />
       <div className={styles.content} data-tour="abroad">
-        <p className={styles.lead}>Podsumowanie do okazania lekarzowi lub zapisania w PDF. Dostępne offline.</p>
+        <p className={styles.lead}>
+          Podsumowanie do okazania lekarzowi lub zapisania w PDF. Dostępne offline.
+        </p>
         <div className={styles.langs} role="group" aria-label="Język lekarza">
           {LANGUAGES.map((l) => (
             <Chip

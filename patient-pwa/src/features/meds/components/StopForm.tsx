@@ -36,12 +36,7 @@ export function StopForm({ medication, onDone }: { medication: Medication; onDon
 
   return (
     <form className={styles.form} onSubmit={onSubmit} noValidate>
-      <ReasonPicker
-        label="Powód odstawienia"
-        value={reason}
-        onChange={setReason}
-        error={error}
-      />
+      <ReasonPicker label="Powód odstawienia" value={reason} onChange={setReason} error={error} />
       <TextField
         label="Ostatni dzień przyjmowania"
         type="date"

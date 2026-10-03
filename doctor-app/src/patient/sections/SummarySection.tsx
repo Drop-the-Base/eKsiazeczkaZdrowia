@@ -11,7 +11,11 @@ export function SummarySection({ snapshot, onSelect }: Props) {
   return (
     <div className={styles.summary}>
       <div className={styles.summaryMain}>
-        <section className={styles.box} aria-label="Sprawy zgłoszone przez pacjenta" data-tour="tell">
+        <section
+          className={styles.box}
+          aria-label="Sprawy zgłoszone przez pacjenta"
+          data-tour="tell"
+        >
           <h2 className={styles.title}>Sprawy zgłoszone przez pacjenta</h2>
           <TellDoctor snapshot={snapshot} />
         </section>
