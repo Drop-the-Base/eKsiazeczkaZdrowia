@@ -100,6 +100,7 @@ export function SummaryPreview({ full, photoCount, photosFailed, sections, onTog
           label={label}
           checked={sections.has(id)}
           onToggle={(on) => onToggle(id, on)}
+          dataTour={id === 'symptoms' ? 'share-toggle-symptoms' : undefined}
         >
           {body[id]}
         </SectionCard>

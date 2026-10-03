@@ -4,7 +4,15 @@ import { DEMO_PIN } from '../../demoMode';
 export type ShowMe =
   | { say: string }
   | { press: string }
-  | { action: 'timeline-zoom-scroll' };
+  | {
+      action:
+        | 'timeline-zoom-scroll'
+        | 'meds-detail'
+        | 'today-confirm'
+        | 'share-toggle'
+        | 'abroad-es'
+        | 'security-fill';
+    };
 
 export interface TourStep {
   id: string;
@@ -62,6 +70,7 @@ export const STEPS: TourStep[] = [
       'Po dodaniu leku aplikacja pyta o pozostałe preparaty: suplementy, witaminy, zioła i herbaty ziołowe. Podpowiedzi ułatwiają kompletne wypełnienie listy.',
       'Suplementy są prezentowane na równi z lekami na receptę. Po wybraniu leku wyświetlane są dane z Rejestru Produktów Leczniczych.',
     ],
+    showMe: { action: 'meds-detail' },
     story:
       'Pytanie dotyczyło wyłącznie leków, dlatego informacja o suplemencie nie została przekazana.',
     why: 'Aplikacja nie generuje automatycznych ostrzeżeń ani nie sugeruje odstawiania preparatów. Ocena kliniczna należy wyłącznie do lekarza, a aplikacja zapewnia mu pełną informację.',
@@ -74,6 +83,7 @@ export const STEPS: TourStep[] = [
     text: [
       'Każdą dawkę, również suplementu, pacjent oznacza jako przyjętą lub pominiętą. Ze względu na poufność przypomnienia nie zawierają nazwy leku.',
     ],
+    showMe: { action: 'today-confirm' },
     why: 'Lekarz otrzymuje dane o regularności przyjmowania, które zwykle są niedostępne.',
   },
   {
@@ -96,6 +106,7 @@ export const STEPS: TourStep[] = [
       'Pacjent widzi podsumowanie od ostatniej wizyty i może wykluczyć wybrane sekcje. Następnie skanuje kod QR wyświetlony przez lekarza.',
       'Widok lekarza można otworzyć w nowej karcie tej samej przeglądarki.',
     ],
+    showMe: { action: 'share-toggle' },
     why: 'Szyfrowanie end-to-end (ECDH, AES-256-GCM): serwer przekazuje wyłącznie szyfrogram. Kod weryfikacyjny na obu ekranach chroni przed podmianą klucza. Lekarz nie potrzebuje konta ani instalacji, a dane są usuwane po zamknięciu karty.',
   },
   {
@@ -106,7 +117,7 @@ export const STEPS: TourStep[] = [
     text: [
       'Podsumowanie w języku lekarza: alergie, leki i rozpoznania z kodami ATC i ICD-10. Dostępne offline, z możliwością zapisu do PDF.',
     ],
-    showMe: { press: 'lang-es' },
+    showMe: { action: 'abroad-es' },
     why: 'Leki są opisywane nazwą substancji czynnej, ponieważ nazwy handlowe różnią się między krajami.',
   },
   {
@@ -118,6 +129,7 @@ export const STEPS: TourStep[] = [
       'Lokalna baza danych jest szyfrowana kluczem wyprowadzonym z PIN-u (Argon2id, AES-256-GCM). Dostępne są także odblokowanie biometryczne i szyfrowana kopia zapasowa. Dokumenty z IKP i zdjęcia wyników (OCR) można dodać w sekcji „Dodaj”.',
       `PIN wersji demonstracyjnej: ${DEMO_PIN}.`,
     ],
+    showMe: { action: 'security-fill' },
     why: 'Historia zdrowia nie opuszcza urządzenia. Brak centralnej bazy danych eliminuje ryzyko masowego wycieku.',
   },
   {

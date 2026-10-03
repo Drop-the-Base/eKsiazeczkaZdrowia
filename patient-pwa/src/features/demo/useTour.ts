@@ -131,6 +131,6 @@ export function useTour() {
     go,
     close: () => setState((s) => ({ ...s, open: false })),
     reopen: () => setState((s) => ({ ...s, open: true })),
-    showMe: () => void showMe(),
+    showMe: () => showMe(),
   };
 }

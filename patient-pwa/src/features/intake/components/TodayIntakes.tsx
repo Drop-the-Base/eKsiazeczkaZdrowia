@@ -105,6 +105,7 @@ function DoseRow({
             className={styles.take}
             onClick={() => onConfirm('taken')}
             aria-label={`Wzięty: ${dose.medication.name}`}
+            data-tour="dose-take"
           >
             ✓ Wzięty
           </button>
