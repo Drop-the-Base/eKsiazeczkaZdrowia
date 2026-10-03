@@ -217,11 +217,9 @@ export function DemoTour() {
                   Przejdź do aplikacji
                 </Button>
                 <Button variant="ghost" onClick={restartDemo}>
+                  <RetryIcon />
                   Uruchom ponownie
                 </Button>
-                <a className={styles.link} href="/">
-                  Otwórz pełną wersję aplikacji
-                </a>
               </>
             )}
           </div>
