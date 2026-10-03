@@ -164,133 +164,117 @@ QueryFilter   { entity: 'medication'|'symptom'|'exam', atcPrefix?, name?, from?,
 
 ---
 
-## 7. Zadania (2 osoby równolegle)
+## 7. Zadania (2 osoby równolegle, podział po funkcjach)
 
-### Podział własności
+Każdy robi swoje funkcje **od początku do końca**: ekran + technika pod spodem. Obaj mamy ekrany do pokazania na demo i obaj mamy trudniejsze technicznie kawałki.
 
-| | **Osoba A** | **Osoba B** |
+### Podział
+
+| | **Osoba A: „Dane i codzienność”** | **Osoba B: „Wizyta i bezpieczeństwo”** |
 |---|---|---|
-| Rola | Ekrany PWA, zaszyfrowana baza lokalna, kopia zapasowa, przypomnienia, design, slajdy | Serwer, transport P2P, aplikacja lekarza, „moduły” dla PWA (głos, leki, OCR, import IKP, LLM, za granicą) |
-| Foldery (tylko właściciel edytuje) | `patient-pwa/src/` **poza** `features/` należącymi do B | `server/`, `doctor-app/`, `data/`, `shared/transport/`, `shared/crypto/`, `shared/dict/`, `patient-pwa/src/features/{voice,drugs,ocr,ikp-import,ask,abroad}/` |
-| Wspólne (zmiana = uzgodnienie na głos) | `shared/types.ts`, `shared/demo-data.ts` | ← to samo |
+| Ekrany PWA | Profil i diagnozy, leki, potwierdzanie leków, objawy, badania, zdjęcia w czasie, **oś czasu**, przypomnienia, **Zapytaj**, import z IKP | Lista „powiem lekarzowi”, **Udostępnij lekarzowi**, **Po wizycie**, **Za granicą**, blokada aplikacji, kopia zapasowa |
+| Technika | Rozpoznawanie mowy + rozbijanie wpisów, baza leków z RPL, OCR, import PDF, LLM: pytanie → filtr | Baza lokalna + szyfrowanie, serwer sygnalizacyjny, WebRTC, podpisywanie kluczami, TURN, **aplikacja lekarza**, LLM: notatka → zmiany, słowniki ATC/ICD-10, eksport/import z hasłem |
+| Happy path (sekcja 4) | kroki 1, 2, 4, 7 | kroki 3, 5, 6, 8 |
 
-**Jak nie czekać na siebie:**
-- Typy i sygnatury ustalamy w Fazie 0 i **zamrażamy**.
-- A pracuje na `demo-data.ts` i atrapach modułów B (zwykłe pole tekstowe zamiast głosu, `sendSnapshot` = `console.log`, autouzupełnianie z 10 leków na sztywno).
-- B buduje widok lekarza na `demo-data.ts` + strona dev „symulator pacjenta”, bez czekania na ekrany A.
+### Własność folderów
+
+| Osoba A | Osoba B | Wspólne (zmiana = uzgodnienie na głos) |
+|---|---|---|
+| `patient-pwa/src/features/{profile,meds,intake,symptoms,exams,photos,timeline,reminders,ask,ikp-import,voice,drugs,ocr}/` | `patient-pwa/src/features/{visit-list,share,post-visit,abroad,lock,backup}/` | `patient-pwa/src/app/` (nawigacja, routing) |
+| `data/` (skrypt RPL) | `patient-pwa/src/db/` (baza + szyfrowanie) | `patient-pwa/src/ui/` (wspólne komponenty) |
+| `server/src/llm/query.ts` | `server/` (reszta), `doctor-app/` | `shared/types.ts`, `shared/demo-data.ts` |
+| | `shared/transport/`, `shared/crypto/`, `shared/dict/` | |
+
+### Gdzie się stykamy (kontrakty z T0.3)
+
+| Kto daje | Co | Kto używa | Atrapa do czasu oddania |
+|---|---|---|---|
+| A | `<VoiceInput mode>` | B: lista „powiem lekarzowi”, Po wizycie | zwykłe pole tekstowe |
+| A | `<DrugPicker>`, `searchDrugs` | B: Po wizycie (nowy lek) | 10 leków na sztywno |
+| A | `createReminder()` | B: kontrola z notatki po wizycie, przypomnienie o eksporcie | `console.log` |
+| A | `<Timeline data>` | B: widok lekarza (ten sam komponent albo jego kopia) | lista dat |
+| B | `db` (Dexie, potem szyfrowanie bez zmiany API) | A: wszystkie ekrany | **B oddaje w Fazie 0** |
+| B | `getActiveVisitList()` | A: nic / B: auto-pokazanie przed wizytą | — |
 
 Priorytet: **M** = must (jest w happy path) · **S** = should (wyróżnik) · **C** = could (jeśli zostanie czas).
 
 ---
 
-### Faza 0: Start
-
-| A | B |
-|---|---|
-| **Razem:** T0.1, T0.3 | **Razem:** T0.1, T0.3 |
-| T0.2 szkielet repo → push, T0.5 | T0.6 tunel/HTTPS, hosting, T0.4 |
+### Faza 0: Start (razem)
 
 - [ ] **T0.1** (A+B, M) Przeczytać treść zadania od organizatorów, porównać z tym planem.
 - [ ] **T0.2** (A, M) Monorepo: `patient-pwa/`, `doctor-app/`, `server/`, `shared/`, `data/`; workspaces, prettier. **Push jak najszybciej.**
-- [ ] **T0.3** (A+B, M) **Kontrakt (potem zamrożony):** `shared/types.ts` (sekcja 6), wiadomości protokołu, sygnatury:
+- [ ] **T0.3** (A+B, M) **Kontrakt (potem zamrożony):** `shared/types.ts` (sekcja 6), protokół, sygnatury z tabeli „Gdzie się stykamy” oraz:
   - transport: `createSession() → { sessionId, qrPayload }`, `connect(qrPayload)`, `sendSnapshot(snapshot)`, `onSnapshot(cb)`
-  - głos: `<VoiceInput mode="entry|visitNote|postVisit|question" onResult />`, `parseEntry(text) → { symptoms[], medications[] }`
-  - leki: `searchDrugs(query) → Drug[]`, `<DrugPicker onSelect />`, `<DrugInfoCard rplId />`
-  - OCR / import: `ocrImage(blob) → { text, results[] }`, `importDocument(file) → Document + propozycje`
-  - pytania: `askHistory(question) → QueryFilter`, `runFilter(filter, db) → wynik`
+  - głos: `parseEntry(text) → { symptoms[], medications[] }`
+  - pytania: `askHistory(question) → QueryFilter`, `runFilter(filter, db)`
   - notatka: `parseVisitNote(text) → { stopMeds[], newMeds[], followUpDate? }`
-  - za granicą: `<AbroadSummary lang />`, `exportAbroadPdf(lang)`
-- [ ] **T0.4** (B, M) `shared/demo-data.ts`: profil **Pani Anna** zgodny z happy path: leki z recepty + OTC (ibuprom) + suplement, nowy lek z datą startu, ~3 tygodnie potwierdzeń i objawów (zawroty po nowym leku), zdjęcia wysypki, 2 badania, 2 diagnozy, 1 wcześniejsza wizyta, lek przeciwzakrzepowy w przeszłości (do pytania z happy path), 1–2 przykładowe PDF-y „z IKP”.
-- [ ] **T0.5** (A, M) `README.md` (uruchomienie) + `CLAUDE.md` (zasady + tabela własności folderów).
-- [ ] **T0.6** (B, M) HTTPS od początku (tunel dla telefonu), wybór hostingu serwera (proces ciągły + WSS).
+- [ ] **T0.4** (A+B, M) **Szkielet aplikacji pacjenta:** nawigacja (Oś czasu / Dodaj / Wizyta / Zapytaj / Profil), kolory, typografia, wspólne komponenty w `ui/` (przycisk, karta, lista, arkusz od dołu, duży przycisk mikrofonu). Puste ekrany z podpisem właściciela. Po tym każdy pracuje już tylko w swoich `features/`.
+- [ ] **T0.5** (B, M) `db/`: Dexie ze schematem z sekcji 6 (na razie bez szyfrowania) + `loadDemoData()` → push.
+- [ ] **T0.6** (B, M) `shared/demo-data.ts`: profil **Pani Anna** zgodny z happy path: leki z recepty + OTC (ibuprom) + suplement, nowy lek z datą startu, ~3 tygodnie potwierdzeń i objawów (zawroty po nowym leku), zdjęcia wysypki, 2 badania, 2 diagnozy, 1 wcześniejsza wizyta, lek przeciwzakrzepowy w przeszłości, 1–2 przykładowe PDF-y „z IKP”.
+- [ ] **T0.7** (A, M) `README.md` (uruchomienie) + `CLAUDE.md` (zasady + tabele własności z tej sekcji).
+- [ ] **T0.8** (B, M) HTTPS od początku (tunel dla telefonu), wybór hostingu serwera (proces ciągły + WSS).
 
 ---
 
 ### Faza 1: Rdzeń
 
-| A – PWA | B – serwer, transport, lekarz, dane leków |
-|---|---|
-| T1.1 → T1.2 → T1.3 → T1.4 → T1.5 → T1.6 → T1.7 | T1.8 → T1.9 → T1.10 → T1.11 → T1.12 → T1.13 |
+**A: dane**
+- [ ] **T1.1** (M) Profil: alergie, grupa krwi, **diagnozy** aktualne / przebyte.
+- [ ] **T1.2** (M) `data/` + `features/drugs/`: skrypt RPL (dane otwarte) → kompaktowy `drugs.json` (nazwa, substancja, moc, postać, ATC, link do ulotki); `searchDrugs` + `<DrugPicker>`.
+- [ ] **T1.3** (M) Leki: lista (recepta / OTC / suplement), dodawanie przez `<DrugPicker>`, harmonogram, od–do; przy odstawieniu lub zmianie **pytanie o powód**.
+- [ ] **T1.4** (M) Potwierdzanie leków: lista na dziś, „wziąłem / pominąłem” jednym dotknięciem.
+- [ ] **T1.5** (M) Objawy: szybkie dodawanie (nazwa, nasilenie opcjonalnie, czas).
+- [ ] **T1.6** (M) Badania: dodawanie ręczne (nazwa, data, wyniki).
 
-**A**
-- [ ] **T1.1** (M) Szkielet PWA: manifest, service worker (działanie offline), instalowalność, nawigacja (Oś czasu / Dodaj / Wizyta / Zapytaj / Profil).
-- [ ] **T1.2** (M) Baza Dexie + warstwa szyfrowania: każdy rekord i blob szyfrowany AES-256-GCM, klucz nieeksportowalny; przycisk „wczytaj dane demo”.
-- [ ] **T1.3** (M) Profil: alergie, grupa krwi, **diagnozy** aktualne / przebyte.
-- [ ] **T1.4** (M) Leki: lista (recepta / OTC / suplement), dodawanie z miejscem na `<DrugPicker>` od B, harmonogram, od–do; przy odstawieniu lub zmianie **pytanie o powód** (szybkie odpowiedzi + własny tekst).
-- [ ] **T1.5** (M) Potwierdzanie leków: lista na dziś, „wziąłem / pominąłem” jednym dotknięciem.
-- [ ] **T1.6** (M) Objawy: szybkie dodawanie (nazwa, nasilenie opcjonalnie, czas).
-- [ ] **T1.7** (M) Badania: dodawanie ręczne (nazwa, data, wyniki), miejsce na „zrób zdjęcie wyniku” (OCR od B).
+**B: połączenie z lekarzem**
+- [ ] **T1.7** (M) Serwer `ws`: `create-session`, `join-session`, przekazywanie `offer/answer/ice`, wygasanie sesji, nic nie zapisuje na dysku.
+- [ ] **T1.8** (M) `shared/transport/`: RTCPeerConnection + DataChannel, JSON w kawałkach z potwierdzeniem; STUN + TURN.
+- [ ] **T1.9** (M) Aplikacja lekarza: ekran z QR (odświeżany po wygaśnięciu), status połączenia.
+- [ ] **T1.10** (M) Strona dev „symulator pacjenta” + test end-to-end na danych demo w dwóch kartach.
+- [ ] **T1.11** (M) Lista **„powiem lekarzowi”**: pływający przycisk z każdego ekranu, dodawanie tekstem (głos po oddaniu `VoiceInput` przez A), odhaczanie „omówione”.
+- [ ] **T1.12** (S) **Podpisywanie ofert:** klucze ECDSA z parowania (publiczny klucz lekarza w QR), podpis SDP (z odciskiem DTLS) po obu stronach, weryfikacja; odrzucenie połączenia przy złym podpisie.
 
-**B**
-- [ ] **T1.8** (M) Serwer `ws`: `create-session`, `join-session`, przekazywanie `offer/answer/ice`, wygasanie sesji, nic nie zapisuje na dysku.
-- [ ] **T1.9** (M) `shared/transport/`: RTCPeerConnection + DataChannel, JSON w kawałkach z potwierdzeniem; STUN + TURN.
-- [ ] **T1.10** (M) Aplikacja lekarza: ekran z QR (odświeżany po wygaśnięciu), status połączenia.
-- [ ] **T1.11** (M) Strona dev „symulator pacjenta” + test end-to-end na danych demo w dwóch kartach.
-- [ ] **T1.12** (M) `data/`: skrypt pobierający dane otwarte RPL → kompaktowy `drugs.json` (nazwa, substancja, moc, postać, ATC, link do ulotki); `searchDrugs` + `<DrugPicker>`.
-- [ ] **T1.13** (S) **Podpisywanie ofert:** klucze ECDSA z parowania, podpis SDP (z odciskiem DTLS) po obu stronach, weryfikacja; odrzucenie połączenia przy złym podpisie.
-
-**🔁 Synchronizacja po Fazie 1:** merge do `main`. A: dane demo widoczne w PWA, szyfrowanie działa. B: transport działa między kartami, `<DrugPicker>` gotowy do wpięcia.
+**🔁 Synchronizacja po Fazie 1:** merge do `main`. A: leki, objawy i badania działają na danych demo. B: transport działa między kartami, lista „powiem lekarzowi” gotowa.
 
 ---
 
-### Faza 2: Główne funkcje (happy path)
+### Faza 2: Happy path
 
-| A – ekrany PWA | B – lekarz + moduły |
-|---|---|
-| T2.1 Oś czasu | T2.8 Widok lekarza |
-| T2.2 Lista „powiem lekarzowi” | T2.9 `VoiceInput` + `parseEntry` → **oddać jak najwcześniej** |
-| T2.3 Zdjęcia w czasie | T2.10 Pytania o przeszłość (LLM → filtr) |
-| T2.4 Udostępnij lekarzowi (wpina transport) | T2.11 Notatka po wizycie (LLM → zmiany) |
-| T2.5 Ekran „Po wizycie” (zatwierdzanie zmian) | T2.12 Podsumowanie za granicą |
-| T2.6 Ekran „Zapytaj” | T2.13 Koniec sesji, kompresja zdjęć |
-| T2.7 Przypomnienia | |
+**A: głos, oś czasu, pytania**
+- [ ] **T2.1** (M) `features/voice/`: `VoiceInput` (silnik rozpoznawania mowy: patrz O1; interfejs taki, żeby dało się go podmienić; na start Web Speech API `pl-PL`) + `parseEntry` (lokalnie: słownik objawów + `searchDrugs`, „od rana”, „wieczorem”, „wzięłam”) → propozycja wpisów do zatwierdzenia jednym dotknięciem. **Oddać B jak najwcześniej.**
+- [ ] **T2.2** (M) **Oś czasu:** leki jako paski (start–koniec, z powodem odstawienia), potwierdzenia, objawy, zdjęcia (miniatury), badania, wizyty, dokumenty; filtr 7/30/90 dni. Związek „nowy lek → objaw” widoczny na pierwszy rzut oka. Komponent wielokrotnego użytku (B użyje go u lekarza).
+- [ ] **T2.3** (M) **Zdjęcia w czasie:** aparat lub galeria, kategoria (skóra / rana / obrzęk), seria, porównanie dwóch zdjęć obok siebie, miniatury na osi czasu.
+- [ ] **T2.4** (M) **Zapytaj:** mikrofon + 3 szybkie przyciski (scenariusze z happy path) → `server/src/llm/query.ts`: **tylko tekst pytania** → `QueryFilter` (np. „przeciwzakrzepowe” → `atcPrefix: B01`) → `runFilter` lokalnie → lista z datami. Fallback bez sieci: 3 gotowe filtry.
+- [ ] **T2.5** (M) **Przypomnienia:** o lekach („Czas na lek”, bez nazwy leku), z powiadomienia prosto do potwierdzenia; `createReminder()` dla B.
 
-**A**
-- [ ] **T2.1** (M) **Oś czasu:** leki jako paski (start–koniec, z powodem odstawienia), potwierdzenia, objawy, zdjęcia (miniatury), badania, wizyty, dokumenty; filtr 7/30/90 dni. Związek „nowy lek → objaw” musi być widoczny na pierwszy rzut oka.
-- [ ] **T2.2** (M) **Lista „powiem lekarzowi”:** dodawanie głosem lub tekstem z każdego miejsca (pływający przycisk); przed wizytą (data z przypomnienia o kontroli) lista wyświetla się automatycznie; odhaczanie „omówione”.
-- [ ] **T2.3** (M) **Zdjęcia w czasie:** aparat lub galeria, kategoria (skóra / rana / obrzęk), seria, porównanie dwóch zdjęć obok siebie, miniatury na osi czasu. Bloby szyfrowane.
-- [ ] **T2.4** (M) **Udostępnij lekarzowi:** wybór zakresu → skan QR → `connect` + `sendSnapshot`; status „przesłano”.
-- [ ] **T2.5** (M) **Po wizycie:** `VoiceInput mode="postVisit"` → `parseVisitNote` (B) → lista proponowanych zmian z checkboxami → zatwierdź → leki zaktualizowane (z powodem), przypomnienie o kontroli ustawione, nagranie usunięte.
-- [ ] **T2.6** (M) **Zapytaj:** przycisk mikrofonu + 3 szybkie przyciski (scenariusze z happy path) → `askHistory` → `runFilter` → lista z datami, do pokazania na ekranie.
-- [ ] **T2.7** (M) **Przypomnienia:** o lekach (powiadomienie „Czas na lek”, bez nazwy), o kontroli, o eksporcie; z powiadomienia prosto do potwierdzenia.
-
-**B**
-- [ ] **T2.8** (M) **Widok lekarza:** nagłówek (pacjent, wiek, alergie, choroby), aktualne leki, **„Pacjent chce powiedzieć”** wysoko, oś czasu leków i objawów z wyraźnym związkiem czasowym, galeria zdjęć, badania, poprzednie wizyty. Czytelny w 30 s.
-- [ ] **T2.9** (M) `features/voice/`: `VoiceInput` (silnik rozpoznawania mowy: patrz O1; interfejs taki, żeby dało się go podmienić; na start Web Speech API `pl-PL`) + `parseEntry` (lokalnie: słownik objawów + `searchDrugs` dla leków, „od rana”, „wieczorem”, „wzięłam”) → propozycja wpisów do zatwierdzenia jednym dotknięciem. Testy na zdaniach z happy path.
-- [ ] **T2.10** (M) `features/ask/` + endpoint `POST /llm/query`: **tylko tekst pytania** → `QueryFilter` (np. „przeciwzakrzepowe” → `atcPrefix: B01`) → `runFilter` lokalnie na Dexie. Fallback bez sieci: 3 gotowe filtry dla scenariuszy z happy path.
-- [ ] **T2.11** (M) Endpoint `POST /llm/visit-note`: transkrypcja → `{ stopMeds[], newMeds[], followUpDate? }` (na start atrapa, żeby A robił UI).
-- [ ] **T2.12** (M) `features/abroad/`: podsumowanie **offline** (alergie, aktualne leki przez substancję czynną + ATC, choroby + ICD-10) w EN/DE/ES; słowniki w `shared/dict/` (etykiety, substancje, kody dla danych demo); widok na ekranie + PDF.
-- [ ] **T2.13** (M) Koniec sesji u lekarza (przycisk + timeout, czyszczenie pamięci) + zmniejszanie zdjęć przed wysyłką.
-- [ ] **T2.14** (S) Druk / PDF widoku lekarza.
+**B: wizyta i za granicą**
+- [ ] **T2.6** (M) **Udostępnij lekarzowi** (ekran pacjenta): wybór zakresu → skan QR → `connect` + `sendSnapshot`; zmniejszanie zdjęć; status „przesłano”.
+- [ ] **T2.7** (M) **Widok lekarza:** nagłówek (pacjent, wiek, alergie, choroby), aktualne leki, **„Pacjent chce powiedzieć”** wysoko, oś czasu (`<Timeline>` od A), galeria zdjęć, badania, poprzednie wizyty. Czytelny w 30 s. Koniec sesji: przycisk + timeout, czyszczenie pamięci.
+- [ ] **T2.8** (M) **Po wizycie:** `VoiceInput mode="postVisit"` → endpoint `POST /llm/visit-note` → `{ stopMeds[], newMeds[], followUpDate? }` → lista zmian z checkboxami → zatwierdź → leki zaktualizowane (z powodem), `createReminder` na kontrolę, nagranie usunięte.
+- [ ] **T2.9** (M) Lista „powiem lekarzowi” **pokazuje się automatycznie przed wizytą** (gdy zbliża się data kontroli).
+- [ ] **T2.10** (M) **Za granicą:** podsumowanie **offline** (alergie, aktualne leki przez substancję czynną + ATC, choroby + ICD-10) w EN/DE/ES; słowniki w `shared/dict/`; widok na ekranie + PDF.
+- [ ] **T2.11** (S) Druk / PDF widoku lekarza.
 
 **🔁 Synchronizacja po Fazie 2:** merge, **pełny happy path na telefonie**. Lista poprawek, decyzja, które S/C robimy.
 
 ---
 
-### Faza 3: Import, OCR, bezpieczeństwo, kopia zapasowa
+### Faza 3: Wyróżniki i bezpieczeństwo
 
-| A | B |
-|---|---|
-| T3.1 Eksport kopii | T3.5 Import dokumentów z IKP |
-| T3.2 Import kopii | T3.6 OCR zdjęcia wyniku |
-| T3.3 Blokada passkey / PIN | T3.7 `<DrugInfoCard>` (fakty z ulotki) |
-| T3.4 Przypomnienie o eksporcie + ostrzeżenie o haśle | T3.8 Test TURN w sieci komórkowej |
+**A: import i informacje o lekach**
+- [ ] **T3.1** (S) `features/ikp-import/`: Web Share Target (PWA odbiera PDF z menu „Udostępnij”) + wybór pliku jako alternatywa → `Document` → tekst z PDF (pdf.js) → propozycje leków / diagnoz / badań do zatwierdzenia.
+- [ ] **T3.2** (S) `features/ocr/`: zdjęcie wyniku → Tesseract.js (`pol`) na urządzeniu → tekst + próba wyciągnięcia wyników (nazwa, wartość, jednostka) → formularz badania do zatwierdzenia.
+- [ ] **T3.3** (S) `<DrugInfoCard>`: substancja czynna, dawkowanie, informacje z ulotki (w tym przeciwwskazania) **jako fakty, bez ostrzeżeń**; link do pełnej ulotki.
+- [ ] **T3.4** (C) Akcent „Sport”: aktywność / treningi na osi czasu obok objawów.
+- [ ] **T3.5** (C) `parseEntry` przez LLM jako fallback dla dłuższych zdań (z jasną informacją, że tekst wpisu idzie do modelu).
 
-**A**
-- [ ] **T3.1** (S) **Eksport:** hasło → Argon2id → AES-256-GCM całości (baza + zdjęcia) → jeden plik do zapisania przez użytkownika.
-- [ ] **T3.2** (S) **Import:** plik + hasło → odszyfrowanie → zapis w bazie z nowym kluczem urządzenia.
-- [ ] **T3.3** (S) **Blokada aplikacji:** passkey (WebAuthn, biometria systemu) lub PIN przy otwarciu.
-- [ ] **T3.4** (S) Przypomnienie o eksporcie raz w miesiącu + wyraźny komunikat przy pierwszym eksporcie: brak odzyskiwania hasła.
-
-**B**
-- [ ] **T3.5** (S) `features/ikp-import/`: Web Share Target (PWA odbiera PDF z menu „Udostępnij”) + wybór pliku jako alternatywa → zapis jako `Document` → wyciągnięcie tekstu (pdf.js) → propozycje leków / diagnoz / badań do zatwierdzenia.
-- [ ] **T3.6** (S) `features/ocr/`: Tesseract.js (`pol`) na urządzeniu → tekst + próba wyciągnięcia wyników (nazwa, wartość, jednostka) → formularz badania do zatwierdzenia.
-- [ ] **T3.7** (S) `<DrugInfoCard>`: substancja czynna, dawkowanie, informacje z ulotki (w tym przeciwwskazania) **jako fakty, bez ostrzeżeń**; link do pełnej ulotki.
-- [ ] **T3.8** (S) Test połączenia przez TURN (telefon na danych komórkowych, laptop na Wi-Fi).
-
-**Could (jeśli zostanie czas)**
-- [ ] **T3.9** (A, C) Akcent „Sport”: aktywność / treningi na osi czasu obok objawów.
-- [ ] **T3.10** (B, C) `parseEntry` przez LLM jako fallback dla dłuższych zdań (z jasną informacją, że tekst wpisu idzie do modelu).
+**B: szyfrowanie i kopia zapasowa**
+- [ ] **T3.6** (S) **Szyfrowanie bazy:** każdy rekord i blob AES-256-GCM (WebCrypto), klucz nieeksportowalny; **bez zmiany API `db`**, więc ekrany A działają dalej.
+- [ ] **T3.7** (S) **Blokada aplikacji:** passkey (WebAuthn, biometria systemu) lub PIN przy otwarciu.
+- [ ] **T3.8** (S) **Eksport:** hasło → Argon2id → AES-256-GCM całości (baza + zdjęcia) → jeden plik; wyraźny komunikat przy pierwszym eksporcie: brak odzyskiwania hasła.
+- [ ] **T3.9** (S) **Import:** plik + hasło → odszyfrowanie → zapis z nowym kluczem urządzenia; przypomnienie o eksporcie raz w miesiącu.
+- [ ] **T3.10** (S) Test połączenia przez TURN (telefon na danych komórkowych, laptop na Wi-Fi).
 
 **🔁 Synchronizacja po Fazie 3:** feature freeze. Od teraz tylko poprawki i prezentacja.
 
@@ -298,20 +282,13 @@ Priorytet: **M** = must (jest w happy path) · **S** = should (wyróżnik) · **
 
 ### Faza 4: Szlif i oddanie
 
-| A | B |
-|---|---|
-| T4.1 design i poprawki PWA | T4.2 deploy + test na telefonie i w sieci hackathonu |
-| **Razem:** T4.3 happy path + wideo | **Razem:** T4.3 |
-| T4.4 slajdy | T4.5 opis + README + happy path |
-| **Razem:** T4.6 wysyłka, T4.7 pitch | **Razem:** T4.6, T4.7 |
-
-- [ ] **T4.1** (A, M) Design: spójne kolory, ikony, szybki UI (wpis w kilka sekund), duży przycisk mikrofonu.
+- [ ] **T4.1** (A+B, M) Design: każdy dopieszcza swoje ekrany; wspólnie pilnujemy spójności (`ui/`).
 - [ ] **T4.2** (B, M) Deploy + test na **prawdziwym telefonie i w sieci hackathonu**.
 - [ ] **T4.3** (A+B, M) Przejść happy path kilka razy bez błędów; nagrać **wideo demo** jako zabezpieczenie.
 - [ ] **T4.4** (A, M) Slajdy (max 10): problem → Pani Anna → rozwiązanie (zbieranie / codzienność / wizyta / pytania / za granicą) → demo (zrzuty) → prywatność i szyfrowanie (local-first, P2P, podpisy, kopia z hasłem) → vs mojeIKP i Bearable → aplikacja mobilna i rozwój (Capacitor, integracja z IKP, MyHealth@EU) → zespół.
 - [ ] **T4.5** (B, M) Opis projektu + README z linkami (repo, demo, wideo) + **opisany happy path** (sekcja 4).
 - [ ] **T4.6** (A+B, M) **Wysłać na HackTribe przed deadlinem** (z zapasem).
-- [ ] **T4.7** (A+B, S) Pitch i odpowiedzi na trudne pytania (poniżej).
+- [ ] **T4.7** (A+B, S) Pitch i odpowiedzi na trudne pytania (poniżej). Każdy pokazuje swoją część happy path.
 
 ---
 
@@ -323,7 +300,7 @@ Priorytet: **M** = must (jest w happy path) · **S** = should (wyróżnik) · **
 | Zabezpieczenia mobilne (SQLCipher, Keystore, blokada zrzutów) niemożliwe w PWA | PWA to forma na hackathon; odpowiedniki w PWA (sekcja 5), na slajdzie wersja mobilna |
 | WebRTC nie łączy się w sieci hackathonu / komórkowej | TURN + wideo demo |
 | Hosting bez WebSocketów (serverless) | Hosting z ciągłym procesem; awaryjnie laptop + tunel |
-| Brak HTTPS → nie działa kamera ani mikrofon | HTTPS/tunel od początku (T0.6) |
+| Brak HTTPS → nie działa kamera ani mikrofon | HTTPS/tunel od początku (T0.8) |
 | Web Share Target nie działa na iOS | Na iOS wybór pliku; demo na Androidzie |
 | RPL jest duży | Skrypt w `data/` → kompaktowy JSON tylko z potrzebnymi polami |
 | Błąd tłumaczenia leku lub dawki | Tłumaczenie przez substancję czynną + kody ATC / ICD-10, a nie wolny tekst |
@@ -339,7 +316,7 @@ Priorytet: **M** = must (jest w happy path) · **S** = should (wyróżnik) · **
   - zostawić Web Speech na demo i powiedzieć o tym wprost w pitchu,
   - rozpoznawanie na urządzeniu w przeglądarce (np. Whisper w WebAssembly / transformers.js; pytanie o jakość polskiego i wagę modelu),
   - w wersji mobilnej systemowe rozpoznawanie na urządzeniu (Android / iOS on-device).
-  Decyzja wpływa na T2.9 (B).
+  Decyzja wpływa na T2.1 (A).
 
 ## 10. Zasady pracy
 
