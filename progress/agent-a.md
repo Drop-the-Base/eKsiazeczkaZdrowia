@@ -29,3 +29,4 @@ Zmergowane taski (dopisuje agent A po każdym merge, patrz `CLAUDE.md`).
 - [x] [A26] Przypomnienia: createReminder, „Do potwierdzenia”, powiadomienie demo · issue #55 · 2026-10-03 18:58 · atrapy: brak
 - [x] [A21] Zdjęcia: aparat / galeria, kategoria, seria · issue #45 · 2026-10-03 19:02 · atrapy: brak
 - [x] [A22] Zdjęcia: seria i porównanie dwóch obok siebie · issue #47 · 2026-10-03 19:04 · atrapy: brak
+- [x] [A32] Szlif designu ekranów A + spójność ui/ · issue #71 · 2026-10-03 19:08 · atrapy: brak

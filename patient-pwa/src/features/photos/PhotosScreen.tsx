@@ -36,6 +36,7 @@ export function PhotosScreen() {
     <>
       <PageHeader
         title="Zdjęcia"
+        back="/profil"
         action={
           <Button variant="ghost" onClick={() => setAdding(true)}>
             + Dodaj

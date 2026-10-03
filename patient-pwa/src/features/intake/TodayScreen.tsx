@@ -6,7 +6,7 @@ import styles from './TodayScreen.module.css';
 export function TodayScreen() {
   return (
     <>
-      <PageHeader title="Leki na dziś" />
+      <PageHeader title="Leki na dziś" back="/profil" />
       <div className={styles.content}>
         <TodayIntakes />
         <DemoNotificationButton />

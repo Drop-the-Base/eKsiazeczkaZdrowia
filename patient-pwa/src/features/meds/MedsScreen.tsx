@@ -21,6 +21,7 @@ export function MedsScreen() {
     <>
       <PageHeader
         title="Leki i suplementy"
+        back="/profil"
         action={
           <Button variant="ghost" onClick={addNew}>
             + Dodaj
