@@ -11,7 +11,7 @@ Dla osoby, która ma kilka minut: dane Pani Anny (fikcyjne, oparte na prawdziwym
 - `/demo`: aplikacja pacjentki z przewodnikiem (PIN demo `1234`, ustawiany sam, osobna baza w przeglądarce).
 - `/demo/lekarz`: widok lekarza z przewodnikiem; „Symuluj telefon pacjentki” łączy się prawdziwym, szyfrowanym kanałem. Z kartą `/demo` w tej samej przeglądarce kod QR przekazuje się sam.
 - `?bez-przewodnika` wyłącza przewodnik (zrzuty ekranu). Prawdziwa aplikacja (`/`, `/lekarz/`) nie zawiera danych demo.
-- Lokalnie: `npm run build && npm start`, potem `http://localhost:8787/demo` (`/demo/lekarz` obsługuje tylko serwer, nie `npm run dev`).
+- Lokalnie: `npm run dev` (`http://localhost:5173/demo`, `/demo/lekarz` przez proxy do aplikacji lekarza) albo `npm run build && npm start` (`http://localhost:8787/demo`).
 
 ## Struktura
 

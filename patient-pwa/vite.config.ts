@@ -50,6 +50,12 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
+      // Aplikacja lekarza (dev server na 5174) także pod /demo/lekarz, jak na serwerze produkcyjnym.
+      '/lekarz': 'http://localhost:5174',
+      '/demo/lekarz': {
+        target: 'http://localhost:5174',
+        rewrite: (path) => path.replace(/^\/demo\/lekarz\/?/, '/lekarz/'),
+      },
       '/relay': { target: 'ws://localhost:8787', ws: true },
       '/llm': 'http://localhost:8787',
     },
