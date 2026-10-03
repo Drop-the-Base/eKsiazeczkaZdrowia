@@ -1,0 +1,76 @@
+# Build on GitHub (Mikrus has too little RAM for Vite/tsc), then ship a node-only bundle over SSH.
+# Mikrus needs only Node >= 20 and pm2; no npm install there.
+# Secrets: MIKRUS_HOST, MIKRUS_SSH_PORT, MIKRUS_USER, MIKRUS_SSH_KEY. Variable: APP_PORT.
+# Server env (LLM_HOST, LLM_PORT, LLM_API_KEY) lives in ~/ez/.env on Mikrus, not in GitHub.
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+
+      - name: Bundle server into one file
+        run: >
+          npx esbuild server/src/index.ts --bundle --platform=node --target=node20 --format=esm
+          --external:bufferutil --external:utf-8-validate
+          --banner:js="import{createRequire}from'module';const require=createRequire(import.meta.url);"
+          --outfile=release/server/dist/server.mjs
+
+      # Same layout as the repo: index.ts resolves ../../patient-pwa/dist relative to itself.
+      - name: Assemble release
+        run: |
+          mkdir -p release/patient-pwa release/doctor-app
+          cp -r patient-pwa/dist release/patient-pwa/
+          cp -r doctor-app/dist release/doctor-app/
+          echo "${GITHUB_SHA}" > release/VERSION
+
+      - name: Upload to Mikrus and restart
+        env:
+          HOST: ${{ secrets.MIKRUS_HOST }}
+          SSH_PORT: ${{ secrets.MIKRUS_SSH_PORT }}
+          SSH_USER: ${{ secrets.MIKRUS_USER }}
+          SSH_KEY: ${{ secrets.MIKRUS_SSH_KEY }}
+          APP_PORT: ${{ vars.APP_PORT }}
+        run: |
+          if [ -z "$HOST" ]; then echo "Brak sekretu MIKRUS_HOST – pomijam deploy."; exit 0; fi
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -p "$SSH_PORT" "$HOST" >> ~/.ssh/known_hosts
+          tar czf - -C release . | ssh -i ~/.ssh/id_deploy -p "$SSH_PORT" "$SSH_USER@$HOST" "
+            set -e
+            mkdir -p ~/ez && touch ~/ez/.env
+            rm -rf ~/ez/new && mkdir ~/ez/new && tar xzf - -C ~/ez/new
+            rm -rf ~/ez/old && { [ -d ~/ez/app ] && mv ~/ez/app ~/ez/old || true; }
+            mv ~/ez/new ~/ez/app
+            pm2 delete ez >/dev/null 2>&1 || true
+            PORT=$APP_PORT pm2 start ~/ez/app/server/dist/server.mjs --name ez --node-args=\"--env-file=\$HOME/ez/.env\"
+            pm2 save
+          "
+
+      - name: Health check
+        env:
+          HOST: ${{ secrets.MIKRUS_HOST }}
+          PUBLIC_URL: ${{ vars.PUBLIC_URL }}
+        run: |
+          if [ -z "$HOST" ] || [ -z "$PUBLIC_URL" ]; then exit 0; fi
+          for i in 1 2 3 4 5; do curl -fsS "$PUBLIC_URL/health" && exit 0; sleep 3; done
+          exit 1
