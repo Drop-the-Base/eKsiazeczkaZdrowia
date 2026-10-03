@@ -104,13 +104,15 @@ export function SinceLastVisit({ snapshot, onSelect }: Props) {
         'brak'
       ),
   });
-  rows.push({
-    label: 'Nowe zdjęcia',
-    content: item(
-      { entity: 'photo', id: s.newPhotos[0]!.id },
-      `${s.newPhotos.length} (od ${formatDate(s.newPhotos[0]!.takenAt)})`,
-    ),
-  });
+  if (s.newPhotos.length > 0) {
+    rows.push({
+      label: 'Nowe zdjęcia',
+      content: item(
+        { entity: 'photo', id: s.newPhotos[0]!.id },
+        `${s.newPhotos.length} (od ${formatDate(s.newPhotos[0]!.takenAt)})`,
+      ),
+    });
+  }
 
   return (
     <section className={styles.box} aria-label="Od ostatniej wizyty">
