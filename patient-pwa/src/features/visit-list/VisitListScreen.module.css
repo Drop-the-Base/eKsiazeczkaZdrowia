@@ -46,3 +46,11 @@
   font-weight: 600;
   text-decoration: none;
 }
+.links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+.links .secondaryLink {
+  text-align: center;
+}

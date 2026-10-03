@@ -20,6 +20,8 @@ export interface AbroadLabels {
   noConditions: string;
   pastConditions: string;
   untranslated: string;
+  /** Name of the ICD-10 classification in this language. */
+  icd: string;
   generated: string;
   disclaimer: string;
   asNeeded: string;
@@ -52,6 +54,7 @@ export const ABROAD_LABELS: Record<AbroadLanguage, AbroadLabels> = {
     noConditions: 'none reported',
     pastConditions: 'Past conditions',
     untranslated: 'not translated, in Polish',
+    icd: 'ICD-10',
     generated: 'Generated',
     disclaimer: 'Not a medical document. Please verify with the patient.',
     asNeeded: 'as needed',
@@ -82,6 +85,7 @@ export const ABROAD_LABELS: Record<AbroadLanguage, AbroadLabels> = {
     noConditions: 'keine bekannt',
     pastConditions: 'Frühere Erkrankungen',
     untranslated: 'nicht übersetzt, auf Polnisch',
+    icd: 'ICD-10',
     generated: 'Erstellt',
     disclaimer: 'Kein ärztliches Dokument. Bitte mit dem Patienten überprüfen.',
     asNeeded: 'bei Bedarf',
@@ -112,6 +116,7 @@ export const ABROAD_LABELS: Record<AbroadLanguage, AbroadLabels> = {
     noConditions: 'ninguna conocida',
     pastConditions: 'Enfermedades previas',
     untranslated: 'sin traducir, en polaco',
+    icd: 'CIE-10',
     generated: 'Generado',
     disclaimer: 'No es un documento médico. Verifíquelo con el paciente.',
     asNeeded: 'a demanda',
