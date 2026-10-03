@@ -96,3 +96,4 @@ Zmergowane taski (dopisuje agent po każdym merge, patrz `CLAUDE.md`).
 - [x] [D09] Demo: zaokrąglenie wycięcia maski podświetlenia zgodne z ramką · issue #191 · 2026-10-03 22:23 · atrapy: brak
 - [x] [D10] Widok lekarza: szczegóły po kliknięciu znacznika na osi czasu (badania/romb) + krok w demo · issue #193 · 2026-10-03 22:28 · atrapy: brak
 - [x] [D11] Demo: widoczna podpowiedź hasła i PIN-u na ekranach blokady i kopii zapasowej · issue #194 · 2026-10-03 22:35 · atrapy: brak
+- [x] [D19] Demo: nawigacja kroków klawiszami strzałek (ArrowLeft / ArrowRight) · issue #207 · 2026-10-03 22:48 · atrapy: brak

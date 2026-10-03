@@ -1,35 +1,6 @@
-/** Where the visitor is in the guide; kept per tab, so a reload does not start from the beginning. */
-export interface TourState {
-  index: number;
-  open: boolean;
-}
+export type GuideStage = 'qr' | 'verify' | 'view';
 
-export const INITIAL_TOUR: TourState = { index: 0, open: true };
-
-export function clampIndex(index: number, total: number): number {
-  return Math.min(Math.max(Math.round(index), 0), total - 1);
-}
-
-/** Saved state from storage – anything malformed means "start from the beginning". */
-export function parseTourState(raw: string | null, total: number): TourState {
-  if (!raw) return INITIAL_TOUR;
-  try {
-    const v: unknown = JSON.parse(raw);
-    if (
-      typeof v === 'object' &&
-      v !== null &&
-      'index' in v &&
-      'open' in v &&
-      typeof v.index === 'number' &&
-      typeof v.open === 'boolean'
-    ) {
-      return { index: clampIndex(v.index, total), open: v.open };
-    }
-  } catch {
-    // not JSON – fall through to the start
-  }
-  return INITIAL_TOUR;
-}
+export type GuideKeyAction = 'simulate' | 'confirm' | 'nextView' | 'close' | 'prevView' | null;
 
 /** True when the keyboard event target is an interactive or editable form field. */
 export function isEditableTarget(target: EventTarget | null): boolean {
@@ -57,4 +28,42 @@ export function isEditableTarget(target: EventTarget | null): boolean {
   }
 
   return false;
+}
+
+export interface GuideNavState {
+  open: boolean;
+  stage?: GuideStage;
+  isBusy: boolean;
+  hasQrPayload: boolean;
+  view: number;
+  lastView: boolean;
+}
+
+export function resolveGuideKeyAction(
+  key: string,
+  state: GuideNavState,
+  target: EventTarget | null,
+): GuideKeyAction {
+  if (!state.open || !state.stage || state.isBusy) return null;
+  if (isEditableTarget(target)) return null;
+
+  if (key === 'ArrowRight') {
+    if (state.stage === 'qr') {
+      return state.hasQrPayload ? 'simulate' : null;
+    }
+    if (state.stage === 'verify') {
+      return 'confirm';
+    }
+    if (state.stage === 'view') {
+      return state.lastView ? 'close' : 'nextView';
+    }
+  }
+
+  if (key === 'ArrowLeft') {
+    if (state.stage === 'view' && state.view > 0) {
+      return 'prevView';
+    }
+  }
+
+  return null;
 }
