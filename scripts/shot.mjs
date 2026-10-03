@@ -1,6 +1,6 @@
 // Zrzut ekranu PWA z kliknięciami (puppeteer-core + zainstalowany Chrome).
 // Użycie: node scripts/shot.mjs <url> <plik.png> [krok...]
-//   krok: "click:fragment tekstu" | "exact:Cały tekst przycisku" | "sel:selektor CSS" | "upload:selektor|plik" | "type:selektor|tekst" | "wait:ms"
+//   krok: "click:fragment tekstu" | "exact:Cały tekst przycisku" | "try:jak exact, jeśli jest" | "pin:1234" | "sel:selektor CSS" | "upload:selektor|plik" | "type:selektor|tekst" | "wait:ms"
 import puppeteer from 'puppeteer-core';
 
 const [url, out, ...steps] = process.argv.slice(2);
@@ -32,6 +32,21 @@ try {
         { timeout: 5000 },
       );
       await el.click();
+    } else if (kind === 'try') {
+      // Jak `exact:`, ale bez błędu, gdy przycisku nie ma (np. arkusz, który pojawia się tylko czasem).
+      const el = await page.$(
+        `::-p-xpath(//*[self::button or self::summary or self::a][normalize-space()=${JSON.stringify(arg)}])`,
+      );
+      if (el) await el.click();
+    } else if (kind === 'pin') {
+      // Ekran blokady (B27/B28): wypełnia wszystkie pola PIN-u i zatwierdza.
+      const fields = await page.$$('input[type=password]');
+      for (const f of fields) await f.type(arg, { delay: 20 });
+      const submit = await page.$(
+        '::-p-xpath(//button[normalize-space()="Ustaw PIN" or normalize-space()="Odblokuj"])',
+      );
+      if (submit) await submit.click();
+      await new Promise((r) => setTimeout(r, 1500));
     } else if (kind === 'sel') {
       const el = await page.waitForSelector(arg, { timeout: 5000 });
       await el.click();

@@ -33,3 +33,8 @@ export async function searchDrugs(query: string, limit = 10): Promise<DrugEntry[
 
 // Zgodność z kontraktem z `@ez/shared`.
 searchDrugs satisfies SearchDrugs;
+
+/** Lek z bazy RPL po identyfikatorze (karta leku). */
+export async function findDrug(rplId: string): Promise<DrugEntry | undefined> {
+  return (await loadDrugIndex()).find((d) => d.drug.rplId === rplId)?.drug;
+}
