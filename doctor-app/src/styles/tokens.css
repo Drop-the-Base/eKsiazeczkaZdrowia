@@ -64,3 +64,11 @@ button {
     font-size: 11pt;
   }
 }
+
+@media print {
+  /* Medication bars and group colours carry meaning – print them. */
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

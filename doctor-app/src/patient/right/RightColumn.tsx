@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import type { ShareSnapshot, TimelineData, TimelineRef } from '@ez/shared';
+import { Timeline } from '@pwa-timeline';
 import { HistoryTabs } from './HistoryTabs';
 import { SinceLastVisit } from './SinceLastVisit';
-import { TimelineStandIn } from './TimelineStandIn';
 import { RANGE_PRESETS, rangeFor, type RangePreset } from './timeline.logic';
 import styles from './Right.module.css';
 
@@ -45,7 +45,7 @@ export function RightColumn({ snapshot }: { snapshot: ShareSnapshot }) {
             ))}
           </div>
         </div>
-        <TimelineStandIn data={data} range={range} highlight={highlight} onSelect={setHighlight} />
+        <Timeline data={data} range={range} highlight={highlight} onSelect={setHighlight} />
       </section>
       <HistoryTabs snapshot={snapshot} />
     </>
