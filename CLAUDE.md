@@ -30,7 +30,7 @@ Rola jest zapisana w `CLAUDE.local.md` (plik lokalny, nie w gicie), np. `Jestem 
 | `progress/agent-a.md` | |
 
 **Jak nie wchodzić sobie w drogę:**
-- **Routing bez wspólnego pliku:** każda funkcja eksportuje `features/<nazwa>/route.tsx` (`{ path, element, tab? }`); `app/` ładuje je przez `import.meta.glob`. Nowy ekran B **nie wymaga** zmiany w `app/`.
+- **Routing bez wspólnego pliku:** każda funkcja eksportuje domyślnie z `features/<nazwa>/route.tsx` obiekt lub tablicę `FeatureRoute` (`{ path, element }`, typ w `app/featureRoute.ts`), a z `features/<nazwa>/overlay.tsx` opcjonalny komponent pływający; `app/` ładuje je przez `import.meta.glob`. Dolna nawigacja jest stała (`app/tabs.tsx`): `/` oś czasu, `/dodaj`, `/zapytaj`, `/profil` – A; **`/wizyta` – B rejestruje ją w jednej ze swoich funkcji**. Zakładka bez zarejestrowanego ekranu pokazuje placeholder. Nowy ekran B **nie wymaga** zmiany w `app/`.
 - **Endpointy serwera:** `server/src/llm/query.ts` eksportuje handler, B podpina go w `server/src/index.ts`.
 - **Potrzebujesz zmiany w cudzym pliku** (np. nowe pole w `shared/types.ts`, nowy komponent w `ui/`)? Nie edytuj. Załóż issue z etykietą drugiego agenta (`gh issue create --label agent-x --title "[prośba] ..."`), a do tego czasu atrapa / lokalna kopia w swoim folderze. Drugi agent bierze prośby **przed** zwykłymi taskami.
 - **`shared/`:** `shared/package.json` i `shared/tsconfig.json` należą do A (monorepo), `shared/src/**` do B.
