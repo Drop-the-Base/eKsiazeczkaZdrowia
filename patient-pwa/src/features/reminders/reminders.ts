@@ -1,5 +1,6 @@
 import type { CreateReminder } from '@ez/shared';
 import { db } from '../../db';
+import { DEMO_BASE, isDemo } from '../../demoMode';
 import { useLive } from '../../ui';
 import { dueReminders } from './reminders.logic';
 
@@ -31,7 +32,7 @@ export async function showMedicationNotification(): Promise<'shown' | 'denied' |
     body: 'Potwierdź: wziąłem / pominąłem',
     icon: '/icon.svg',
     tag: 'medication',
-    data: { url: '/dzis' },
+    data: { url: isDemo ? `${DEMO_BASE}/dzis` : '/dzis' },
   });
   return 'shown';
 }

@@ -16,17 +16,12 @@ const xpButton = (text) =>
 await mkdir(OUT, { recursive: true });
 const browser = await puppeteer.launch({ executablePath, headless: true });
 
-/** Telefon: nowy profil (dane demo + PIN), potem kroki i zrzut widocznego ekranu. */
+/** Telefon: nowy profil w trybie demo (dane Pani Anny, PIN sam), potem kroki i zrzut widocznego ekranu. */
 async function phone(name, path, steps = async () => {}) {
   const context = await browser.createBrowserContext();
   const page = await context.newPage();
   await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 2 });
-  await page.goto(`${BASE}${path}${path.includes('?') ? '&' : '?'}demo=reset`, {
-    waitUntil: 'networkidle0',
-  });
-  for (const f of await page.$$('input[type=password]')) await f.type('1234');
-  const setPin = await page.$(xpButton('Ustaw PIN'));
-  if (setPin) await setPin.click();
+  await page.goto(`${BASE}/demo${path === '/' ? '' : path}`, { waitUntil: 'networkidle0' });
   await sleep(1500);
   const close = await page.$(xpButton('Zamknij'));
   if (close) await close.click();

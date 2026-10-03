@@ -1,10 +1,11 @@
 import { createDb } from './createDb';
 import { HealthDatabase } from './database';
-import { initDemoData, loadDemoData } from './demo';
 import { createBiometric } from './biometric';
 import { createVault } from './vault';
+import { DEMO_PIN, demoStarted, isDemo, markDemoStarted } from '../demoMode';
 
-const dexie = new HealthDatabase();
+// The demo has its own database, so it never touches the patient's real data.
+const dexie = new HealthDatabase(isDemo ? 'eksiazeczka-zdrowia-demo' : undefined);
 
 /** Database key from the PIN (only in memory). The lock screen sets it up and unlocks it. */
 export const vault = createVault(dexie);
@@ -15,25 +16,19 @@ export const biometric = createBiometric(dexie, vault);
 /** The only way the app touches the local database. Returns domain types from `@ez/shared`. */
 export const db = createDb(dexie, vault);
 
-/**
- * Demo data on start (see `initDemoData`). Screens read through `useLiveQuery`,
- * so they re-render once this finishes; await it only if you need the data up front.
- */
-export const dbReady: Promise<void> = initDemoData(dexie, db, vault, {
-  search: window.location.search,
-  autoLoad: import.meta.env.DEV || import.meta.env.VITE_DEMO === '1',
-  now: new Date().toISOString(),
-}).then((result) => {
-  if (result === 'reset') {
-    const url = new URL(window.location.href);
-    url.searchParams.delete('demo');
-    window.history.replaceState(null, '', url);
-  }
-});
-dbReady.catch((err: unknown) => console.error('Nie udało się wczytać danych demo', err));
-
-/** Replaces all data with the "Pani Anna" demo (e.g. a "Wczytaj demo" button). */
-export const resetDemoData = (): Promise<void> => loadDemoData(dexie, db, new Date().toISOString());
+/** Resolves once the demo data is in (`/demo` only); outside the demo at once. */
+export const dbReady: Promise<void> = isDemo
+  ? import('./demo')
+      .then((m) =>
+        m.startDemo(dexie, db, vault, {
+          pin: DEMO_PIN,
+          fresh: !demoStarted(),
+          now: new Date().toISOString(),
+        }),
+      )
+      .then(markDemoStarted)
+  : Promise.resolve();
+dbReady.catch((err: unknown) => console.error('Nie udało się przygotować demo', err));
 
 export type { Db, MedicationsApi } from './createDb';
 export type { DatedEntityApi } from './entityApi';

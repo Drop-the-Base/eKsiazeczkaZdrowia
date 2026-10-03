@@ -43,3 +43,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B39] Zmiana nazwy na „Prywatna Karta Zdrowia” (ekrany B, aplikacja lekarza) · issue #147 · 2026-10-03 19:46 · atrapy: brak
 - [x] [B29] Biometria przez passkey z PRF · issue #62 · 2026-10-03 19:49 · atrapy: brak (sprawdzone wirtualnym autentykatorem; telefon demo – do sprawdzenia)
 - [x] [D05] Widok lekarza: „Leki i suplementy” / „Wszystko, co przyjmuje” · issue #176 · 2026-10-03 20:13 · atrapy: brak
+- [x] [D01] Tryb demo /demo: osobna baza, PIN sam, prawdziwa aplikacja bez danych demo · issue #172 · 2026-10-03 20:17 · atrapy: arkusz „wizyta za 3 dni” wyskakuje w demo do D02

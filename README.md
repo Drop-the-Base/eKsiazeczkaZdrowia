@@ -61,11 +61,11 @@ Każdy task to issue na GitHubie; agent bierze je skillem `/next-task`. Zmergowa
 scripts/ship.sh            # dla PR z bieżącej gałęzi
 ```
 
-Zrzut ekranu z klikaniem (sprawdzanie ekranów bez ręcznego klikania; puppeteer-core + zainstalowany Chrome, nowy profil przy każdym uruchomieniu – dane demo przez `?demo=reset`):
+Zrzut ekranu z klikaniem (sprawdzanie ekranów bez ręcznego klikania; puppeteer-core + zainstalowany Chrome, nowy profil przy każdym uruchomieniu – dane demo pod `/demo/...`):
 
 ```bash
 npm run build -w patient-pwa && npx vite preview --port 4173 -c patient-pwa/vite.config.ts patient-pwa &
-node scripts/shot.mjs "http://localhost:4173/leki?demo=reset" out.png "click:+ Dodaj" "type:input[type=search]|ibupr" "wait:1000"
+node scripts/shot.mjs "http://localhost:4173/demo/leki" out.png "click:+ Dodaj" "type:input[type=search]|ibupr" "wait:1000"
 ```
 
 ## Slajdy

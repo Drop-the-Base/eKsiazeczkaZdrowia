@@ -1,4 +1,5 @@
 import { PageHeader } from '../../ui';
+import { isDemo } from '../../demoMode';
 import { DemoNotificationButton } from '../reminders';
 import { TodayIntakes } from './components/TodayIntakes';
 import styles from './TodayScreen.module.css';
@@ -9,7 +10,7 @@ export function TodayScreen() {
       <PageHeader title="Leki na dziś" back="/profil" />
       <div className={styles.content}>
         <TodayIntakes />
-        <DemoNotificationButton />
+        {isDemo && <DemoNotificationButton />}
       </div>
     </>
   );
