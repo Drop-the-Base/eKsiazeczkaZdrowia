@@ -71,12 +71,10 @@ gh pr create --title "[KLUCZ] tytuł" --body "Closes #<nr>
 ...
 ## Atrapy / odstępstwa
 ..."
-git fetch origin && git rebase origin/main   # konflikt w cudzych plikach → STOP, zapytaj
-npm run build
-git push --force-with-lease                   # tylko na własnej gałęzi
-gh pr merge --squash --delete-branch
-git switch main && git pull --ff-only
+bash scripts/ship.sh
 ```
+
+`scripts/ship.sh`: fetch → rebase na `origin/main` → `npm install` → build → testy → `push --force-with-lease` → squash merge → `main` lokalnie; ponawia, gdy drugi agent zmergował w międzyczasie. Konflikt przy rebase w cudzych plikach → STOP, zapytaj. Build / testy padają po rebase → napraw u siebie albo `[prośba]` do drugiego agenta.
 
 ## 7. Raport
 
