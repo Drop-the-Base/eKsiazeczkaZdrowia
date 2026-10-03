@@ -9,7 +9,7 @@ import {
 import { db } from '../../db';
 import { searchDrugs } from '../drugs';
 import { stopMedication } from '../meds';
-import { createReminder } from './createReminderStub';
+import { createReminder, markDone } from '../reminders';
 import { followUpReminderAt, isVisitNoteChanges, type PostVisitPlan } from './postVisit.logic';
 
 /** Only the note text and today's date go to the server – no name, profile or history. */
@@ -87,9 +87,8 @@ export async function applyPlan(
   }
 
   // This visit is the follow-up the earlier reminders were about.
-  const doneAt = new Date().toISOString();
   for (const r of await db.reminders.list()) {
-    if (r.type === 'followUp' && !r.doneAt) await db.reminders.update(r.id, { doneAt });
+    if (r.type === 'followUp' && !r.doneAt) await markDone(r.id);
   }
 
   const visit: Omit<Visit, 'id'> = { date: today, transcript, appliedChanges: applied };
