@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Prywatna Karta Zdrowia – HackYeah 2026</title>
+    <!-- 10 slajdów 1280×720. PDF: node scripts/slides/build-pdf.mjs. Zrzuty: scripts/slides/capture.mjs -->
+    <style>
+      :root {
+        --bg: #f6f7f9;
+        --surface: #fff;
+        --text: #1b1f24;
+        --muted: #5f6b7a;
+        --primary: #0f766e;
+        --primary-soft: #d9f0ed;
+        --rx: #2563eb;
+        --otc: #d97706;
+        --supp: #7c3aed;
+        --danger: #b42318;
+      }
+      @page {
+        size: 1280px 720px;
+        margin: 0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        color: var(--text);
+        background: #ccc;
+      }
+      .slide {
+        position: relative;
+        width: 1280px;
+        height: 720px;
+        margin: 0 auto 24px;
+        padding: 56px 72px;
+        overflow: hidden;
+        background: var(--bg);
+        page-break-after: always;
+        break-after: page;
+      }
+      @media print {
+        body {
+          background: none;
+        }
+        .slide {
+          margin: 0;
+        }
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: 56px;
+        line-height: 1.05;
+      }
+      h2 {
+        margin: 0 0 28px;
+        font-size: 40px;
+      }
+      h3 {
+        margin: 0 0 8px;
+        font-size: 22px;
+      }
+      p,
+      li {
+        font-size: 22px;
+        line-height: 1.4;
+      }
+      ul {
+        margin: 0;
+        padding-left: 1.1em;
+      }
+      li + li {
+        margin-top: 10px;
+      }
+      .lead {
+        font-size: 28px;
+        color: var(--muted);
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .accent {
+        color: var(--primary);
+      }
+      .num {
+        position: absolute;
+        right: 40px;
+        bottom: 24px;
+        font-size: 16px;
+        color: var(--muted);
+      }
+      .brand {
+        position: absolute;
+        left: 72px;
+        bottom: 24px;
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--primary);
+      }
+      .row {
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
+      }
+      .grow {
+        flex: 1;
+      }
+      .phone {
+        height: 540px;
+        border-radius: 28px;
+        border: 6px solid #1b1f24;
+        box-shadow: 0 12px 32px rgb(0 0 0 / 0.18);
+        background: #fff;
+      }
+      .phone.sm {
+        height: 470px;
+      }
+      .crop {
+        height: 360px;
+        overflow: hidden;
+        border-radius: 12px;
+        border: 1px solid #d0d5db;
+        box-shadow: 0 12px 32px rgb(0 0 0 / 0.15);
+      }
+      .crop img {
+        width: 100%;
+        display: block;
+      }
+      .desk {
+        width: 100%;
+        border-radius: 12px;
+        border: 1px solid #d0d5db;
+        box-shadow: 0 12px 32px rgb(0 0 0 / 0.15);
+      }
+      .card {
+        padding: 20px 24px;
+        border-radius: 16px;
+        background: var(--surface);
+        border: 1px solid #e3e6ea;
+      }
+      .grid2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .tag {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 999px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        font-weight: 600;
+        font-size: 18px;
+      }
+      .quote {
+        padding: 24px 28px;
+        border-left: 6px solid var(--primary);
+        background: var(--surface);
+        border-radius: 0 16px 16px 0;
+        font-size: 26px;
+        line-height: 1.45;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 19px;
+      }
+      th,
+      td {
+        padding: 9px 12px;
+        border-bottom: 1px solid #e3e6ea;
+        text-align: left;
+      }
+      th {
+        color: var(--muted);
+        font-weight: 600;
+      }
+      td.c {
+        text-align: center;
+      }
+      .flow {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 20px 0 8px;
+      }
+      .box {
+        padding: 16px 20px;
+        border-radius: 14px;
+        background: var(--surface);
+        border: 2px solid #e3e6ea;
+        font-size: 20px;
+        text-align: center;
+      }
+      .box.key {
+        border-color: var(--primary);
+      }
+      .arrow {
+        font-size: 28px;
+        color: var(--muted);
+      }
+      .steps {
+        counter-reset: s;
+        list-style: none;
+        padding: 0;
+      }
+      .steps li {
+        counter-increment: s;
+        position: relative;
+        padding-left: 44px;
+        font-size: 21px;
+      }
+      .steps li::before {
+        content: counter(s);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: #fff;
+        font-size: 17px;
+        font-weight: 700;
+        text-align: center;
+        line-height: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 1. Tytuł -->
+    <section class="slide">
+      <div class="row">
+        <div class="grow" style="padding-top: 70px">
+          <span class="tag">HackYeah 2026 · Sport &amp; Healthcare</span>
+          <h1 style="margin-top: 28px">Prywatna<br />Karta Zdrowia</h1>
+          <p class="lead">
+            Prywatna oś czasu zdrowia na telefonie pacjenta, uzupełniana głosem, którą w kilka
+            sekund można bezpiecznie pokazać dowolnemu lekarzowi – także za granicą.
+          </p>
+          <p style="margin-top: 48px"><strong>Zespół Drop the Base</strong></p>
+          <p class="muted">[członkowie zespołu]</p>
+        </div>
+        <img class="phone" src="img/os-czasu.png" alt="" />
+      </div>
+      <span class="num">1</span>
+    </section>
+
+    <!-- 2. Przypadek z życia -->
+    <section class="slide">
+      <h2>Pacjent nie wie, co jest istotne</h2>
+      <div class="quote">
+        Pacjentka leczona na nowotwór krwi. Lekarze kolejno zmieniali leki, a po każdym wyniki krwi
+        były złe. Nikt nie wiedział dlaczego.<br /><br />
+        Nie uznała za istotne, żeby wspomnieć o <strong>suplemencie z grzybów</strong>, który brała
+        codziennie. Lekarze dowiedzieli się o nim przypadkiem – od jej córki.
+      </div>
+      <p class="lead" style="margin-top: 36px">
+        → Zapisujemy <strong>wszystko</strong>, co pacjent bierze – także suplementy i zioła – i
+        pokazujemy to lekarzowi <strong>na równi</strong> z lekami z recepty.
+      </p>
+      <span class="brand">Prywatna Karta Zdrowia</span><span class="num">2</span>
+    </section>
+
+    <!-- 3. Problem -->
+    <section class="slide">
+      <h2>Problem: dane o zdrowiu są rozproszone</h2>
+      <div class="grid2">
+        <div class="card">
+          <h3>Rozproszenie</h3>
+          <p>
+            Przychodnie, szpitale, laboratoria, aplikacje, papier. IKP zna recepty, ale nie wie, co
+            pacjent <em>faktycznie</em> bierze, kupuje bez recepty i jak się czuje.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Łatwo zapomnieć</h3>
+          <p>Dawki, daty badań, objawy, zalecenia z wizyty – w 10-minutowej wizycie wszystko ucieka.</p>
+        </div>
+        <div class="card">
+          <h3>Brak osi czasu</h3>
+          <p>Trudno zobaczyć, że objaw zaczął się kilka dni po nowym leku albo że jedyną stałą jest suplement.</p>
+        </div>
+        <div class="card">
+          <h3>Za granicą</h3>
+          <p>Lekarz nie ma dostępu do historii, a pacjent nie umie jej opisać w obcym języku.</p>
+        </div>
+      </div>
+      <span class="brand">Prywatna Karta Zdrowia</span><span class="num">3</span>
+    </section>
+
+    <!-- 4. Rozwiązanie / Pani Anna -->
+    <section class="slide">
+      <h2>Pani Anna i jej telefon</h2>
+      <div class="row">
+        <ol class="steps grow">
+          <li>Dodaje leki z rejestru i – zapytana wprost – <strong>suplement</strong>, który uważa za nieistotny.</li>
+          <li>Codziennie potwierdza leki jednym dotknięciem; mówi: <em>„od rana boli mnie głowa, wzięłam ibuprom”</em>.</li>
+          <li>Wyniki krwi (import z IKP, zdjęcie wydruku) lądują na osi czasu obok leków.</li>
+          <li><em>„Powiem lekarzowi, że po nowym leku kręci mi się w głowie”</em> → lista na wizytę.</li>
+          <li>U lekarza skanuje QR – lekarz w 30 s widzi wszystko, także suplement.</li>
+          <li>Po wizycie: notatka → zmiany w lekach i kontrola w kalendarzu.</li>
+          <li>Przed oddaniem krwi pyta: <em>„jakie leki brałam w ostatnich 2 miesiącach?”</em></li>
+          <li>W Hiszpanii pokazuje podsumowanie po hiszpańsku – offline.</li>
+        </ol>
+      </div>
+      <span class="brand">Prywatna Karta Zdrowia</span><span class="num">4</span>
+    </section>
+
+    <!-- 5. Zbieranie danych -->
+    <section class="slide">
+      <div class="row">
+        <div class="grow">
+          <h2>Zbieranie bez wysiłku</h2>
+          <ul>
+            <li><strong>Głos:</strong> jedno zdanie → objaw + przyjęty lek, zatwierdzenie jednym dotknięciem (zdanie rozbijane na telefonie).</li>
+            <li><strong>Rejestr Produktów Leczniczych:</strong> 20 248 leków offline – substancja, moc, ATC, ulotka.</li>
+            <li><strong>Import z IKP:</strong> PDF z „Udostępnij” → diagnozy, wyniki, leki do zatwierdzenia.</li>
+            <li><strong>Zdjęcie wydruku:</strong> OCR na telefonie → gotowy formularz badania.</li>
+            <li><strong>„Czy bierzesz coś jeszcze?”</strong> – suplementy i zioła na równi z lekami.</li>
+          </ul>
+        </div>
+        <img class="phone sm" src="img/dodaj.png" alt="" />
+        <img class="phone sm" src="img/leki.png" alt="" />
+      </div>
+      <span class="brand">Prywatna Karta Zdrowia</span><span class="num">5</span>
+    </section>
+
+    <!-- 6. Oś czasu -->
+    <section class="slide">
+      <div class="row">
+        <img class="phone" src="img/os-czasu.png" alt="" />
+        <div class="grow" style="padding-top: 40px">
+          <h2>Wszystko na jednej osi czasu</h2>
+          <ul>
+            <li>Leki jako paski – w trzech grupach: <span style="color: var(--rx)">na receptę</span>, <span style="color: var(--otc)">bez recepty</span>, <span style="color: var(--supp)">suplementy i zioła</span>.</li>
+            <li>Pod spodem wyniki badań (poza normą ↓↑), objawy, wizyty, zdjęcia, dokumenty.</li>
+            <li>Widać, że <strong>suplement trwa przez cały okres złych wyników</strong>, a zawroty zaczęły się po nowym leku.</li>
+            <li class="muted">Bez interpretacji i ostrzeżeń – wnioski wyciąga lekarz.</li>
+          </ul>
+        </div>
+      </div>
+      <span class="num">6</span>
+    </section>
+
+    <!-- 7. Wizyta -->
+    <section class="slide">
+      <h2>U lekarza: QR, 30 sekund, zero instalacji</h2>
+      <div class="row">
+        <img class="phone sm" src="img/powiem-lekarzowi.png" alt="" />
+        <div class="grow">
+          <div class="crop"><img src="img/lekarz.png" alt="" /></div>
+          <p style="margin-top: 16px">
+            Lekarz otwiera stronę w przeglądarce, pacjentka skanuje QR → dane płyną
+            <strong>zaszyfrowane end-to-end</strong>. „Pacjent chce powiedzieć”, wszystko, co
+            przyjmuje (na równi), podsumowanie od ostatniej wizyty i oś czasu. Dane tylko w pamięci
+            karty – znikają po „Zakończ wizytę”.
+          </p>
+        </div>
+      </div>
+      <span class="brand">Prywatna Karta Zdrowia</span><span class="num">7</span>
+    </section>
+
+    <!-- 8. Zapytaj + Za granicą -->
+    <section class="slide">
+      <div class="row">
+        <div class="grow">
+          <h2>Pytania o przeszłość i za granicą</h2>
+          <ul>
+            <li><em>„Jakie leki brałam w ostatnich 2 miesiącach?”</em>, <em>„Kiedy ostatnio brałam leki przeciwzakrzepowe?”</em>, <em>„Od kiedy mam te bóle głowy?”</em></li>
+            <li>Model językowy dostaje <strong>tylko pytanie</strong> i zamienia je na filtr – odpowiedź liczy się na telefonie.</li>
+            <li><strong>Za granicą:</strong> podsumowanie po angielsku, niemiecku, hiszpańsku – leki przez substancję czynną + ATC, choroby z ICD-10. Offline, z wydrukiem do PDF.</li>
+          </ul>
+        </div>
+        <img class="phone sm" src="img/zapytaj.png" alt="" />
+        <img class="phone sm" src="img/za-granica.png" alt="" />
+      </div>
+      <span class="brand">Prywatna Karta Zdrowia</span><span class="num">8</span>
+    </section>
+
+    <!-- 9. Prywatność -->
+    <section class="slide">
+      <h2>Prywatność: historia zdrowia nie opuszcza telefonu</h2>
+      <div class="flow">
+        <div class="box key">Telefon pacjenta<br /><small class="muted">baza AES-256-GCM, klucz z PIN-u</small></div>
+        <span class="arrow">→</span>
+        <div class="box">Serwer = listonosz<br /><small class="muted">przekazuje zaklejoną kopertę</small></div>
+        <span class="arrow">→</span>
+        <div class="box key">Przeglądarka lekarza<br /><small class="muted">tylko w pamięci karty</small></div>
+      </div>
+      <div class="grid2" style="margin-top: 20px">
+        <ul>
+          <li>Przesył: jednorazowe klucze ECDH → AES-256-GCM; serwer nie ma klucza.</li>
+          <li>4-cyfrowy kod weryfikacyjny na obu ekranach – podmiana klucza wychodzi od razu.</li>
+          <li>Kopia zapasowa: plik szyfrowany hasłem (Argon2id), pacjent decyduje, gdzie go trzyma.</li>
+        </ul>
+        <ul>
+          <li>Rozpoznawanie wpisów, wyszukiwanie leków, OCR, import PDF – lokalnie.</li>
+          <li>Do modelu językowego: tylko jedno zdanie pytania, anonimowo, bez historii.</li>
+          <li class="muted">Uczciwie: dyktowanie w Chrome korzysta z usługi Google – w aplikacji mobilnej rozpoznawanie na urządzeniu.</li>
+        </ul>
+      </div>
+      <span class="brand">Prywatna Karta Zdrowia</span><span class="num">9</span>
+    </section>
+
+    <!-- 10. Konkurencja + rozwój -->
+    <section class="slide">
+      <div class="row">
+        <div class="grow">
+          <h2>Dlaczego my</h2>
+          <table>
+            <tr><th></th><th>mojeIKP</th><th>Bearable / CareClinic</th><th>Prywatna Karta Zdrowia</th></tr>
+            <tr><td>Faktycznie przyjmowane, OTC, suplementy</td><td class="c">✗</td><td class="c">✓</td><td class="c">✓</td></tr>
+            <tr><td>Jedna oś: leki + objawy + badania + wizyty</td><td class="c">✗</td><td class="c">częściowo</td><td class="c">✓</td></tr>
+            <tr><td>Głos: wpisy i pytania o przeszłość</td><td class="c">✗</td><td class="c">✗</td><td class="c">✓</td></tr>
+            <tr><td>Widok dla lekarza przez QR, bez konta</td><td class="c">✗</td><td class="c">PDF</td><td class="c">✓</td></tr>
+            <tr><td>Dane tylko na telefonie, przesył E2E</td><td class="c">✗</td><td class="c">chmura</td><td class="c">✓</td></tr>
+            <tr><td>Podsumowanie offline w języku lekarza</td><td class="c">częściowo</td><td class="c">✗</td><td class="c">✓</td></tr>
+          </table>
+        </div>
+        <div class="card" style="width: 360px">
+          <h3>Co dalej</h3>
+          <ul>
+            <li>Aplikacja mobilna z tego kodu (Capacitor): SQLCipher, Keystore/Keychain, blokada zrzutów, lokalne powiadomienia.</li>
+            <li>Integracja z IKP i MyHealth@EU.</li>
+            <li>Rozpoznawanie mowy na urządzeniu.</li>
+          </ul>
+        </div>
+      </div>
+      <span class="brand">Prywatna Karta Zdrowia</span><span class="num">10</span>
+    </section>
+  </body>
+</html>
