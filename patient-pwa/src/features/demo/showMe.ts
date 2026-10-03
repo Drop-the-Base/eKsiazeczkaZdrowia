@@ -177,6 +177,9 @@ export async function runShowMe(action: ShowMe): Promise<void> {
     await sleep(350);
     form.requestSubmit();
     const confirm = await waitForTarget('confirm', 800);
-    if (confirm) await clickWithEffect(confirm);
+    if (confirm) {
+      await sleep(1800); // time to read what is sent (the notice text)
+      await clickWithEffect(confirm);
+    }
   }
 }

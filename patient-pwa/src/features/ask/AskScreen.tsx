@@ -137,7 +137,7 @@ function AnswerView({ answer }: { answer: Answer }) {
   }, [answer]);
 
   return (
-    <section className={styles.answer} aria-live="polite">
+    <section className={styles.answer} aria-live="polite" data-tour="ask-answer">
       <p className={styles.question}>„{answer.question}”</p>
       <p className={styles.muted}>
         Kryteria: {describeFilter(answer.filter)}
