@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, EmptyState, List, ListItem, LoadingState, PageHeader } from '../../ui';
 import { BACKUP_PATH } from '../backup';
-import { lockNow } from '../lock';
+import { lockNow, SECURITY_PATH } from '../lock';
 import { DemoDataCard } from './components/DemoDataCard';
 import { DiagnosesSection } from './components/DiagnosesSection';
 import { ProfileCard } from './components/ProfileCard';
@@ -70,6 +70,12 @@ export function ProfileScreen() {
             subtitle="Zaszyfrowany plik na nowy telefon"
             trailing="›"
             onClick={() => navigate(BACKUP_PATH)}
+          />
+          <ListItem
+            title="Zabezpieczenia"
+            subtitle="PIN, odcisk palca, blokada"
+            trailing="›"
+            onClick={() => navigate(SECURITY_PATH)}
           />
         </List>
         <DiagnosesSection />
