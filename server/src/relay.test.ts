@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { WebSocket } from 'ws';
 import type { ServerMessage } from '@ez/shared';
 import { createApp } from './app';
+import { handleVisitNote } from './llm/visit-note';
 import { handleQueryStub } from './queryStub';
 
 type Client = { ws: WebSocket; next: () => Promise<ServerMessage>; send: (m: unknown) => void };
@@ -15,6 +16,7 @@ async function startServer(ttlMs = 60_000): Promise<string> {
     patientDist: '/nope',
     doctorDist: '/nope',
     llmQuery: handleQueryStub,
+    llmVisitNote: handleVisitNote,
     relay: { ttlMs },
   });
   await new Promise<void>((r) => server.listen(0, '127.0.0.1', r));

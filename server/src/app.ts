@@ -1,6 +1,11 @@
 import { createServer, type Server } from 'node:http';
 import { WebSocketServer, type WebSocket } from 'ws';
-import { LLM_QUERY_PATH, RELAY_MAX_MESSAGE_BYTES, RELAY_PATH } from '@ez/shared';
+import {
+  LLM_QUERY_PATH,
+  LLM_VISIT_NOTE_PATH,
+  RELAY_MAX_MESSAGE_BYTES,
+  RELAY_PATH,
+} from '@ez/shared';
 import { COMMON_HEADERS, DOCTOR_HEADERS } from './headers.js';
 import { handleJson, sendJson, type JsonHandler } from './json.js';
 import { createRelay, type RelayOptions } from './relay.js';
@@ -13,6 +18,7 @@ export interface AppOptions {
   patientDist: string;
   doctorDist: string;
   llmQuery: JsonHandler;
+  llmVisitNote: JsonHandler;
   relay?: RelayOptions;
 }
 
@@ -45,6 +51,7 @@ export function createApp(opts: AppOptions): Server {
 
     if (path === '/health') return sendJson(res, 200, { ok: true });
     if (path === LLM_QUERY_PATH) return void handleJson(req, res, opts.llmQuery);
+    if (path === LLM_VISIT_NOTE_PATH) return void handleJson(req, res, opts.llmVisitNote);
 
     if (method !== 'GET' && method !== 'HEAD') {
       res.writeHead(405, COMMON_HEADERS);
