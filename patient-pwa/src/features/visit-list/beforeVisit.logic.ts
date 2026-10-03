@@ -13,8 +13,12 @@ const pad = (n: number) => String(n).padStart(2, '0');
 const localDay = (d: Date): IsoDate =>
   `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
-/** Earliest pending follow-up from today to `DAYS_BEFORE` days ahead (local calendar days). */
-export function upcomingFollowUp(reminders: Reminder[], now: Date): UpcomingVisit | undefined {
+/** Earliest pending follow-up from today to `withinDays` days ahead (local calendar days). */
+export function upcomingFollowUp(
+  reminders: Reminder[],
+  now: Date,
+  withinDays = DAYS_BEFORE,
+): UpcomingVisit | undefined {
   const today = localDay(now);
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
   return reminders
@@ -25,7 +29,7 @@ export function upcomingFollowUp(reminders: Reminder[], now: Date): UpcomingVisi
       const daysLeft = Math.round((new Date(y, m - 1, d).getTime() - startOfToday) / 86_400_000);
       return { reminderId: r.id, date, daysLeft };
     })
-    .filter((v) => v.date >= today && v.daysLeft <= DAYS_BEFORE)
+    .filter((v) => v.date >= today && v.daysLeft <= withinDays)
     .sort((a, b) => a.date.localeCompare(b.date))[0];
 }
 

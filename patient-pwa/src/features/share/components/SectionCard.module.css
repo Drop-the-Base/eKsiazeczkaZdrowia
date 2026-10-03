@@ -32,7 +32,8 @@
   padding-left: calc(22px + var(--space-3));
   font-size: var(--font-size-sm);
 }
-.body ul {
+.body ul,
+.body ol {
   margin: 0;
   padding-left: var(--space-4);
 }

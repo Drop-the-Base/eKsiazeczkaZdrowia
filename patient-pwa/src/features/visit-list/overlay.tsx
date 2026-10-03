@@ -7,20 +7,19 @@ import { VISIT_PATH } from './route';
 import styles from './overlay.module.css';
 
 /**
- * "Powiem lekarzowi" from any screen (except the list itself, which has its own form),
- * plus the list opening by itself before a follow-up visit.
+ * "Powiem lekarzowi" from any screen outside the visit tab, plus the list opening by itself
+ * before a follow-up visit.
  */
 export default function TellDoctorOverlay() {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  if (pathname === VISIT_PATH) return null;
-  // Not over the visit flows (sharing, post-visit, the summary shown to a doctor abroad).
-  const inVisitFlow = pathname.startsWith(`${VISIT_PATH}/`);
+  // The visit tab has its own form; its flows (sharing, post-visit, abroad) need the whole screen.
+  if (pathname === VISIT_PATH || pathname.startsWith(`${VISIT_PATH}/`)) return null;
   return (
     <>
-      {!inVisitFlow && <BeforeVisitSheet />}
+      <BeforeVisitSheet />
       <button
         type="button"
         className={styles.fab}
