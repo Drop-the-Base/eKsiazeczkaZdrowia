@@ -17,11 +17,18 @@ export default defineConfig({
         background_color: '#ffffff',
         theme_color: '#0f766e',
         icons: [{ src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }],
+        // Android / Chrome: PDF z IKP przez systemowe „Udostępnij” → import (public/sw-share.js).
+        share_target: {
+          action: '/share-target',
+          method: 'POST',
+          enctype: 'multipart/form-data',
+          params: { files: [{ name: 'file', accept: ['application/pdf', 'text/plain'] }] },
+        },
       },
       workbox: {
+        // Kliknięcie powiadomienia „Czas na lek” → /dzis (features/reminders); „Udostępnij” → import (A28).
+        importScripts: ['/sw-notifications.js', '/sw-share.js'],
         // Te ścieżki obsługuje serwer (aplikacja lekarza, LLM, przekaźnik) – SW PWA nie może ich podmieniać.
-        // Kliknięcie powiadomienia „Czas na lek” → /dzis (features/reminders).
-        importScripts: ['/sw-notifications.js'],
         navigateFallbackDenylist: [/^\/lekarz/, /^\/llm/, /^\/relay/, /^\/health/],
         // Baza leków (~2 MB) poza precache: pobierana przy pierwszym wyszukiwaniu, potem z cache (offline).
         runtimeCaching: [
