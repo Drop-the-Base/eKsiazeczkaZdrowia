@@ -51,6 +51,18 @@ export function createVault(dexie: HealthDatabase) {
       setStatus('error');
     });
 
+  async function keyFromPin(pin: string): Promise<CryptoKey> {
+    const meta = await dexie.meta.get('vault');
+    if (!meta) throw new Error('Brak ustawionego PIN-u');
+    const k = await deriveKey(pin, meta.salt, meta.kdf);
+    try {
+      await openBytes(k, meta.check, 'vault');
+    } catch {
+      throw new WrongPinError();
+    }
+    return k;
+  }
+
   /** Encrypts rows that were stored in plain text (data from before encryption). */
   async function sealLegacyRows(k: CryptoKey) {
     for (const table of dexie.entityTables()) {
@@ -90,16 +102,13 @@ export function createVault(dexie: HealthDatabase) {
       open(k);
     },
     async unlock(pin: string): Promise<void> {
-      const meta = await dexie.meta.get('vault');
-      if (!meta) throw new Error('Brak ustawionego PIN-u');
-      const k = await deriveKey(pin, meta.salt, meta.kdf);
-      try {
-        await openBytes(k, meta.check, 'vault');
-      } catch {
-        throw new WrongPinError();
-      }
+      const k = await keyFromPin(pin);
       await sealLegacyRows(k);
       open(k);
+    },
+    /** Throws `WrongPinError` unless the PIN is right; does not unlock. */
+    async verifyPin(pin: string): Promise<void> {
+      await keyFromPin(pin);
     },
     /** Forgets the key; reads wait again until the next unlock. */
     lock(): void {
@@ -110,7 +119,9 @@ export function createVault(dexie: HealthDatabase) {
     /** Deletes all data and the PIN (demo reset / forgotten PIN). */
     async wipe(): Promise<void> {
       key = null;
-      await Promise.all([...dexie.entityTables(), dexie.meta].map((t) => t.clear()));
+      await Promise.all(
+        [...dexie.entityTables(), dexie.meta, dexie.biometric].map((t) => t.clear()),
+      );
       setStatus('no-pin');
     },
   };

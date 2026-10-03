@@ -1,5 +1,11 @@
-import { useCallback, useState, useSyncExternalStore } from 'react';
-import { vault, WrongPinError } from '../../db';
+import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
+import {
+  biometric,
+  biometricSupported,
+  BiometricUnavailableError,
+  vault,
+  WrongPinError,
+} from '../../db';
 import { validateNewPin } from './lock.logic';
 
 /** Lock state of the encrypted database and the actions of the lock screen. */
@@ -7,6 +13,19 @@ export function useLock() {
   const status = useSyncExternalStore(vault.onChange, () => vault.status);
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
+  const [biometricOn, setBiometricOn] = useState(false);
+
+  useEffect(() => {
+    if (status !== 'locked' || !biometricSupported()) return;
+    let active = true;
+    biometric
+      .isEnabled()
+      .then((on) => active && setBiometricOn(on))
+      .catch(() => active && setBiometricOn(false)); // no biometric option – the PIN still works
+    return () => {
+      active = false;
+    };
+  }, [status]);
 
   const run = useCallback(async (action: () => Promise<void>, fallback: string) => {
     setBusy(true);
@@ -14,7 +33,13 @@ export function useLock() {
     try {
       await action();
     } catch (err) {
-      setError(err instanceof WrongPinError ? 'Nieprawidłowy PIN' : fallback);
+      setError(
+        err instanceof WrongPinError
+          ? 'Nieprawidłowy PIN'
+          : err instanceof BiometricUnavailableError
+            ? err.message
+            : fallback,
+      );
     } finally {
       setBusy(false);
     }
@@ -27,6 +52,8 @@ export function useLock() {
   };
   const unlock = (pin: string) => void run(() => vault.unlock(pin), 'Nie udało się odblokować');
   const wipe = () => void run(() => vault.wipe(), 'Nie udało się usunąć danych');
+  const unlockBiometric = () =>
+    void run(() => biometric.unlock(), 'Nie udało się odblokować biometrią – wpisz PIN');
 
-  return { status, error, busy, setup, unlock, wipe };
+  return { status, error, busy, setup, unlock, wipe, biometricOn, unlockBiometric };
 }

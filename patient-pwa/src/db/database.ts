@@ -11,6 +11,14 @@ export interface VaultMeta {
   check: Sealed;
 }
 
+/** Unencrypted: the PIN sealed with a key from the passkey's PRF output (biometric unlock, B29). */
+export interface BiometricMeta {
+  id: 'biometric';
+  credentialId: Uint8Array;
+  salt: Uint8Array;
+  sealedPin: Sealed;
+}
+
 export const ENTITY_TABLES = [
   'profile',
   'medications',
@@ -40,12 +48,14 @@ export class HealthDatabase extends Dexie {
   visits!: Table<StoredRow, string>;
   reminders!: Table<StoredRow, string>;
   meta!: Table<VaultMeta, string>;
+  biometric!: Table<BiometricMeta, string>;
 
   constructor(name = 'eksiazeczka-zdrowia') {
     super(name);
     // Primary keys only: records are encrypted, queries filter in memory (see entityApi.ts).
     this.version(1).stores(Object.fromEntries(ENTITY_TABLES.map((t) => [t, 'id'])));
     this.version(2).stores({ meta: 'id' });
+    this.version(3).stores({ biometric: 'id' });
   }
 
   entityTables(): Table<StoredRow, string>[] {
