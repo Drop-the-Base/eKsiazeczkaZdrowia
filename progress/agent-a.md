@@ -27,3 +27,4 @@ Zmergowane taski (dopisuje agent A po każdym merge, patrz `CLAUDE.md`).
 - [x] [A24] runFilter(filter, db) lokalnie · issue #51 · 2026-10-03 18:50 · atrapy: brak
 - [x] [A25] Ekran „Zapytaj” · issue #53 · 2026-10-03 18:55 · atrapy: brak
 - [x] [A26] Przypomnienia: createReminder, „Do potwierdzenia”, powiadomienie demo · issue #55 · 2026-10-03 18:58 · atrapy: brak
+- [x] [A21] Zdjęcia: aparat / galeria, kategoria, seria · issue #45 · 2026-10-03 19:02 · atrapy: brak

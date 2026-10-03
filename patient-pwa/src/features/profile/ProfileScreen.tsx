@@ -51,6 +51,12 @@ export function ProfileScreen() {
             trailing="›"
             onClick={() => navigate('/badania')}
           />
+          <ListItem
+            title="Zdjęcia"
+            subtitle="Zmiany skórne, rany, obrzęki w czasie"
+            trailing="›"
+            onClick={() => navigate('/zdjecia')}
+          />
         </List>
         <DiagnosesSection />
         <DemoDataCard />

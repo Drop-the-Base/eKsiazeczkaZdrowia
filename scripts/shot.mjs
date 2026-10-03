@@ -1,6 +1,6 @@
 // Zrzut ekranu PWA z kliknięciami (puppeteer-core + zainstalowany Chrome).
 // Użycie: node scripts/shot.mjs <url> <plik.png> [krok...]
-//   krok: "click:fragment tekstu" | "exact:Cały tekst przycisku" | "sel:selektor CSS" | "type:selektor|tekst" | "wait:ms"
+//   krok: "click:fragment tekstu" | "exact:Cały tekst przycisku" | "sel:selektor CSS" | "upload:selektor|plik" | "type:selektor|tekst" | "wait:ms"
 import puppeteer from 'puppeteer-core';
 
 const [url, out, ...steps] = process.argv.slice(2);
@@ -35,6 +35,10 @@ try {
     } else if (kind === 'sel') {
       const el = await page.waitForSelector(arg, { timeout: 5000 });
       await el.click();
+    } else if (kind === 'upload') {
+      const [sel = '', file = ''] = arg.split(/\|(.*)/s);
+      const input = await page.waitForSelector(sel, { timeout: 5000 });
+      await input.uploadFile(file);
     } else if (kind === 'type') {
       const [sel = '', text = ''] = arg.split(/\|(.*)/s);
       await page.type(sel, text, { delay: 20 });
