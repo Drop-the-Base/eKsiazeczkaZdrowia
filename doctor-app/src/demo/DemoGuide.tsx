@@ -129,18 +129,9 @@ export function DemoGuide() {
     }
   }, [stage, view]);
 
-  if (!step) return null;
-  if (!open) {
-    return (
-      <button type="button" className={styles.reopen} onClick={() => setOpen(true)}>
-        Przewodnik demo
-      </button>
-    );
-  }
-
   const lastView = stage === 'view' && view === VIEW_STEPS.length - 1;
 
-  // Navigate guide steps via keyboard ArrowLeft / ArrowRight
+  // Navigate guide steps via keyboard ArrowLeft / ArrowRight (above the early returns: hooks keep their order)
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       const action = resolveGuideKeyAction(
@@ -181,6 +172,15 @@ export function DemoGuide() {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [open, stage, phone, qrPayload, view, lastView, confirmCode]);
+
+  if (!step) return null;
+  if (!open) {
+    return (
+      <button type="button" className={styles.reopen} onClick={() => setOpen(true)}>
+        Przewodnik demo
+      </button>
+    );
+  }
 
   return (
     <>
