@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { isDemo } from '../../../demoMode';
 import { Button } from '../../../ui';
+import { DemoDoctorLink } from '../../demo';
 import { QrScanner } from './QrScanner';
 import styles from './Steps.module.css';
 
@@ -14,6 +16,7 @@ export function ScanStep({
   return (
     <div className={styles.step}>
       <p className={styles.lead}>Skieruj aparat na kod QR na ekranie lekarza.</p>
+      {isDemo && <DemoDoctorLink onPayload={onPayload} />}
       <QrScanner onResult={onPayload} />
       {error && (
         <p className={styles.error} role="alert">

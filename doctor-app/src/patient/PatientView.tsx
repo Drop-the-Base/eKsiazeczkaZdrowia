@@ -66,6 +66,7 @@ export function PatientView({ snapshot }: { snapshot: ShareSnapshot }) {
         <section
           key={s.id}
           aria-label={s.title}
+          data-tour={`section-${s.id}`}
           className={
             s.id === section
               ? sectionStyles.section

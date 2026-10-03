@@ -13,6 +13,7 @@ export function SectionNav({ tabs, current, onChange }: Props) {
           aria-current={t.id === current ? 'page' : undefined}
           disabled={t.disabled}
           title={t.omitted ? 'Pacjent nie udostępnił' : undefined}
+          data-tour={`tab-${t.id}`}
           className={t.id === current ? `${styles.navItem} ${styles.navActive}` : styles.navItem}
           onClick={() => onChange(t.id)}
         >

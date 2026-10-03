@@ -3,7 +3,8 @@ import { DOCTOR_DEMO_PATH, restartDemo } from '../../demoMode';
 import { Button, todayIso } from '../../ui';
 import { dismissBeforeVisit } from '../visit-list';
 import type { TourStep } from './steps';
-import { useTour } from './useTour';
+import { useScrollLock } from './useScrollLock';
+import { useTour, type Spot } from './useTour';
 import styles from './DemoTour.module.css';
 
 /** The demo's follow-up visit (shared/demo-data.ts): its sheet would cover the first steps. */
@@ -48,12 +49,39 @@ function StepBody({ step }: { step: TourStep }) {
   );
 }
 
+const RING_PADDING = 6;
+
+/**
+ * Dims everything except the lit element, and takes the clicks there: four panels around the hole
+ * (the hole itself stays clickable). Without a lit element the whole screen is dimmed.
+ */
+function Mask({ spot }: { spot: Spot | null }) {
+  if (!spot) return <div className={styles.dim} aria-hidden="true" />;
+  const top = Math.max(spot.top - RING_PADDING, 0);
+  const left = Math.max(spot.left - RING_PADDING, 0);
+  const bottom = Math.min(spot.top + spot.height + RING_PADDING, window.innerHeight);
+  const right = Math.min(spot.left + spot.width + RING_PADDING, window.innerWidth);
+  return (
+    <div aria-hidden="true">
+      <div className={styles.panel} style={{ top: 0, left: 0, right: 0, height: top }} />
+      <div className={styles.panel} style={{ top: bottom, left: 0, right: 0, bottom: 0 }} />
+      <div className={styles.panel} style={{ top, left: 0, width: left, height: bottom - top }} />
+      <div className={styles.panel} style={{ top, left: right, right: 0, height: bottom - top }} />
+      <div
+        className={styles.ring}
+        style={{ top, left, width: right - left, height: bottom - top }}
+      />
+    </div>
+  );
+}
+
 /** Demo guide: the app greyed out, one element lit, a card with what to look at and why. */
 export function DemoTour() {
   const tour = useTour();
   const [collapsed, setCollapsed] = useState(false);
   const { step, index, total } = tour;
   const last = index === total - 1;
+  useScrollLock(tour.open);
 
   useEffect(() => dismissBeforeVisit(DEMO_FOLLOW_UP, todayIso()), []);
   useEffect(() => setCollapsed(false), [index]);
@@ -110,20 +138,7 @@ export function DemoTour() {
 
   return (
     <>
-      {tour.spot ? (
-        <div
-          className={styles.spot}
-          style={{
-            top: tour.spot.top - 6,
-            left: tour.spot.left - 6,
-            width: tour.spot.width + 12,
-            height: tour.spot.height + 12,
-          }}
-          aria-hidden="true"
-        />
-      ) : (
-        <div className={styles.dim} aria-hidden="true" />
-      )}
+      <Mask spot={tour.spot} />
       <aside
         className={collapsed ? `${styles.card} ${styles.collapsed}` : styles.card}
         aria-label="Przewodnik demo"
@@ -165,7 +180,7 @@ export function DemoTour() {
         {collapsed ? (
           <h2 className={styles.title}>{step.title}</h2>
         ) : (
-          <div className={styles.body}>
+          <div className={styles.body} data-allow-scroll>
             <StepBody step={step} />
             {step.id === 'share' && <DoctorLink>Otwórz widok lekarza w nowej karcie</DoctorLink>}
             {tour.error && (

@@ -56,6 +56,15 @@ describe('server', () => {
     expect(redirect.headers.get('location')).toBe('/lekarz/');
   });
 
+  it('serves the doctor app under /demo/lekarz too (demo mode), still with the doctor headers', async () => {
+    const res = await fetch(`${base}/demo/lekarz/`);
+    expect(await res.text()).toBe('doctor');
+    expect(res.headers.get('cache-control')).toBe('no-store');
+    const redirect = await fetch(`${base}/demo/lekarz`, { redirect: 'manual' });
+    expect(redirect.headers.get('location')).toBe('/demo/lekarz/');
+    expect(await (await fetch(`${base}/demo/leki`)).text()).toBe('patient');
+  });
+
   it('answers the LLM query stub and rejects bad bodies', async () => {
     const ok = await fetch(`${base}/llm/query`, {
       method: 'POST',

@@ -3,6 +3,8 @@
 
 export const DEMO_BASE = '/demo';
 export const DOCTOR_DEMO_PATH = '/demo/lekarz';
+/** Same-browser handover of the doctor tab's QR payload (the demo has no camera to scan it with). */
+export const DEMO_QR_CHANNEL = 'pkz-demo-qr';
 /** Set automatically in the demo, shown on the security step. */
 export const DEMO_PIN = '1234';
 

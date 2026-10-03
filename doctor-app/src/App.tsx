@@ -3,6 +3,9 @@ import { StatusScreen, type StatusScreenStatus } from './components/StatusScreen
 import { TopBar } from './components/TopBar';
 import { VerifyScreen } from './components/VerifyScreen';
 import { PatientView } from './patient/PatientView';
+import { DemoGuide } from './demo/DemoGuide';
+import { DemoPhoneProvider } from './demo/DemoPhone';
+import { isDemo } from './demo/demoMode';
 import { SessionProvider, useSession } from './session/SessionContext';
 
 function Screen() {
@@ -20,13 +23,28 @@ function Screen() {
   return <StatusScreen status={shown} />;
 }
 
-export function App() {
+function Page() {
   return (
-    <SessionProvider>
+    <>
       <TopBar />
       <main>
         <Screen />
       </main>
+    </>
+  );
+}
+
+export function App() {
+  return (
+    <SessionProvider>
+      {isDemo ? (
+        <DemoPhoneProvider>
+          <Page />
+          <DemoGuide />
+        </DemoPhoneProvider>
+      ) : (
+        <Page />
+      )}
     </SessionProvider>
   );
 }
