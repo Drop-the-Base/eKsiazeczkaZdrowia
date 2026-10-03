@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { ShareSnapshot, TimelineData, TimelineRef } from '@ez/shared';
 import { Timeline } from '@pwa-timeline';
 import { RANGE_PRESETS, rangeFor, type RangePreset } from './timeline.logic';
+import { TimelineDetails } from './TimelineDetails';
 import styles from './Sections.module.css';
 
 type Props = {
@@ -10,9 +11,24 @@ type Props = {
   onSelect: (ref: TimelineRef) => void;
 };
 
-/** Full-width timeline (A's `<Timeline>`) with range presets. */
+/** Full-width timeline (A's `<Timeline>`) with range presets and element details. */
 export function TimelineSection({ snapshot, highlight, onSelect }: Props) {
   const [preset, setPreset] = useState<RangePreset>('treatment');
+  const [selected, setSelected] = useState<TimelineRef | undefined>(highlight);
+
+  useEffect(() => {
+    if (highlight) setSelected(highlight);
+  }, [highlight]);
+
+  const handleSelect = (ref: TimelineRef) => {
+    setSelected(ref);
+    onSelect(ref);
+  };
+
+  const handleClose = () => {
+    setSelected(undefined);
+  };
+
   const data: TimelineData = useMemo(
     () => ({
       ...snapshot,
@@ -26,6 +42,7 @@ export function TimelineSection({ snapshot, highlight, onSelect }: Props) {
     [snapshot],
   );
   const range = rangeFor(preset, data, snapshot.createdAt.slice(0, 10));
+
   return (
     <>
       <div className={styles.presets}>
@@ -41,7 +58,8 @@ export function TimelineSection({ snapshot, highlight, onSelect }: Props) {
           </button>
         ))}
       </div>
-      <Timeline data={data} range={range} highlight={highlight} onSelect={onSelect} />
+      <Timeline data={data} range={range} highlight={highlight || selected} onSelect={handleSelect} />
+      {selected && <TimelineDetails selected={selected} data={data} onClose={handleClose} />}
     </>
   );
 }

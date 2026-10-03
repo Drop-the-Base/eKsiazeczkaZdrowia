@@ -111,6 +111,23 @@ export function DemoGuide() {
     if (tab) document.querySelector<HTMLElement>(`[data-tour="tab-${tab}"]`)?.click();
   }, [tab, snapshot]);
 
+  // Open timeline details dialog on the timeline-details step if not already opened; close when leaving.
+  useEffect(() => {
+    if (stage === 'view' && VIEW_STEPS[view]?.target === 'timeline-details') {
+      const timer = setTimeout(() => {
+        const marker = document.querySelector<HTMLElement>('[data-tour="timeline-exam-mark"]');
+        if (marker && !document.querySelector('[data-tour="timeline-details"]')) {
+          marker.click();
+        }
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+    if (stage === 'view' && VIEW_STEPS[view]?.target !== 'timeline-details') {
+      const closeBtn = document.querySelector<HTMLElement>('[data-tour="timeline-details-close"]');
+      closeBtn?.click();
+    }
+  }, [stage, view]);
+
   if (!step) return null;
   if (!open) {
     return (

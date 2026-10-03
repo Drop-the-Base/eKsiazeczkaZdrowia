@@ -62,6 +62,18 @@ export const VIEW_STEPS: GuideStep[] = [
     why: 'Aplikacja nie interpretuje danych. Wnioski kliniczne formułuje lekarz.',
   },
   {
+    title: 'Szczegóły badań na osi czasu',
+    text: [
+      'Kliknięcie znacznika na osi czasu (rombu badania krwi) otwiera dokładne wyniki laboratoryjne z wartościami referencyjnymi i oznaczeniem odchyleń.',
+      'Wyniki pokazują małopłytkowość (PLT 92 tys/µl) powtarzającą się mimo kolejnych modyfikacji leczenia onkologicznego.',
+    ],
+    target: 'timeline-details',
+    tab: 'timeline',
+    story:
+      'Złe wyniki morfologii były powodem odstawiania kolejnych leków, podczas gdy przyczyną była interakcja ze stale przyjmowanym suplementem.',
+    why: 'Szybki podgląd parametrów laboratoryjnych bezpośrednio z osi czasu ułatwia weryfikację dynamiki zmian.',
+  },
+  {
     title: 'Zakończenie wizyty',
     text: [
       'Dane są przechowywane wyłącznie w pamięci tej karty, bez zapisu na dysku. Po zakończeniu wizyty lub zamknięciu karty są trwale usuwane.',

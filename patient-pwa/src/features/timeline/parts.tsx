@@ -86,6 +86,9 @@ export function Marker({
       )}
       style={style}
       data-highlighted={isHighlighted(highlight, refTo.entity, refTo.id) || undefined}
+      data-tour={refTo.entity === 'exam' ? 'timeline-exam-mark' : undefined}
+      data-tour-entity={refTo.entity}
+      data-tour-id={refTo.id}
       title={title}
       aria-label={title}
       onClick={() => onSelect?.(refTo)}
