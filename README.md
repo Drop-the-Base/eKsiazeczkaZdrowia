@@ -2,7 +2,7 @@
 
 Prywatna oś czasu zdrowia na telefonie pacjenta, uzupełniana głosem, którą w kilka sekund można bezpiecznie pokazać dowolnemu lekarzowi. HackYeah 2026, Sport & Healthcare.
 
-Plan, architektura i taski: [`TASKS.md`](TASKS.md). Zasady pracy agentów: [`CLAUDE.md`](CLAUDE.md).
+Plan, architektura i taski: [`TASKS.md`](TASKS.md). Zasady pracy agenta: [`CLAUDE.md`](CLAUDE.md).
 
 ## Demo
 
@@ -62,7 +62,7 @@ Na telefonie otwórz wypisany adres, a na komputerze `<adres>/lekarz/` (albo `ht
 
 Tryb dev z hot reloadem: `npm run dev`, potem `npm run tunnel -w server -- dev` (tunel do PWA na :5173).
 
-## Praca z repo (agenci)
+## Praca z repo (agent)
 
 Każdy task to issue na GitHubie; agent bierze je skillem `/next-task`. Zmergowanie PR po rebase, buildzie i testach:
 

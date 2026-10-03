@@ -16,7 +16,7 @@ export function SummaryStep({ onContinue }: Props) {
   if (share.status === 'no-profile' || !share.full || !share.selected) {
     return (
       <EmptyState title="Najpierw uzupełnij profil">
-        Lekarz zobaczy Twoje imię, wiek i alergie. <Link to="/profil">Przejdź do profilu</Link>
+        Podsumowanie dla lekarza obejmuje imię, wiek i alergie. <Link to="/profil">Przejdź do profilu</Link>
       </EmptyState>
     );
   }
@@ -24,8 +24,8 @@ export function SummaryStep({ onContinue }: Props) {
   return (
     <div className={styles.step} data-tour="share-sections">
       <p className={styles.lead}>
-        Lekarz zobaczy to podsumowanie od {formatDate(share.since ?? '')} oraz Twoją historię.
-        Odznacz to, czego nie chcesz pokazywać.
+        Lekarz otrzyma podsumowanie od {formatDate(share.since ?? '')} oraz historię leczenia.
+        Odznacz sekcje, których nie chcesz udostępniać.
       </p>
       <SummaryPreview
         full={share.full}
@@ -36,7 +36,7 @@ export function SummaryStep({ onContinue }: Props) {
       />
       <div className={styles.footer}>
         <Button block disabled={!onContinue} onClick={() => onContinue?.(selected)}>
-          Dalej: zeskanuj kod lekarza
+          Dalej: skanowanie kodu QR
         </Button>
       </div>
     </div>

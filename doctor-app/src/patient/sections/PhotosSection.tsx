@@ -30,7 +30,7 @@ export function PhotosSection({ photos }: { photos: SnapshotPhoto[] }) {
         </div>
       )}
       <p className={`${styles.muted} ${styles.screenOnly}`}>
-        Wybierz dwa zdjęcia, żeby porównać je obok siebie.
+        Zaznacz dwa zdjęcia, aby je porównać.
       </p>
       <div className={styles.gallery}>
         {sorted.map((p, i) => (

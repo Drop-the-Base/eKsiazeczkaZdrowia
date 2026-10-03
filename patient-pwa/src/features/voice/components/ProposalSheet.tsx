@@ -25,7 +25,7 @@ function describe(p: Proposal): { title: string; detail: string } {
     title: `Przyjęty lek: ${p.existing ?? p.item.name}`,
     detail: [
       formatDateTime(p.item.takenAt),
-      p.existing ? 'z Twojej listy leków' : 'nowy lek doraźny na liście',
+      p.existing ? 'z Twojej listy leków' : 'zostanie dodany jako lek doraźny',
       p.item.drug?.activeSubstance,
     ]
       .filter(Boolean)
@@ -36,7 +36,7 @@ function describe(p: Proposal): { title: string; detail: string } {
 /** Rozpoznane wpisy – zatwierdzenie jednym dotknięciem (można odznaczyć pomyłki). */
 export function ProposalSheet({ proposals, onClose, onSaved }: Props) {
   return (
-    <BottomSheet open={proposals !== null} onClose={onClose} title="Czy dobrze zrozumiałem?">
+    <BottomSheet open={proposals !== null} onClose={onClose} title="Sprawdź rozpoznane dane">
       {proposals && <Body proposals={proposals} onSaved={onSaved} />}
     </BottomSheet>
   );

@@ -4,9 +4,9 @@ import styles from './NotFound.module.css';
 export function NotFound() {
   return (
     <section className={styles.notFound}>
-      <h1>Nie znaleziono</h1>
-      <p>Takiego ekranu nie ma.</p>
-      <Link to="/">Wróć na start</Link>
+      <h1>Nie znaleziono strony</h1>
+      <p>Żądana strona nie istnieje.</p>
+      <Link to="/">Przejdź do strony głównej</Link>
     </section>
   );
 }

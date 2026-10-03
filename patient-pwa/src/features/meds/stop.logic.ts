@@ -17,7 +17,7 @@ export function dayBefore(date: IsoDate): IsoDate {
 }
 
 export function validateReason(reason: string): string | undefined {
-  return reason.trim() ? undefined : 'Podaj powód – lekarz zapyta';
+  return reason.trim() ? undefined : 'Podaj powód odstawienia';
 }
 
 export function stopPatch(

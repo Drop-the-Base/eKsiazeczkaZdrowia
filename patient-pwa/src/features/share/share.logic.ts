@@ -15,7 +15,7 @@ import {
 
 export const SECTIONS: { id: ShareSection; label: string }[] = [
   { id: 'medications', label: 'Leki i regularność' },
-  { id: 'visitNotes', label: 'Powiem lekarzowi' },
+  { id: 'visitNotes', label: 'Do omówienia z lekarzem' },
   { id: 'symptoms', label: 'Objawy' },
   { id: 'exams', label: 'Badania' },
   { id: 'diagnoses', label: 'Choroby' },

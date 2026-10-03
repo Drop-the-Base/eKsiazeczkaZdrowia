@@ -65,8 +65,8 @@ export function PhotosScreen() {
           <LoadingState />
         ) : photos.length === 0 ? (
           <EmptyState title="Brak zdjęć">
-            Rób zdjęcie zmiany co kilka dni – lekarz zobaczy, jak się zmienia.
-            <Button onClick={() => setAdding(true)}>📷 Dodaj zdjęcie</Button>
+            Dokumentuj zmianę zdjęciami co kilka dni, aby lekarz mógł ocenić jej przebieg.
+            <Button onClick={() => setAdding(true)}>Dodaj zdjęcie</Button>
           </EmptyState>
         ) : (
           groupBySeries(photos, data.data.series).map((g) => (

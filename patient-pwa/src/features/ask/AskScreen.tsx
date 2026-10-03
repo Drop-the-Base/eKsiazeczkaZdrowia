@@ -61,7 +61,7 @@ export function AskScreen() {
       } else {
         setState({
           status: 'error',
-          message: `${err instanceof Error ? err.message : 'Brak połączenia'}. Bez internetu działają szybkie pytania.`,
+          message: `${err instanceof Error ? err.message : 'Brak połączenia'}. W trybie offline dostępne są tylko pytania predefiniowane.`,
         });
       }
     }
@@ -85,12 +85,12 @@ export function AskScreen() {
         {showNotice && (
           <Card className={styles.notice} role="note">
             <p>
-              Pytanie (sam tekst, bez imienia i historii) zostanie wysłane do modelu językowego,
-              który zamieni je na wyszukiwanie. Odpowiedź powstaje na Twoim telefonie – Twoje dane
-              nie opuszczają urządzenia.
+              Treść pytania, bez danych osobowych i historii leczenia, zostanie przesłana do modelu
+              językowego w celu utworzenia kryteriów wyszukiwania. Wyszukiwanie odbywa się na
+              urządzeniu, a dane zdrowotne go nie opuszczają.
             </p>
             <Button onClick={acceptNotice} data-tour="confirm">
-              Rozumiem, zapytaj
+              Akceptuję i wysyłam
             </Button>
           </Card>
         )}
@@ -111,7 +111,7 @@ export function AskScreen() {
           ))}
         </div>
 
-        {state.status === 'asking' && <p className={styles.muted}>Szukam: „{state.question}”…</p>}
+        {state.status === 'asking' && <p className={styles.muted}>Wyszukiwanie: „{state.question}”…</p>}
         {state.status === 'error' && (
           <p className={styles.error} role="alert">
             {state.message}
@@ -138,8 +138,8 @@ function AnswerView({ answer }: { answer: Answer }) {
     <section className={styles.answer} aria-live="polite">
       <p className={styles.question}>„{answer.question}”</p>
       <p className={styles.muted}>
-        Szukałem: {describeFilter(answer.filter)}
-        {answer.offline && ' (bez internetu – gotowe pytanie)'}
+        Kryteria: {describeFilter(answer.filter)}
+        {answer.offline && ' (tryb offline, pytanie predefiniowane)'}
       </p>
       {results.status === 'loading' ? (
         <LoadingState />

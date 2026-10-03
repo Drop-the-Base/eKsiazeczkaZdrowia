@@ -18,7 +18,7 @@ type Props = {
  */
 export function AnythingElseSheet({ open, onClose, current }: Props) {
   return (
-    <BottomSheet open={open} onClose={onClose} title="Czy bierzesz coś jeszcze?">
+    <BottomSheet open={open} onClose={onClose} title="Inne przyjmowane preparaty">
       {open && <Body onClose={onClose} current={current} />}
     </BottomSheet>
   );
@@ -45,8 +45,8 @@ function Body({ onClose, current }: Omit<Props, 'open'>) {
   return (
     <div className={styles.form}>
       <p className={styles.muted}>
-        Nawet suplementy, witaminy albo herbatki ziołowe. Lekarz zobaczy je na równi z lekami z
-        recepty – czasem to właśnie one mają znaczenie.
+        Uwzględnij suplementy, witaminy i herbaty ziołowe. Lekarz zobaczy je na równi z lekami na
+        receptę, ponieważ mogą mieć znaczenie kliniczne.
       </p>
       <div className={styles.chips}>
         {COMMON_EXTRAS.filter((name) => !alreadyTaking(name, taken)).map((name) => (
@@ -57,7 +57,7 @@ function Body({ onClose, current }: Omit<Props, 'open'>) {
       </div>
       <div className={styles.row}>
         <TextField
-          label="Coś innego"
+          label="Inny preparat"
           value={text}
           placeholder="np. kurkuma"
           onChange={(e) => setText(e.target.value)}
@@ -81,7 +81,7 @@ function Body({ onClose, current }: Omit<Props, 'open'>) {
         </p>
       )}
       <Button block onClick={onClose}>
-        {added.length > 0 ? 'Gotowe' : 'Nie, to wszystko'}
+        {added.length > 0 ? 'Gotowe' : 'Lista jest kompletna'}
       </Button>
     </div>
   );

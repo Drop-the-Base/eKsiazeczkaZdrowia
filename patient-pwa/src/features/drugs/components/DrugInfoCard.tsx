@@ -60,7 +60,7 @@ export function DrugInfoCard({ medication }: { medication: Medication }) {
       )}
       <p className={styles.muted}>
         Źródło: Rejestr Produktów Leczniczych
-        {state.status === 'error' && ' (offline – dane z listy)'}.
+        {state.status === 'error' && ' (tryb offline, dane lokalne)'}.
       </p>
     </Card>
   );

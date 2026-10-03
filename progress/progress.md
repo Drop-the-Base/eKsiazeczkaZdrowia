@@ -1,0 +1,91 @@
+# Postęp prac
+
+Zmergowane taski (dopisuje agent po każdym merge, patrz `CLAUDE.md`).
+
+- [x] [A01] Monorepo: workspaces, TS, prettier, puste aplikacje · issue #4 · 2026-10-03 17:32 · atrapy: server/src/index.ts to tylko /health (właściwy serwer: B05)
+- [x] [B01] Kontrakt: shared/types.ts + shared/contracts.ts · issue #5 · 2026-10-03 17:34 · atrapy: brak
+- [x] [A02] Szkielet PWA: routing przez features/*/route.tsx, dolna nawigacja · issue #6 · 2026-10-03 17:36 · atrapy: placeholdery zakładek bez ekranu
+- [x] [B02] db/: Dexie ze schematem i typowanym API · issue #7 · 2026-10-03 17:37 · atrapy: brak (szyfrowanie w B27)
+- [x] [A03] Wspólne komponenty ui/ i tokeny designu · issue #8 · 2026-10-03 17:40 · atrapy: brak
+- [x] [B03] shared/demo-data.ts: Pani Anna · issue #9 · 2026-10-03 17:40 · atrapy: nazwa suplementu i wyniki krwi ogólne (czekają na H02), bez zdjęć
+- [x] [B04] loadDemoData() i reset danych demo · issue #11 · 2026-10-03 17:41 · atrapy: brak
+- [x] [A04] README: uruchomienie lokalne i na telefonie · issue #10 · 2026-10-03 17:42 · atrapy: sekcja tunelu czeka na B06; dodatkowo scripts/ship.sh
+- [x] [B05] Serwer: szkielet Node + ws, statyki, nagłówki, podpięcie LLM · issue #12 · 2026-10-03 17:44 · atrapy: POST /llm/query (do A23), /relay odpowiada błędem (do B08)
+- [x] [A05] Profil: dane, alergie, grupa krwi · issue #15 · 2026-10-03 17:46 · atrapy: brak
+- [x] [B06] HTTPS w dev: tunel dla telefonu · issue #13 · 2026-10-03 17:46 · atrapy: brak
+- [x] [prośba #89] resolveStaticPath na Windowsie · issue #89 · 2026-10-03 17:48 · atrapy: brak
+- [x] [A06] Diagnozy aktualne i przebyte · issue #16 · 2026-10-03 17:49 · atrapy: brak
+- [x] [B08] Przekaźnik WebSocket: sesje, przekazywanie, wygasanie · issue #19 · 2026-10-03 17:50 · atrapy: brak
+- [x] [A07] Skrypt RPL → kompaktowy drugs.json · issue #17 · 2026-10-03 17:52 · atrapy: brak
+- [x] [B09] shared/crypto: ECDH → HKDF → AES-256-GCM + kod weryfikacyjny · issue #21 · 2026-10-03 17:52 · atrapy: brak
+- [x] [prośba #86] vite.config PWA: SW bez /lekarz /llm /relay /health, proxy /llm i /relay w dev · issue #86 · 2026-10-03 17:54 · atrapy: brak
+- [x] [A08] searchDrugs + <DrugPicker> · issue #18 · 2026-10-03 17:56 · atrapy: brak
+- [x] [B10] shared/transport: zaszyfrowany snapshot w kawałkach · issue #23 · 2026-10-03 17:56 · atrapy: brak
+- [x] [A09] Lista leków w trzech grupach · issue #20 · 2026-10-03 18:00 · atrapy: brak
+- [x] [B11] Aplikacja lekarza: ekran z QR i status połączenia · issue #25 · 2026-10-03 18:00 · atrapy: po odebraniu danych tymczasowe podsumowanie (widok w B18)
+- [x] [A10] Dodawanie i edycja leku · issue #22 · 2026-10-03 18:04 · atrapy: brak
+- [x] [B12] Symulator pacjenta + test end-to-end w dwóch kartach · issue #27 · 2026-10-03 18:04 · atrapy: summary w createDemoSnapshot uproszczone do B15
+- [x] [B13] Lista „powiem lekarzowi” + pływający przycisk · issue #29 · 2026-10-03 18:07 · atrapy: pole tekstowe zamiast VoiceInput (A16)
+- [x] [A11] Odstawienie / zmiana leku z pytaniem o powód · issue #24 · 2026-10-03 18:10 · atrapy: brak
+- [x] [B15] buildVisitSummary(db, od) – lokalnie, bez LLM · issue #34 · 2026-10-03 18:10 · atrapy: brak
+- [x] [A12] Pytanie „czy bierzesz coś jeszcze?” (suplementy, zioła) · issue #26 · 2026-10-03 18:13 · atrapy: brak
+- [x] [B16] Ekran podsumowania przed wysłaniem (odznaczanie sekcji) · issue #36 · 2026-10-03 18:14 · atrapy: przycisk „Dalej” nieaktywny do B17, zdjęcia bez miniatur do B17
+- [x] [A13] Potwierdzanie leków na dziś · issue #28 · 2026-10-03 18:16 · atrapy: ekran pod /dzis (wejście z profilu) do czasu osi czasu A20
+- [x] [B17] Udostępnij lekarzowi: skan QR, wysyłka, status · issue #38 · 2026-10-03 18:18 · atrapy: brak (porównanie kodów z przyciskami w B14)
+- [x] [A14] Objawy: szybkie dodawanie · issue #30 · 2026-10-03 18:19 · atrapy: brak
+- [x] [A15] Badania: ręczne dodawanie wyników z normami · issue #32 · 2026-10-03 18:23 · atrapy: brak
+- [x] [B18] Widok lekarza: pasek górny, nagłówek, lewa kolumna · issue #40 · 2026-10-03 18:24 · atrapy: prawa kolumna pusta do B19
+- [x] [A16] SpeechEngine + VoiceInput (Web Speech, zawsze z polem tekstowym) · issue #35 · 2026-10-03 18:27 · atrapy: brak
+- [x] [B19] Widok lekarza: „Od ostatniej wizyty”, oś czasu, zakładki · issue #42 · 2026-10-03 18:29 · atrapy: TimelineStandIn zamiast <Timeline> (B37)
+- [x] [prośba #116] VoiceInput w „powiem lekarzowi” · issue #116 · 2026-10-03 18:32 · atrapy: brak (Po wizycie użyje VoiceInput w B22)
+- [x] [A18] <Timeline>: oś i tory leków · issue #39 · 2026-10-03 18:33 · atrapy: brak (tory badań/objawów/wizyt/zdjęć: A19)
+- [x] [B20] Widok lekarza: tylko pamięć, koniec sesji, nagłówki, wąski ekran · issue #44 · 2026-10-03 18:37 · atrapy: brak
+- [x] [A19] <Timeline>: badania, objawy, wizyty, zdjęcia, potwierdzenia · issue #41 · 2026-10-03 18:38 · atrapy: brak
+- [x] [B21] Serwer: POST /llm/visit-note → zmiany w lekach · issue #46 · 2026-10-03 18:40 · atrapy: reguły zamiast LLM (B38 po A23)
+- [x] [A20] Ekran „Oś czasu” w PWA · issue #43 · 2026-10-03 18:41 · atrapy: brak
+- [x] [B22] Ekran „Po wizycie”: notatka → zmiany do zatwierdzenia · issue #48 · 2026-10-03 18:45 · atrapy: createReminder (A26) → zapis do db.reminders
+- [x] [A17] parseEntry lokalnie + zatwierdzanie wpisu jednym dotknięciem · issue #37 · 2026-10-03 18:46 · atrapy: brak
+- [x] [B23] Lista „powiem lekarzowi” pokazuje się przed wizytą · issue #50 · 2026-10-03 18:48 · atrapy: brak
+- [x] [A23] Serwer: LlmClient + POST /llm/query (z atrapą) · issue #49 · 2026-10-03 18:49 · atrapy: reguły zamiast modelu bez LLM_HOST; podpięcie w index.ts
+- [x] [A24] runFilter(filter, db) lokalnie · issue #51 · 2026-10-03 18:50 · atrapy: brak
+- [x] [prośba #130 + B38] handleQuery podpięte, today w LlmQueryRequest, /llm/visit-note przez LlmClient z regułami · issue #130, #123 · 2026-10-03 18:51 · atrapy: brak
+- [x] [A25] Ekran „Zapytaj” · issue #53 · 2026-10-03 18:55 · atrapy: brak
+- [x] [B24] shared/dict: ATC, ICD-10, tłumaczenia EN/DE/ES · issue #52 · 2026-10-03 18:55 · atrapy: brak
+- [x] [B25] Ekran „Za granicą”: podsumowanie offline + PDF · issue #54 · 2026-10-03 18:58 · atrapy: brak
+- [x] [A26] Przypomnienia: createReminder, „Do potwierdzenia”, powiadomienie demo · issue #55 · 2026-10-03 18:58 · atrapy: brak
+- [x] [prośba #137] post-visit: createReminder z reminders · issue #137 · 2026-10-03 19:00 · atrapy: brak
+- [x] [A21] Zdjęcia: aparat / galeria, kategoria, seria · issue #45 · 2026-10-03 19:02 · atrapy: brak
+- [x] [A22] Zdjęcia: seria i porównanie dwóch obok siebie · issue #47 · 2026-10-03 19:04 · atrapy: brak
+- [x] [B27] Szyfrowanie bazy AES-256-GCM, klucz z PIN-u (Argon2id) · issue #58 · 2026-10-03 19:06 · atrapy: brak (auto-blokada po czasie w B28)
+- [x] [A32] Szlif designu ekranów + spójność ui/ · issue #71 · 2026-10-03 19:08 · atrapy: brak
+- [x] [B28] Blokada aplikacji PIN-em · issue #60 · 2026-10-03 19:09 · atrapy: przycisk „Zablokuj” w Profilu
+- [x] [A30] <DrugInfoCard>: fakty z RPL bez ostrzeżeń · issue #63 · 2026-10-03 19:13 · atrapy: brak
+- [x] [B33] Szlif designu ekranów i widoku lekarza · issue #73 · 2026-10-03 19:13 · atrapy: brak
+- [x] [B14] Kod weryfikacyjny na telefonie i u lekarza · issue #31 · 2026-10-03 19:17 · atrapy: brak
+- [x] [A27] Import z IKP: wybór pliku PDF → propozycje · issue #57 · 2026-10-03 19:19 · atrapy: brak
+- [x] [B26] Druk / PDF widoku lekarza · issue #56 · 2026-10-03 19:20 · atrapy: brak
+- [x] [B36] Pacjent może dołączyć ponownie po odświeżeniu strony · issue #101 · 2026-10-03 19:22 · atrapy: brak
+- [x] [A28] Web Share Target (Chrome Android) dla importu · issue #59 · 2026-10-03 19:23 · atrapy: brak
+- [x] [prośba #143] Profil: przycisk „Zablokuj aplikację” · issue #143 · 2026-10-03 19:26 · atrapy: brak
+- [x] [B37] Widok lekarza: <Timeline> zamiast zastępczej osi · issue #117 · 2026-10-03 19:26 · atrapy: brak
+- [x] [A29] OCR zdjęcia wyniku (Tesseract pol) → formularz badania · issue #61 · 2026-10-03 19:30 · atrapy: brak
+- [x] [prośba #156] Ekran blokady zakrywa całą stronę · issue #156 · 2026-10-03 19:31 · atrapy: brak
+- [x] [A34] Zmiana nazwy na „Prywatna Karta Zdrowia” (manifest, tytuł, README) · issue #148 · 2026-10-03 19:32 · atrapy: brak
+- [x] [B30] Eksport: zaszyfrowany plik z hasła · issue #64 · 2026-10-03 19:35 · atrapy: wejście z Profilu
+- [x] [B31] Import kopii + przypomnienie o eksporcie · issue #66 · 2026-10-03 19:38 · atrapy: brak
+- [x] [A33] Slajdy (max 10): treść + zrzuty ekranu · issue #72 · 2026-10-03 19:41 · atrapy: [członkowie zespołu] do uzupełnienia
+- [x] [prośba #160] Profil: pozycja „Kopia zapasowa” · issue #160 · 2026-10-03 19:44 · atrapy: brak
+- [x] [B40] Widok lekarza: Podsumowanie + sekcje · issue #162 · 2026-10-03 19:44 · atrapy: brak
+- [x] [B39] Zmiana nazwy na „Prywatna Karta Zdrowia” (ekrany, aplikacja lekarza) · issue #147 · 2026-10-03 19:46 · atrapy: brak
+- [x] [B29] Biometria przez passkey z PRF · issue #62 · 2026-10-03 19:49 · atrapy: brak (sprawdzone wirtualnym autentykatorem; telefon demo – do sprawdzenia)
+- [x] [prośba #169] Profil: pozycja „Zabezpieczenia” · issue #169 · 2026-10-03 19:56 · atrapy: brak
+- [x] [A33] odświeżenie slajdów (nowa nazwa, nowy widok lekarza) · issue #72 · 2026-10-03 19:58 · atrapy: [członkowie zespołu]
+- [x] [D05] Widok lekarza: „Leki i suplementy” / „Wszystko, co przyjmuje” · issue #176 · 2026-10-03 20:13 · atrapy: brak
+- [x] [D01] Tryb demo /demo: osobna baza, PIN sam, prawdziwa aplikacja bez danych demo · issue #172 · 2026-10-03 20:17 · atrapy: arkusz „wizyta za 3 dni” wyskakuje w demo do D02
+- [x] [D02] Przewodnik demo: wyszarzenie, podświetlenie, karty, „Pokaż mi” · issue #173 · 2026-10-03 20:26 · atrapy: połączenie z kartą lekarza w D03
+- [x] [D03] /demo/lekarz: widok lekarza z przewodnikiem, symulowany telefon, połączenie z kartą pacjentki · issue #174 · 2026-10-03 20:38 · atrapy: brak (dodatkowo: przewodnik pacjentki blokuje klikanie i przewijanie poza podświetleniem)
+- [x] [D04] Odnośniki do demo: ekran startowy, /lekarz, README · issue #175 · 2026-10-03 20:39 · atrapy: brak
+- [x] [N01] Nazwa z powrotem: eKsiazeczkaZdrowia (aplikacje, manifest, kopia zapasowa, README, slajdy + PDF) · issue #177 · 2026-10-03 20:43 · atrapy: brak
+- [x] [D06] /demo/lekarz bez „Ekranu w budowie”: dev proxy, odzysk po starym service workerze, ekran „Nie znaleziono” · issue #184 · 2026-10-03 20:45 · atrapy: brak
+- [x] [D07] Karta przewodnika lekarza na lewo, gdy podświetlenie po prawej · issue #186 · 2026-10-03 20:49 · atrapy: brak
+- [x] [T00] Teksty w aplikacji: rzeczowy, profesjonalny ton (pacjent, lekarz, demo) · bez issue · 2026-10-03 21:14 · atrapy: brak

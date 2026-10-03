@@ -8,8 +8,8 @@ import styles from './Screens.module.css';
 const PREVIOUS_END_TEXT = {
   ended: 'Wizyta zakończona.',
   expired: 'Sesja wygasła.',
-  error: 'Połączenie z pacjentem przerwane.',
-  mismatch: 'Kody weryfikacyjne się nie zgadzały – połączenie przerwane.',
+  error: 'Połączenie z pacjentem zostało przerwane.',
+  mismatch: 'Kody weryfikacyjne były niezgodne. Połączenie zostało przerwane.',
 } as const;
 
 export function QrScreen() {
@@ -20,13 +20,13 @@ export function QrScreen() {
     <section className={styles.center}>
       {previousEnd && (
         <p className={styles.notice} role="status">
-          {PREVIOUS_END_TEXT[previousEnd]} Dane pacjenta usunięte z pamięci tej karty.
+          {PREVIOUS_END_TEXT[previousEnd]} Dane pacjenta zostały usunięte z pamięci tej karty.
         </p>
       )}
-      <h1 className={styles.title}>Zeskanuj kod telefonem pacjenta</h1>
+      <h1 className={styles.title}>Kod QR do zeskanowania przez pacjenta</h1>
       <p className={styles.lead}>
         W aplikacji pacjenta: <strong>Wizyta → Udostępnij lekarzowi</strong>. Dane są szyfrowane na
-        telefonie i odszyfrowywane tylko w tej karcie.
+        telefonie i odszyfrowywane wyłącznie w tej karcie.
       </p>
       <div className={styles.qrBox} data-tour="qr">
         {qr.src && <img className={styles.qr} src={qr.src} alt="Kod QR sesji" />}
@@ -35,12 +35,12 @@ export function QrScreen() {
       </div>
       {!isDemo && (
         <a className={styles.demoLink} href={DOCTOR_DEMO_PATH}>
-          Zobacz przykład →
+          Wersja demonstracyjna
         </a>
       )}
       {expiresAt && (
         <p className={styles.muted}>
-          Kod ważny jeszcze {formatRemaining(expiresAt, now)}; potem odświeży się sam.
+          Kod ważny przez {formatRemaining(expiresAt, now)}. Po tym czasie zostanie odświeżony automatycznie.
         </p>
       )}
     </section>

@@ -24,7 +24,7 @@ export default function TellDoctorOverlay() {
         type="button"
         className={styles.fab}
         onClick={() => setOpen(true)}
-        aria-label="Powiem lekarzowi"
+        aria-label="Dodaj sprawę do omówienia z lekarzem"
       >
         <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
           <path
@@ -39,10 +39,10 @@ export default function TellDoctorOverlay() {
       </button>
       {saved && (
         <div className={styles.toast} role="status">
-          Dodano do listy na wizytę
+          Dodano do listy spraw do omówienia
         </div>
       )}
-      <BottomSheet open={open} onClose={() => setOpen(false)} title="Powiem lekarzowi">
+      <BottomSheet open={open} onClose={() => setOpen(false)} title="Do omówienia z lekarzem">
         <NoteForm
           onSaved={() => {
             setOpen(false);

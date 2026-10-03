@@ -10,7 +10,7 @@ export default defineConfig({
       manifest: {
         name: 'eKsiazeczkaZdrowia',
         short_name: 'eKsiazeczka',
-        description: 'Prywatna oś czasu zdrowia na telefonie',
+        description: 'Osobista dokumentacja zdrowotna przechowywana na urządzeniu',
         lang: 'pl',
         start_url: '/',
         display: 'standalone',

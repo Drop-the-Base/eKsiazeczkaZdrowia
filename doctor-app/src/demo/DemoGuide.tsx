@@ -52,13 +52,13 @@ function StepBody({ step }: { step: GuideStep }) {
       ))}
       {step.story && (
         <div className={styles.story}>
-          <span className={styles.label}>W prawdziwej historii</span>
+          <span className={styles.label}>Studium przypadku</span>
           <p>{step.story}</p>
         </div>
       )}
       {step.why && (
         <div className={styles.why}>
-          <span className={styles.label}>Dlaczego to ważne</span>
+          <span className={styles.label}>Znaczenie</span>
           <p>{step.why}</p>
         </div>
       )}
@@ -139,8 +139,8 @@ export function DemoGuide() {
           )}
           {lastView && (
             <p className={styles.links}>
-              <a href={PATIENT_DEMO_PATH}>Wróć do demo pacjentki</a>
-              <a href="/lekarz/">Prawdziwy widok lekarza</a>
+              <a href={PATIENT_DEMO_PATH}>Wróć do prezentacji aplikacji pacjenta</a>
+              <a href="/lekarz/">Otwórz pełną wersję widoku lekarza</a>
             </p>
           )}
         </div>
@@ -160,12 +160,12 @@ export function DemoGuide() {
               disabled={!qrPayload || phone.busy}
               onClick={() => qrPayload && void phone.simulate(qrPayload)}
             >
-              {phone.busy ? 'Łączę…' : 'Symuluj telefon pacjentki'}
+              {phone.busy ? 'Łączenie…' : 'Symuluj telefon pacjentki'}
             </button>
           )}
           {stage === 'verify' && (
             <button type="button" className={styles.next} onClick={confirmCode}>
-              Kody się zgadzają
+              Kody są zgodne
             </button>
           )}
           {stage === 'view' && (
@@ -174,7 +174,7 @@ export function DemoGuide() {
               className={styles.next}
               onClick={() => (lastView ? setOpen(false) : setView((v) => v + 1))}
             >
-              {lastView ? 'Koniec' : 'Dalej →'}
+              {lastView ? 'Zakończ' : 'Dalej'}
             </button>
           )}
         </div>

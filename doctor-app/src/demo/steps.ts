@@ -14,61 +14,61 @@ export interface GuideStep {
 
 // Same real case as in the patient demo (features/demo/steps.ts); the app itself never interprets.
 export const QR_STEP: GuideStep = {
-  title: 'Bez konta i bez instalacji',
+  title: 'Bez konta i instalacji',
   text: [
-    'Lekarz otwiera tę stronę i to wszystko. Pacjent skanuje kod w aplikacji (Wizyta, Udostępnij lekarzowi) i dane płyną na tę kartę.',
-    'Nie masz telefonu pod ręką? Przycisk niżej zagra telefon pacjentki. Albo przejdź demo pacjentki w drugiej karcie, a ona sama pobierze ten kod.',
+    'Lekarz otwiera tę stronę w przeglądarce. Pacjent skanuje kod w aplikacji (Wizyta → Udostępnij lekarzowi), a dane są przesyłane do tej karty.',
+    'Bez telefonu można użyć symulacji telefonu pacjentki (przycisk poniżej) lub otworzyć demo pacjentki w drugiej karcie, które automatycznie pobierze ten kod.',
   ],
   target: 'qr',
-  why: 'Dane są szyfrowane na telefonie (ECDH, AES-256-GCM). Przekaźnik widzi tylko szyfrogram, bo klucz powstaje na obu urządzeniach i nigdy nie przechodzi przez serwer.',
+  why: 'Dane są szyfrowane na telefonie (ECDH, AES-256-GCM). Serwer pośredniczący przekazuje wyłącznie szyfrogram, ponieważ klucz jest wyznaczany na obu urządzeniach i nie jest przesyłany przez serwer.',
 };
 
 export const VERIFY_STEP: GuideStep = {
-  title: 'Ten sam kod na obu ekranach',
+  title: 'Weryfikacja połączenia',
   text: [
-    'Kod weryfikacyjny jest wyliczany z kluczy obu stron. Gdyby ktoś podmienił klucz po drodze, kody by się różniły.',
-    'Przed pokazaniem danych lekarz sprawdza, czy kod jest taki sam jak na telefonie pacjenta.',
+    'Kod weryfikacyjny jest wyznaczany z kluczy obu stron. Podmiana klucza w trakcie transmisji spowodowałaby niezgodność kodów.',
+    'Przed wyświetleniem danych lekarz potwierdza, że kod jest identyczny z kodem na telefonie pacjenta.',
   ],
   target: 'code',
-  why: 'Dopiero po potwierdzeniu kodu pokazujemy jakiekolwiek dane.',
+  why: 'Dane są wyświetlane dopiero po potwierdzeniu zgodności kodów.',
 };
 
 export const VIEW_STEPS: GuideStep[] = [
   {
-    title: 'Pacjent chce powiedzieć',
-    text: ['Lista spraw i pytań z telefonu jest na samej górze, zanim lekarz zacznie mówić.'],
+    title: 'Sprawy zgłoszone przez pacjenta',
+    text: ['Pytania i obserwacje zapisane przez pacjenta są wyświetlane na początku widoku.'],
     target: 'tell',
     tab: 'summary',
-    why: 'Na wizycie nic nie ucieka: pacjent nie musi pamiętać, o co chciał zapytać.',
+    why: 'Żadna ze zgłoszonych spraw nie zostaje pominięta w trakcie wizyty.',
   },
   {
-    title: 'Wszystko, co przyjmuje, a nie tylko leki',
+    title: 'Pełna lista przyjmowanych preparatów',
     text: [
-      'Recepta, leki bez recepty, suplementy i zioła na jednej liście, na równi. Lekarz nie musi wiedzieć, o co dopytać.',
+      'Leki na receptę, leki bez recepty, suplementy i zioła są prezentowane na jednej liście, na równych prawach.',
     ],
     target: 'meds-now',
     tab: 'summary',
-    story: 'O suplemencie lekarze dowiedzieli się przypadkiem, od córki pacjentki.',
-    why: 'Informacje o lekach pokazujemy jako fakty, bez automatycznych ostrzeżeń. Ocena należy do lekarza.',
+    story: 'Informacja o suplemencie dotarła do lekarzy przypadkiem, od córki pacjentki.',
+    why: 'Informacje o lekach są prezentowane jako fakty, bez automatycznych ostrzeżeń. Ocena kliniczna należy do lekarza.',
   },
   {
     title: 'Oś czasu z wynikami',
     text: [
-      'Kolejne leki, objawy i wyniki badań na jednej osi. Widać, co zmieniało się w tym samym czasie, a co nie zmieniało się wcale.',
+      'Leki, objawy i wyniki badań w jednym widoku chronologicznym, z wyraźnym zestawieniem zmian w czasie.',
     ],
     target: 'section-timeline',
     tab: 'timeline',
     story: 'Każdy kolejny lek wchodził w interakcję z tym samym suplementem.',
-    why: 'Aplikacja niczego nie interpretuje: wniosek wyciąga lekarz.',
+    why: 'Aplikacja nie interpretuje danych. Wnioski kliniczne formułuje lekarz.',
   },
   {
-    title: 'Koniec wizyty, dane znikają',
+    title: 'Zakończenie wizyty',
     text: [
-      'Dane są tylko w pamięci tej karty: bez konta, bez zapisu na dysku, bez service workera. Zakończ wizytę albo zamknij kartę, a strona wraca pusta.',
+      'Dane są przechowywane wyłącznie w pamięci tej karty, bez zapisu na dysku. Po zakończeniu wizyty lub zamknięciu karty są trwale usuwane.',
       'Widok można wydrukować albo zapisać jako PDF (Drukuj).',
     ],
     target: 'end-visit',
-    why: 'Lekarz nie zostawia po sobie żadnych danych pacjenta na komputerze.',
+    why: 'Na komputerze lekarza nie pozostają żadne dane pacjenta.',
   },
 ];
 

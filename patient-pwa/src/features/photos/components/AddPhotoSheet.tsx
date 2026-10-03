@@ -87,7 +87,7 @@ function Body({ series, onDone }: { series: PhotoSeries[]; onDone: () => void })
         <img className={styles.preview} src={preview} alt="Podgląd" />
       ) : (
         <div className={styles.row}>
-          <Button onClick={() => cameraRef.current?.click()}>📷 Zrób zdjęcie</Button>
+          <Button onClick={() => cameraRef.current?.click()}>Zrób zdjęcie</Button>
           <Button variant="secondary" onClick={() => galleryRef.current?.click()}>
             Z galerii
           </Button>
@@ -95,7 +95,7 @@ function Body({ series, onDone }: { series: PhotoSeries[]; onDone: () => void })
       )}
 
       <fieldset className={styles.fieldset}>
-        <legend className={styles.legend}>Co to jest</legend>
+        <legend className={styles.legend}>Kategoria</legend>
         <div className={styles.chips}>
           {CATEGORIES.map((c) => (
             <Chip key={c} selected={category === c} onClick={() => setCategory(c)}>

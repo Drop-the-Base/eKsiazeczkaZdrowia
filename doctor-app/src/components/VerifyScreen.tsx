@@ -6,19 +6,19 @@ export function VerifyScreen({ code }: { code: string }) {
   const { confirmCode, rejectVerification } = useSession();
   return (
     <section className={styles.center}>
-      <h1 className={styles.title}>Sprawdź kod z telefonu pacjenta</h1>
+      <h1 className={styles.title}>Weryfikacja połączenia</h1>
       <p className={styles.code} aria-label="Kod weryfikacyjny" data-tour="code">
         {code}
       </p>
       <p className={styles.lead}>
-        Poproś pacjenta o pokazanie kodu na telefonie. Muszą być identyczne.
+        Porównaj kod z kodem wyświetlanym na telefonie pacjenta. Kody muszą być identyczne.
       </p>
       <div className={styles.actions}>
         <button type="button" className={styles.primary} onClick={confirmCode}>
-          Kody się zgadzają
+          Kody są zgodne
         </button>
         <button type="button" className={styles.danger} onClick={rejectVerification}>
-          Nie zgadzają się
+          Kody są różne
         </button>
       </div>
     </section>

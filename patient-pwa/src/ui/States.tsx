@@ -24,7 +24,7 @@ export function LoadingState({ label = 'Wczytywanie…' }: { label?: string }) {
 export function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
     <div className={`${styles.state} ${styles.error}`} role="alert">
-      <p className={styles.title}>Coś poszło nie tak</p>
+      <p className={styles.title}>Wystąpił błąd</p>
       <p>{message}</p>
       {onRetry && (
         <button type="button" className={styles.retry} onClick={onRetry}>

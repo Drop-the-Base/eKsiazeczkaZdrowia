@@ -24,11 +24,11 @@ export function OcrButton({ onRecognized }: Props) {
       if (form) onRecognized(form);
       else
         setMessage(
-          'Nie odczytałem wyników ze zdjęcia – spróbuj ostrzejszego zdjęcia albo wpisz ręcznie.',
+          'Nie rozpoznano wyników na zdjęciu. Użyj wyraźniejszego zdjęcia lub wprowadź wyniki ręcznie.',
         );
     } catch {
       setMessage(
-        'Nie udało się odczytać zdjęcia (pierwsze użycie wymaga internetu do pobrania modelu).',
+        'Nie udało się przetworzyć zdjęcia. Pierwsze użycie wymaga połączenia z internetem w celu pobrania modelu.',
       );
     } finally {
       setProgress(null);
@@ -52,8 +52,8 @@ export function OcrButton({ onRecognized }: Props) {
         onClick={() => inputRef.current?.click()}
       >
         {progress === null
-          ? '📷 Zdjęcie wydruku wyników'
-          : `Odczytuję… ${Math.round(progress * 100)}%`}
+          ? 'Wczytaj wyniki ze zdjęcia'
+          : `Przetwarzanie… ${Math.round(progress * 100)}%`}
       </Button>
       {message && (
         <p className={styles.message} role="status">

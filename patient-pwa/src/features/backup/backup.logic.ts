@@ -9,7 +9,7 @@ export function validateNewPassword(
   min: number,
 ): string | undefined {
   if (password.length < min) return `Hasło musi mieć co najmniej ${min} znaków`;
-  if (password !== repeat) return 'Hasła się różnią';
+  if (password !== repeat) return 'Podane hasła nie są identyczne';
   return undefined;
 }
 

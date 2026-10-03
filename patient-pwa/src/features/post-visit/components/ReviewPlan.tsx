@@ -34,7 +34,7 @@ export function ReviewPlan({ plan, update }: Props) {
           </label>
           {(!s.matched || s.candidates.length > 1) && (
             <label className={styles.field}>
-              {s.matched ? 'Który lek?' : `Nie znaleziono leku „${s.said}” – wybierz z listy`}
+              {s.matched ? 'Który lek?' : `Nie znaleziono leku „${s.said}”. Wybierz z listy.`}
               <select
                 value={s.medicationId ?? ''}
                 onChange={(e) =>

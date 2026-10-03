@@ -33,7 +33,7 @@ export function BeforeVisitSheet() {
       <div className={styles.body}>
         {items.length > 0 ? (
           <>
-            <p className={styles.lead}>Chcesz powiedzieć lekarzowi:</p>
+            <p className={styles.lead}>Sprawy do omówienia:</p>
             <ol className={styles.items}>
               {items.map((i) => (
                 <li key={i.id}>{i.text}</li>
@@ -42,7 +42,7 @@ export function BeforeVisitSheet() {
           </>
         ) : (
           <p className={styles.lead}>
-            Lista na wizytę jest pusta. Coś Cię niepokoi? Zapisz to teraz.
+            Brak spraw do omówienia. Dodaj pytania lub obserwacje przed wizytą.
           </p>
         )}
         <NoteForm />
@@ -54,7 +54,7 @@ export function BeforeVisitSheet() {
             navigate(VISIT_PATH);
           }}
         >
-          Zobacz listę
+          Przejdź do listy
         </Button>
         <Button block variant="ghost" onClick={close}>
           Zamknij

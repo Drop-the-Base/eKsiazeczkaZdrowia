@@ -43,7 +43,7 @@ export function PatientView({ snapshot }: { snapshot: ShareSnapshot }) {
     },
     {
       id: 'meds',
-      title: 'Wszystko, co przyjmuje',
+      title: 'Przyjmowane preparaty',
       hint: 'leki z recepty, bez recepty, suplementy i zioła',
       body: <MedsSection snapshot={snapshot} />,
     },

@@ -108,7 +108,7 @@ export function useTour() {
     try {
       await runShowMe(step.showMe);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Nie udało się – zrób to ręcznie');
+      setError(err instanceof Error ? err.message : 'Nie udało się wykonać demonstracji. Wykonaj ten krok ręcznie.');
     } finally {
       setShowing(false);
     }

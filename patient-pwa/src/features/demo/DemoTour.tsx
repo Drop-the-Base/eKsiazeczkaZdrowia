@@ -33,14 +33,14 @@ function StepBody({ step }: { step: TourStep }) {
       {step.punchline && <p className={styles.punchline}>{step.punchline}</p>}
       {step.story && (
         <div className={styles.story}>
-          <span className={styles.label}>W prawdziwej historii</span>
+          <span className={styles.label}>Studium przypadku</span>
           <p>{step.story}</p>
         </div>
       )}
       {step.why && (
         <div className={styles.why}>
           <span className={styles.label}>
-            {step.full ? 'Zanim zaczniesz' : 'Dlaczego to ważne'}
+            {step.full ? 'Informacje wstępne' : 'Znaczenie'}
           </span>
           <p>{step.why}</p>
         </div>
@@ -108,25 +108,25 @@ export function DemoTour() {
     return (
       <div className={styles.fullDim} role="dialog" aria-modal="true" aria-label={step.title}>
         <div className={styles.fullCard}>
-          <p className={styles.kicker}>{index === 0 ? 'Demo · 3 minuty' : 'Koniec demo'}</p>
+          <p className={styles.kicker}>{index === 0 ? 'Prezentacja · 3 minuty' : 'Koniec prezentacji'}</p>
           <StepBody step={step} />
           <div className={styles.actions}>
             {index === 0 ? (
               <>
-                <Button onClick={tour.next}>Zaczynamy →</Button>
+                <Button onClick={tour.next}>Rozpocznij prezentację</Button>
                 <Button variant="secondary" onClick={tour.close}>
-                  Sam poklikam
+                  Pomiń przewodnik
                 </Button>
-                <DoctorLink>Tylko widok lekarza (nowa karta)</DoctorLink>
+                <DoctorLink>Otwórz widok lekarza (nowa karta)</DoctorLink>
               </>
             ) : (
               <>
-                <Button onClick={tour.close}>Poklikaj sam</Button>
+                <Button onClick={tour.close}>Przejdź do aplikacji</Button>
                 <Button variant="secondary" onClick={restartDemo}>
-                  Zacznij od nowa
+                  Uruchom ponownie
                 </Button>
                 <a className={styles.link} href="/">
-                  Otwórz prawdziwą aplikację →
+                  Otwórz pełną wersję aplikacji
                 </a>
               </>
             )}
@@ -203,11 +203,11 @@ export function DemoTour() {
                 tour.showMe();
               }}
             >
-              {tour.showing ? 'Pokazuję…' : 'Pokaż mi'}
+              {tour.showing ? 'Trwa demonstracja…' : 'Zademonstruj'}
             </Button>
           )}
           <Button onClick={tour.next} className={styles.next}>
-            {last ? 'Koniec' : 'Dalej →'}
+            {last ? 'Zakończ' : 'Dalej'}
           </Button>
         </div>
       </aside>

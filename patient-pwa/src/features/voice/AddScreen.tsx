@@ -25,7 +25,7 @@ export function AddScreen() {
     try {
       const found = await toProposals(await parseEntry(text, new Date().toISOString()));
       if (found.length === 0) {
-        setMessage(`Nie rozpoznałem objawu ani leku w „${text}”. Dodaj ręcznie poniżej.`);
+        setMessage(`Nie rozpoznano objawu ani leku w „${text}”. Dodaj wpis ręcznie poniżej.`);
       } else {
         setProposals(found);
       }
@@ -49,7 +49,7 @@ export function AddScreen() {
           )}
         </Card>
 
-        <h2 className={styles.heading}>Albo ręcznie</h2>
+        <h2 className={styles.heading}>Dodawanie ręczne</h2>
         <div className={styles.grid}>
           <Button variant="secondary" onClick={() => setSheet('med')}>
             Lek / suplement
@@ -77,7 +77,7 @@ export function AddScreen() {
         onClose={() => setProposals(null)}
         onSaved={() => {
           setProposals(null);
-          setMessage('Zapisano – zobaczysz to na osi czasu.');
+          setMessage('Zapisano. Wpis jest widoczny na osi czasu.');
         }}
       />
       <MedicationSheet

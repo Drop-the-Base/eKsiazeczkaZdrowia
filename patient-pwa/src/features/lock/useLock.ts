@@ -53,7 +53,7 @@ export function useLock() {
   const unlock = (pin: string) => void run(() => vault.unlock(pin), 'Nie udało się odblokować');
   const wipe = () => void run(() => vault.wipe(), 'Nie udało się usunąć danych');
   const unlockBiometric = () =>
-    void run(() => biometric.unlock(), 'Nie udało się odblokować biometrią – wpisz PIN');
+    void run(() => biometric.unlock(), 'Odblokowanie biometryczne nie powiodło się. Wpisz PIN.');
 
   return { status, error, busy, setup, unlock, wipe, biometricOn, unlockBiometric };
 }

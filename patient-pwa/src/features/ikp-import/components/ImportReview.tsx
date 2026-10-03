@@ -62,7 +62,7 @@ function Body({ result, onDone }: { result: ImportResult; onDone: () => void }) 
     <div className={styles.review}>
       <p className={styles.muted}>Dokument z {formatDate(result.document.date)}</p>
       {result.proposals.length === 0 ? (
-        <p>Nie znalazłem nowych wpisów – wszystko z tego dokumentu już jest w aplikacji.</p>
+        <p>Brak nowych wpisów. Wszystkie dane z tego dokumentu są już w aplikacji.</p>
       ) : (
         <ul className={styles.proposals}>
           {result.proposals.map((p, i) => {

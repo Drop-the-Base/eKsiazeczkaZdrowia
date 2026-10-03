@@ -16,7 +16,7 @@ function Code({ code }: { code: string }) {
     <div className={styles.codeBox}>
       <span className={styles.codeLabel}>Kod weryfikacyjny</span>
       <span className={styles.code}>{code}</span>
-      <span className={styles.codeLabel}>Lekarz musi widzieć ten sam kod</span>
+      <span className={styles.codeLabel}>Ten sam kod musi być widoczny u lekarza</span>
     </div>
   );
 }
@@ -34,12 +34,12 @@ export function SendSteps({ state, onSend, onReject, onEnd, onRescan, onDone }: 
               {state.error}
             </p>
           )}
-          <p className={styles.lead}>Czy lekarz widzi na swoim ekranie ten sam kod?</p>
+          <p className={styles.lead}>Czy na ekranie lekarza wyświetla się ten sam kod?</p>
           <Button block onClick={onSend}>
-            Tak, wyślij dane lekarzowi
+            Kody są zgodne, wyślij dane
           </Button>
           <Button block variant="danger" onClick={onReject}>
-            Kod się nie zgadza
+            Kody są różne
           </Button>
           <Button block variant="ghost" onClick={onEnd}>
             Anuluj
@@ -57,16 +57,16 @@ export function SendSteps({ state, onSend, onReject, onEnd, onRescan, onDone }: 
     case 'sent':
       return (
         <div className={styles.step}>
-          <p className={styles.success}>✓ Przesłano</p>
+          <p className={styles.success}>Dane przesłane</p>
           <p className={styles.lead}>
-            Lekarz widzi Twoje dane do końca wizyty. Dane nie zostają na jego komputerze ani na
-            serwerze.
+            Dane są dostępne dla lekarza do końca wizyty. Nie są zapisywane na jego komputerze ani
+            na serwerze.
           </p>
           <Button block onClick={onDone}>
             Gotowe
           </Button>
           <Button block variant="danger" onClick={onEnd}>
-            Zakończ udostępnianie teraz
+            Zakończ udostępnianie
           </Button>
         </div>
       );

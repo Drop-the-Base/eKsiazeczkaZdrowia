@@ -47,7 +47,7 @@ export function ImportScreen() {
     window.history.replaceState(null, '', url);
     void run(
       takeSharedFile().then((file) => {
-        if (!file) throw new Error('Nie otrzymano pliku – wybierz go ręcznie');
+        if (!file) throw new Error('Nie otrzymano pliku. Wybierz go ręcznie.');
         return importFile(file);
       }),
     );
@@ -64,8 +64,9 @@ export function ImportScreen() {
       <div className={styles.content}>
         <Card className={styles.how}>
           <p>
-            W Internetowym Koncie Pacjenta pobierz dokument (np. kartę informacyjną, wynik badania,
-            e-receptę) i wybierz go tutaj. Odczytamy go na tym telefonie i zaproponujemy wpisy.
+            Pobierz dokument z Internetowego Konta Pacjenta (np. kartę informacyjną, wynik badania,
+            e-receptę) i wskaż go poniżej. Dokument zostanie przetworzony na urządzeniu, a aplikacja
+            zaproponuje wpisy.
           </p>
           <input
             ref={fileRef}
@@ -75,7 +76,7 @@ export function ImportScreen() {
             onChange={(e) => onFile(e.target.files?.[0])}
           />
           <Button block disabled={busy} onClick={() => fileRef.current?.click()}>
-            {busy ? 'Odczytuję…' : 'Wybierz plik PDF'}
+            {busy ? 'Przetwarzanie…' : 'Wybierz plik PDF'}
           </Button>
           {error && (
             <p className={styles.error} role="alert">
@@ -95,7 +96,7 @@ export function ImportScreen() {
               <ListItem
                 key={d.id}
                 title={d.title}
-                subtitle={`${formatDate(d.date)} · dotknij, żeby odczytać`}
+                subtitle={`${formatDate(d.date)} · wybierz, aby przetworzyć`}
                 trailing="›"
                 onClick={() => void run(readStoredDocument(d))}
               />

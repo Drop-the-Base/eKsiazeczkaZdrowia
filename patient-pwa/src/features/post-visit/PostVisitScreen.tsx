@@ -16,8 +16,8 @@ export function PostVisitScreen() {
         {state.step === 'input' && (
           <>
             <p className={styles.lead}>
-              Powiedz albo wpisz, co ustalił lekarz. Do serwera trafia tylko ten tekst – bez imienia
-              i historii; nagranie nie jest zapisywane.
+              Podyktuj lub wpisz zalecenia lekarza. Na serwer przesyłana jest wyłącznie treść
+              notatki, bez danych osobowych i historii leczenia. Nagranie nie jest zapisywane.
             </p>
             <VoiceInput
               mode="postVisit"
@@ -35,7 +35,7 @@ export function PostVisitScreen() {
 
         {(state.step === 'reading' || state.step === 'saving') && (
           <LoadingState
-            label={state.step === 'reading' ? 'Odczytuję notatkę…' : 'Zapisuję zmiany…'}
+            label={state.step === 'reading' ? 'Analiza notatki…' : 'Zapisywanie zmian…'}
           />
         )}
 
@@ -44,11 +44,11 @@ export function PostVisitScreen() {
             <Card className={styles.transcript}>„{state.transcript}”</Card>
             {isEmptyPlan(state.plan) ? (
               <p className={styles.lead}>
-                Nie rozpoznano zmian w lekach ani terminu kontroli. Notatka zostanie zapisana.
+                Nie rozpoznano zmian w lekach ani terminu kontroli. Zostanie zapisana sama notatka.
               </p>
             ) : (
               <>
-                <p className={styles.lead}>Sprawdź i zaznacz, co zapisać:</p>
+                <p className={styles.lead}>Zweryfikuj i zaznacz zmiany do zapisania:</p>
                 <ReviewPlan plan={state.plan} update={pv.updatePlan} />
               </>
             )}
@@ -59,7 +59,7 @@ export function PostVisitScreen() {
                   checked={pv.markDiscussed}
                   onChange={(e) => pv.setMarkDiscussed(e.target.checked)}
                 />
-                Lista „powiem lekarzowi” omówiona ({pv.openItems})
+                Oznacz sprawy do omówienia jako omówione ({pv.openItems})
               </label>
             )}
             {state.error && (
@@ -71,14 +71,14 @@ export function PostVisitScreen() {
               Zatwierdź
             </Button>
             <Button block variant="ghost" onClick={pv.restart}>
-              Popraw notatkę
+              Edytuj notatkę
             </Button>
           </>
         )}
 
         {state.step === 'done' && (
           <Card className={styles.done}>
-            <p className={styles.success}>✓ Zapisano wizytę</p>
+            <p className={styles.success}>Wizyta zapisana</p>
             {state.result.stopped.length > 0 && (
               <p>Odstawione: {state.result.stopped.join(', ')}</p>
             )}

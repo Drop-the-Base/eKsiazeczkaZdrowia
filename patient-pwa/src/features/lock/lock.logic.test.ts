@@ -9,7 +9,7 @@ describe('validateNewPin', () => {
   it('rejects short, non-digit and different PINs', () => {
     expect(validateNewPin('123', '123')).toMatch(/4 do 8/);
     expect(validateNewPin('12a4', '12a4')).toMatch(/4 do 8/);
-    expect(validateNewPin('1234', '1235')).toMatch(/różnią/);
+    expect(validateNewPin('1234', '1235')).toMatch(/nie są identyczne/);
   });
 });
 

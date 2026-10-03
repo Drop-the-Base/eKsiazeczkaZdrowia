@@ -20,9 +20,9 @@ export const MODE_TEXT: Record<VoiceInputMode, { placeholder: string; submit: st
 };
 
 export const ERROR_TEXT: Record<SpeechErrorCode, string> = {
-  'not-allowed': 'Brak zgody na mikrofon – możesz wpisać tekst.',
-  'no-speech': 'Nic nie usłyszałem. Spróbuj jeszcze raz albo wpisz tekst.',
-  network: 'Rozpoznawanie mowy wymaga internetu – możesz wpisać tekst.',
-  unavailable: 'Ta przeglądarka nie rozpoznaje mowy – wpisz tekst.',
-  other: 'Nie udało się rozpoznać mowy – wpisz tekst.',
+  'not-allowed': 'Brak dostępu do mikrofonu. Wpisz tekst.',
+  'no-speech': 'Nie wykryto mowy. Spróbuj ponownie lub wpisz tekst.',
+  network: 'Rozpoznawanie mowy wymaga połączenia z internetem. Wpisz tekst.',
+  unavailable: 'Ta przeglądarka nie obsługuje rozpoznawania mowy. Wpisz tekst.',
+  other: 'Nie udało się rozpoznać mowy. Wpisz tekst.',
 };

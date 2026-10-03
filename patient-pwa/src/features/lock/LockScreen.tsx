@@ -18,8 +18,8 @@ function SetupPin({ lock }: { lock: ReturnType<typeof useLock> }) {
     <form className={styles.card} onSubmit={submit}>
       <h1 className={styles.title}>Ustaw PIN</h1>
       <p className={styles.lead}>
-        PIN szyfruje Twoje dane zdrowotne na tym telefonie. Bez niego nikt ich nie odczyta – także
-        my. <strong>PIN-u nie da się odzyskać.</strong>
+        PIN służy do szyfrowania danych zdrowotnych na tym urządzeniu. Bez niego odczytanie danych
+        nie jest możliwe, również dla dostawcy aplikacji. <strong>PIN-u nie można odzyskać.</strong>
       </p>
       <PinField label="PIN (4–8 cyfr)" value={pin} onChange={setPin} autoFocus />
       <PinField label="Powtórz PIN" value={repeat} onChange={setRepeat} />
@@ -29,7 +29,7 @@ function SetupPin({ lock }: { lock: ReturnType<typeof useLock> }) {
         </p>
       )}
       <Button type="submit" block disabled={lock.busy}>
-        {lock.busy ? 'Szyfruję…' : 'Ustaw PIN'}
+        {lock.busy ? 'Szyfrowanie…' : 'Ustaw PIN'}
       </Button>
     </form>
   );
@@ -48,7 +48,7 @@ function UnlockPin({ lock }: { lock: ReturnType<typeof useLock> }) {
       <h1 className={styles.title}>Wpisz PIN</h1>
       {lock.biometricOn && (
         <Button block onClick={lock.unlockBiometric} disabled={lock.busy}>
-          Odblokuj odciskiem palca lub twarzą
+          Odblokuj biometrycznie
         </Button>
       )}
       <PinField label="PIN" value={pin} onChange={setPin} autoFocus />
@@ -58,20 +58,20 @@ function UnlockPin({ lock }: { lock: ReturnType<typeof useLock> }) {
         </p>
       )}
       <Button type="submit" block disabled={lock.busy || pin.length < 4}>
-        {lock.busy ? 'Odblokowuję…' : 'Odblokuj'}
+        {lock.busy ? 'Odblokowywanie…' : 'Odblokuj'}
       </Button>
       {!forgot ? (
         <button type="button" className={styles.link} onClick={() => setForgot(true)}>
-          Nie pamiętam PIN-u
+          Nie pamiętasz PIN-u?
         </button>
       ) : (
         <div className={styles.forgot}>
           <p>
-            Dane są zaszyfrowane PIN-em i nie da się ich odczytać bez niego. Możesz usunąć dane z
-            tego telefonu i zacząć od nowa (albo potem wczytać kopię zapasową).
+            Dane są zaszyfrowane PIN-em i nie można ich odczytać bez niego. Możesz usunąć dane z tego
+            urządzenia i skonfigurować aplikację ponownie, a następnie wczytać kopię zapasową.
           </p>
           <Button block variant="danger" onClick={lock.wipe} disabled={lock.busy}>
-            Usuń wszystkie dane i zacznij od nowa
+            Usuń wszystkie dane
           </Button>
         </div>
       )}
@@ -129,9 +129,9 @@ export function LockScreen() {
       </div>
       {isDemo && !demoError && lock.status !== 'error' ? (
         <div className={styles.card}>
-          <h1 className={styles.title}>Przygotowuję demo…</h1>
+          <h1 className={styles.title}>Przygotowywanie wersji demonstracyjnej…</h1>
           <p className={styles.lead}>
-            Dane Pani Anny są szyfrowane na tym urządzeniu PIN-em demo {DEMO_PIN}.
+            Dane demonstracyjne są szyfrowane na tym urządzeniu. PIN: {DEMO_PIN}.
           </p>
           <LoadingState />
         </div>
@@ -142,7 +142,7 @@ export function LockScreen() {
           {lock.status === 'locked' && <UnlockPin lock={lock} />}
           {(lock.status === 'no-pin' || lock.status === 'locked') && (
             <a className={styles.demoLink} href={DEMO_BASE}>
-              Zobacz demo w 3 minuty →
+              Wersja demonstracyjna (3 min)
             </a>
           )}
         </>

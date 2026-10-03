@@ -73,7 +73,7 @@ export function DrugPicker({ onSelect, placeholder = 'np. Ibuprom', label = 'Naz
           <li>
             <button type="button" className={styles.option} onClick={() => pick({ name: typed })}>
               <span className={styles.name}>Użyj „{typed}”</span>
-              <span className={styles.meta}>spoza bazy, np. suplement albo zioła</span>
+              <span className={styles.meta}>spoza rejestru, np. suplement lub zioła</span>
             </button>
           </li>
         </ul>
