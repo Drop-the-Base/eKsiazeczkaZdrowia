@@ -40,7 +40,18 @@ npm start          # serwer produkcyjny
 
 ## Na telefonie
 
-Kamera, mikrofon i instalacja PWA wymagają **HTTPS**, więc sam adres z sieci lokalnej (`http://192.168…:5173`) nie wystarczy. Tunel HTTPS do serwera dev: patrz B06 (`npm run tunnel`, opis pojawi się tutaj po jego zmergowaniu).
+Kamera, mikrofon i instalacja PWA wymagają **HTTPS**, więc sam adres z sieci lokalnej (`http://192.168…:5173`) nie wystarczy. Używamy darmowego tunelu Cloudflare (bez konta), który daje adres `https://…trycloudflare.com`.
+
+Jednorazowo: `brew install cloudflared` (macOS) albo `winget install Cloudflare.cloudflared` (Windows).
+
+```bash
+npm run build && npm start         # terminal 1: serwer produkcyjny :8787 (PWA na /, lekarz na /lekarz/)
+npm run tunnel -w server           # terminal 2: wypisze adres https://…trycloudflare.com
+```
+
+Na telefonie otwórz wypisany adres, a na komputerze `<adres>/lekarz/` (albo `http://localhost:8787/lekarz/`). Przekaźnik (`wss://…/relay`) i LLM idą przez ten sam tunel. Adres zmienia się przy każdym uruchomieniu tunelu.
+
+Tryb dev z hot reloadem: `npm run dev`, potem `npm run tunnel -w server -- dev` (tunel do PWA na :5173).
 
 ## Praca z repo (agenci)
 

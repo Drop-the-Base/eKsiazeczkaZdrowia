@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p .",
-    "start": "tsx src/index.ts"
+    "start": "tsx src/index.ts",
+    "tunnel": "bash scripts/tunnel.sh"
   },
   "dependencies": {
     "@ez/shared": "*",
