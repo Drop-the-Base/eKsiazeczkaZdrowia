@@ -37,3 +37,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B36] Pacjent może dołączyć ponownie po odświeżeniu strony · issue #101 · 2026-10-03 19:22 · atrapy: brak
 - [x] [B37] Widok lekarza: <Timeline> od A zamiast zastępczej osi · issue #117 · 2026-10-03 19:26 · atrapy: brak
 - [x] [prośba #156] Ekran blokady zakrywa całą stronę · issue #156 · 2026-10-03 19:31 · atrapy: brak
+- [x] [B30] Eksport: zaszyfrowany plik z hasła · issue #64 · 2026-10-03 19:35 · atrapy: wejście z Profilu – prośba do A
