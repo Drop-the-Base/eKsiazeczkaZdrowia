@@ -50,3 +50,9 @@
   border-radius: var(--radius-sm);
   background: var(--color-surface);
 }
+
+@media print {
+  .bar {
+    display: none;
+  }
+}
