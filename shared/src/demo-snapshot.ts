@@ -16,7 +16,7 @@ export function createDemoSnapshot(now: IsoDateTime): ShareSnapshot {
     exams: d.exams,
     photos: [],
     documents: d.documents.map(({ content: _content, ...meta }) => meta),
-    visitNoteItems: d.visitNoteItems,
+    visitNoteItems: d.visitNoteItems.filter((n) => !n.discussed),
     visits: d.visits,
     range: {
       from: d.medications.reduce((min, m) => (m.startDate < min ? m.startDate : min), since),
