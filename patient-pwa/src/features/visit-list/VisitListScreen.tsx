@@ -1,19 +1,29 @@
 import { Link } from 'react-router-dom';
-import { Card, EmptyState, ErrorState, LoadingState, PageHeader } from '../../ui';
+import { Card, EmptyState, ErrorState, LoadingState, PageHeader, formatDate } from '../../ui';
 import { ABROAD_PATH } from '../abroad';
 import { POST_VISIT_PATH } from '../post-visit';
 import { SHARE_PATH } from '../share';
 import { NoteForm } from './components/NoteForm';
 import { NoteRow } from './components/NoteRow';
+import { whenText } from './beforeVisit.logic';
+import { useUpcomingVisit } from './useUpcomingVisit';
 import { useVisitList } from './useVisitList';
 import styles from './VisitListScreen.module.css';
 
 export function VisitListScreen() {
   const list = useVisitList();
+  const next = useUpcomingVisit(365);
+  const upcoming = next.status === 'ready' ? next.data.upcoming : undefined;
   return (
     <>
       <PageHeader title="Wizyta" />
       <div className={styles.content}>
+        {upcoming && (
+          <p className={styles.next}>
+            Najbliższa kontrola: <strong>{formatDate(upcoming.date)}</strong> (
+            {whenText(upcoming.daysLeft)})
+          </p>
+        )}
         <Link to={SHARE_PATH} className={styles.share}>
           Udostępnij lekarzowi
           <span className={styles.shareHint}>Podsumowanie i historia przez kod QR, szyfrowane</span>

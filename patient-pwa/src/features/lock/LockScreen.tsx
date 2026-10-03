@@ -79,6 +79,22 @@ export function LockScreen() {
   if (lock.status === 'unlocked') return null;
   return (
     <div className={styles.cover} role="dialog" aria-modal="true" aria-label="Blokada aplikacji">
+      <div className={styles.brand} aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="40" height="40">
+          <rect
+            x="5"
+            y="10"
+            width="14"
+            height="10"
+            rx="2"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          />
+          <path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" strokeWidth="2" />
+        </svg>
+        <span>eKsiazeczkaZdrowia</span>
+      </div>
       {lock.status === 'checking' && <LoadingState />}
       {lock.status === 'no-pin' && <SetupPin lock={lock} />}
       {lock.status === 'locked' && <UnlockPin lock={lock} />}
