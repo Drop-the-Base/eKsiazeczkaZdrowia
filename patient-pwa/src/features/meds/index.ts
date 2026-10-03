@@ -10,3 +10,4 @@ export {
 export { useMedications } from './useMedications';
 export { MedicationSheet } from './components/MedicationSheet';
 export { saveMedication } from './saveMedication';
+export { stopMedication, changeMedication } from './saveMedication';

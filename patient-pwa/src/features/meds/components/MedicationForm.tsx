@@ -12,15 +12,23 @@ import {
   validateMedForm,
   type MedFormErrors,
 } from '../medForm.logic';
-import { saveMedication } from '../saveMedication';
+import { changeMedication, saveMedication } from '../saveMedication';
+import { validateReason } from '../stop.logic';
+import { ReasonPicker } from './ReasonPicker';
 import styles from './MedicationForm.module.css';
 
 type Props = {
   medication: Medication | undefined;
+  /** `change`: zmiana dawki / schematu – stary rekord się kończy, powstaje nowy (z powodem). */
+  mode?: 'edit' | 'change';
   onSaved: (saved: Medication, isNew: boolean) => void;
 };
 
-export function MedicationForm({ medication, onSaved }: Props) {
+export function MedicationForm({ medication, mode = 'edit', onSaved }: Props) {
+  const changing = mode === 'change' && medication !== undefined;
+  const [reason, setReason] = useState('');
+  const [reasonError, setReasonError] = useState<string | undefined>();
+  const [changeDate, setChangeDate] = useState(todayIso());
   const [form, setForm] = useState(() =>
     medication ? medFormFrom(medication) : emptyMedForm(todayIso()),
   );
@@ -32,12 +40,19 @@ export function MedicationForm({ medication, onSaved }: Props) {
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const found = validateMedForm(form);
+    const foundReason = changing ? validateReason(reason) : undefined;
     setErrors(found);
-    if (Object.keys(found).length > 0) return;
+    setReasonError(foundReason);
+    if (Object.keys(found).length > 0 || foundReason) return;
     setSaving(true);
     setSaveError(null);
     try {
-      onSaved(await saveMedication(form, medication), !medication);
+      if (changing) {
+        const date = changeDate > medication.startDate ? changeDate : medication.startDate;
+        onSaved(await changeMedication(medication, form, reason, date), true);
+      } else {
+        onSaved(await saveMedication(form, medication), !medication);
+      }
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : 'Nie udało się zapisać leku');
     } finally {
@@ -72,6 +87,24 @@ export function MedicationForm({ medication, onSaved }: Props) {
         <>
           <DrugPicker onSelect={(pick) => setForm(applyPick(form, pick))} />
           {errors.name && <span className={styles.error}>{errors.name}</span>}
+        </>
+      )}
+
+      {changing && (
+        <>
+          <ReasonPicker
+            label="Dlaczego zmiana?"
+            value={reason}
+            onChange={setReason}
+            error={reasonError}
+          />
+          <TextField
+            label="Od kiedy nowa dawka"
+            type="date"
+            value={changeDate}
+            min={medication.startDate}
+            onChange={(e) => setChangeDate(e.target.value)}
+          />
         </>
       )}
 
@@ -153,23 +186,25 @@ export function MedicationForm({ medication, onSaved }: Props) {
         )}
       </fieldset>
 
-      <div className={styles.row}>
-        <TextField
-          label="Od"
-          type="date"
-          value={form.startDate}
-          onChange={(e) => setForm({ ...form, startDate: e.target.value })}
-          error={errors.startDate}
-        />
-        <TextField
-          label="Do (opcjonalnie)"
-          type="date"
-          value={form.endDate}
-          min={form.startDate}
-          onChange={(e) => setForm({ ...form, endDate: e.target.value })}
-          error={errors.endDate}
-        />
-      </div>
+      {!changing && (
+        <div className={styles.row}>
+          <TextField
+            label="Od"
+            type="date"
+            value={form.startDate}
+            onChange={(e) => setForm({ ...form, startDate: e.target.value })}
+            error={errors.startDate}
+          />
+          <TextField
+            label="Do (opcjonalnie)"
+            type="date"
+            value={form.endDate}
+            min={form.startDate}
+            onChange={(e) => setForm({ ...form, endDate: e.target.value })}
+            error={errors.endDate}
+          />
+        </div>
+      )}
 
       {saveError && (
         <p className={styles.error} role="alert">
@@ -177,7 +212,13 @@ export function MedicationForm({ medication, onSaved }: Props) {
         </p>
       )}
       <Button type="submit" block disabled={saving}>
-        {saving ? 'Zapisywanie…' : medication ? 'Zapisz zmiany' : 'Dodaj lek'}
+        {saving
+          ? 'Zapisywanie…'
+          : changing
+            ? 'Zapisz nową dawkę'
+            : medication
+              ? 'Zapisz zmiany'
+              : 'Dodaj lek'}
       </Button>
     </form>
   );

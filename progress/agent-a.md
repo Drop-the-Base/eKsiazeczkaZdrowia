@@ -13,3 +13,4 @@ Zmergowane taski (dopisuje agent A po każdym merge, patrz `CLAUDE.md`).
 - [x] [A08] searchDrugs + <DrugPicker> · issue #18 · 2026-10-03 17:56 · atrapy: brak
 - [x] [A09] Lista leków w trzech grupach · issue #20 · 2026-10-03 18:00 · atrapy: brak
 - [x] [A10] Dodawanie i edycja leku · issue #22 · 2026-10-03 18:04 · atrapy: brak
+- [x] [A11] Odstawienie / zmiana leku z pytaniem o powód · issue #24 · 2026-10-03 18:10 · atrapy: brak
