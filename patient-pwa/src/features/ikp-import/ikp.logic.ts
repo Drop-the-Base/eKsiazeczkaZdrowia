@@ -10,8 +10,12 @@ export interface FoundDiagnosis {
 }
 
 const ICD = '[A-TV-Z]\\d{2}(?:\\.\\d{1,2})?';
-const NAME_THEN_CODE = new RegExp(`([\\p{Lu}\\p{Ll}][\\p{L} ,-]{2,80}?)\\s*\\((${ICD})\\)`, 'gu');
-const CODE_THEN_NAME = new RegExp(`\\b(${ICD})\\s+[-–]?\\s*([\\p{L}][\\p{L} ,-]{2,80})`, 'gu');
+// Nazwa choroby może zawierać cyfry („Cukrzyca typu 2”).
+const NAME_THEN_CODE = new RegExp(
+  `([\\p{Lu}\\p{Ll}][\\p{L}\\d ,-]{2,80}?)\\s*\\((${ICD})\\)`,
+  'gu',
+);
+const CODE_THEN_NAME = new RegExp(`\\b(${ICD})\\s+[-–]?\\s*([\\p{L}][\\p{L}\\d ,-]{2,80})`, 'gu');
 const LABEL = /^(rozpoznanie|rozpoznania|diagnoza|choroba|choroby)\s*:\s*/iu;
 
 /** „Rozpoznanie: Przewlekła białaczka szpikowa (C92.1)” albo „C92.1 Przewlekła białaczka szpikowa”. */

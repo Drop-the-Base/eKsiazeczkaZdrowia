@@ -24,6 +24,9 @@ describe('findDiagnoses', () => {
     expect(findDiagnoses(discharge)).toEqual([
       { name: 'Przewlekła białaczka szpikowa', icd10: 'C92.1' },
     ]);
+    expect(findDiagnoses('Rozpoznanie: Cukrzyca typu 2 (E11)')).toEqual([
+      { name: 'Cukrzyca typu 2', icd10: 'E11' },
+    ]);
     expect(findDiagnoses('I10 Nadciśnienie tętnicze pierwotne')).toEqual([
       { name: 'Nadciśnienie tętnicze pierwotne', icd10: 'I10' },
     ]);

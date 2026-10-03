@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { MedicalDocument } from '@ez/shared';
 import { db } from '../../db';
 import {
@@ -14,6 +14,7 @@ import {
 } from '../../ui';
 import { ImportReview } from './components/ImportReview';
 import { importFile, readStoredDocument, type ImportResult } from './importApi';
+import { takeSharedFile } from './sharedFile';
 import styles from './ImportScreen.module.css';
 
 /** Import z IKP: pacjent pobiera dokument z IKP i wybiera go tutaj (albo „Udostępnij”, A28). */
@@ -37,6 +38,20 @@ export function ImportScreen() {
       setBusy(false);
     }
   };
+
+  // Plik z systemowego „Udostępnij” (Web Share Target, tylko Chrome na Androidzie).
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('shared') !== '1') return;
+    url.searchParams.delete('shared');
+    window.history.replaceState(null, '', url);
+    void run(
+      takeSharedFile().then((file) => {
+        if (!file) throw new Error('Nie otrzymano pliku – wybierz go ręcznie');
+        return importFile(file);
+      }),
+    );
+  }, []); // tylko przy wejściu na ekran
 
   const onFile = (file: File | undefined) => {
     if (fileRef.current) fileRef.current.value = '';
