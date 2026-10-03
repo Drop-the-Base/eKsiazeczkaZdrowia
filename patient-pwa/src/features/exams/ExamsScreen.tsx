@@ -22,6 +22,7 @@ export function ExamsScreen() {
     <>
       <PageHeader
         title="Badania"
+        back="/profil"
         action={
           <Button variant="ghost" onClick={() => setAdding(true)}>
             + Dodaj

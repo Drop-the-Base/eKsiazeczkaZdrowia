@@ -96,7 +96,7 @@ function DoseRow({
             type="button"
             className={styles.skip}
             onClick={() => onConfirm('skipped')}
-            aria-label={`Pominąłem ${dose.medication.name}`}
+            aria-label={`Pominięty: ${dose.medication.name}`}
           >
             Pomiń
           </button>
@@ -104,9 +104,9 @@ function DoseRow({
             type="button"
             className={styles.take}
             onClick={() => onConfirm('taken')}
-            aria-label={`Wziąłem ${dose.medication.name}`}
+            aria-label={`Wzięty: ${dose.medication.name}`}
           >
-            ✓ Wziąłem
+            ✓ Wzięty
           </button>
         </span>
       )}
@@ -133,7 +133,7 @@ function AsNeededRow({
         </span>
       </span>
       <button type="button" className={styles.take} onClick={onTake}>
-        Wziąłem teraz
+        Wzięty teraz
       </button>
     </Card>
   );

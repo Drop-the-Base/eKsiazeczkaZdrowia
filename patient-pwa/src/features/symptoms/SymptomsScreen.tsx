@@ -29,6 +29,7 @@ export function SymptomsScreen() {
     <>
       <PageHeader
         title="Objawy"
+        back="/profil"
         action={
           <Button variant="ghost" onClick={() => setAdding(true)}>
             + Dodaj

@@ -64,7 +64,9 @@ export function MedicationTracks({
                 highlight={highlight}
                 onSelect={onSelect}
               >
-                {!bar.asNeeded && <span className={styles.barLabel}>{bar.label}</span>}
+                {!bar.asNeeded && bar.width >= 20 && (
+                  <span className={styles.barLabel}>{bar.label}</span>
+                )}
               </Marker>
             );
           })}
