@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Medication } from '@ez/shared';
 import { BottomSheet, Button, todayIso } from '../../../ui';
+import { DrugInfoCard } from '../../drugs';
 import { isCurrent } from '../meds.logic';
 import { MedicationForm } from './MedicationForm';
 import { StopForm } from './StopForm';
@@ -56,6 +57,8 @@ function SheetBody({ medication, onClose, onSaved }: Omit<Props, 'open'>) {
           </Button>
         </div>
       )}
+
+      {view === 'edit' && medication && <DrugInfoCard medication={medication} />}
 
       {view === 'stop' && medication ? (
         <StopForm medication={medication} onDone={onClose} />
