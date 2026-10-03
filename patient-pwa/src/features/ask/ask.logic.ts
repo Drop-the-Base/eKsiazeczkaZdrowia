@@ -12,15 +12,15 @@ function monthsBefore(today: IsoDate, months: number): IsoDate {
 export function quickQuestions(today: IsoDate): { question: string; filter: QueryFilter }[] {
   return [
     {
-      question: 'Jakie leki brałam w ostatnich 2 miesiącach?',
+      question: 'Jakie leki były przyjmowane w ostatnich 2 miesiącach?',
       filter: { entity: 'medication', from: monthsBefore(today, 2), sort: 'asc' },
     },
     {
-      question: 'Kiedy ostatnio brałam leki przeciwzakrzepowe?',
+      question: 'Kiedy ostatnio przyjmowano leki przeciwzakrzepowe?',
       filter: { entity: 'medication', atcPrefix: 'B01', sort: 'desc', limit: 1 },
     },
     {
-      question: 'Od kiedy mam te bóle głowy?',
+      question: 'Od kiedy występują bóle głowy?',
       filter: { entity: 'symptom', name: 'ból głowy', sort: 'asc' },
     },
   ];
@@ -44,17 +44,17 @@ export function describeFilter(f: QueryFilter): string {
 /** Jednozdaniowa odpowiedź nad listą (bez wniosków, tylko daty). */
 export function headline(f: QueryFilter, results: QueryResultItem[]): string {
   const first = results[0];
-  if (!first) return 'Nic nie znalazłem w Twoich zapisach.';
+  if (!first) return 'Brak wyników.';
   if (first.entity === 'medication' && f.sort === 'desc' && f.limit === 1) {
     const m = first.item;
     return m.endDate
       ? `Ostatnio: ${m.name}, do ${formatDate(m.endDate)}.`
-      : `${m.name} – przyjmujesz nadal (od ${formatDate(m.startDate)}).`;
+      : `${m.name}: przyjmowany nadal (od ${formatDate(m.startDate)}).`;
   }
   if (first.entity === 'symptom' && f.sort !== 'desc') {
-    return `Pierwszy wpis: ${formatDateTime(first.item.startedAt)} · razem ${results.length}.`;
+    return `Pierwszy wpis: ${formatDateTime(first.item.startedAt)} · łącznie ${results.length}.`;
   }
-  return `Znalezione: ${results.length}.`;
+  return `Liczba wyników: ${results.length}.`;
 }
 
 export function resultLine(r: QueryResultItem): { title: string; detail: string } {

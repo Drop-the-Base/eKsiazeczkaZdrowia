@@ -8,7 +8,7 @@ describe('backup logic', () => {
   it('validates the password twice', () => {
     expect(validateNewPassword('dlugie-haslo', 'dlugie-haslo', 8)).toBeUndefined();
     expect(validateNewPassword('krotkie', 'krotkie', 8)).toMatch(/8 znaków/);
-    expect(validateNewPassword('dlugie-haslo', 'inne-haslo', 8)).toMatch(/różnią/);
+    expect(validateNewPassword('dlugie-haslo', 'inne-haslo', 8)).toMatch(/nie są identyczne/);
   });
 });
 

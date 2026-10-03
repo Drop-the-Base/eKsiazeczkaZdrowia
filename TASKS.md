@@ -221,57 +221,56 @@ QueryFilter   { entity: 'medication'|'symptom'|'exam', atcPrefix?, name?, from?,
 
 ---
 
-## 7. Zadania (2 osoby równolegle, podział po funkcjach)
+## 7. Zadania i moduły funkcjonalne
 
-Każdy robi swoje funkcje **od początku do końca**: ekran + technika pod spodem. Obaj mamy ekrany do pokazania na demo i obaj mamy trudniejsze technicznie kawałki.
+Każda funkcja jest realizowana **od początku do końca**: ekran + logika i obsługa danych pod spodem.
 
-### Podział
+### Obszary funkcjonalne
 
-| | **Osoba A: „Dane i codzienność”** | **Osoba B: „Wizyta i bezpieczeństwo”** |
-|---|---|---|
-| Ekrany PWA | Profil i diagnozy, leki, potwierdzanie leków, objawy, badania, zdjęcia w czasie, **oś czasu**, przypomnienia, **Zapytaj**, import z IKP | Lista „powiem lekarzowi”, **Podsumowanie na wizytę**, **Udostępnij lekarzowi**, **Po wizycie**, **Za granicą**, blokada aplikacji, kopia zapasowa |
-| Technika | Rozpoznawanie mowy + rozbijanie wpisów, baza leków z RPL, OCR, import PDF, LLM: pytanie → filtr | Baza lokalna + szyfrowanie, serwer-przekaźnik, szyfrowanie przesyłu (ECDH + AES-GCM) z kodem weryfikacyjnym, **aplikacja lekarza**, LLM: notatka → zmiany, słowniki ATC/ICD-10, eksport/import z hasłem |
-| Happy path (sekcja 4) | kroki 1, 2, 3, 7 | kroki 4, 5, 6, 8 |
+| Obszar | Zakres |
+|---|---|
+| Dane i codzienność | Profil i diagnozy, leki, potwierdzanie leków, objawy, badania, zdjęcia w czasie, **oś czasu**, przypomnienia, **Zapytaj**, import z IKP, rozpoznawanie mowy, baza leków z RPL, OCR |
+| Wizyta i bezpieczeństwo | Lista „powiem lekarzowi”, **Podsumowanie na wizytę**, **Udostępnij lekarzowi**, **Po wizycie**, **Za granicą**, blokada aplikacji, kopia zapasowa, baza lokalna + szyfrowanie, serwer-przekaźnik, szyfrowanie przesyłu (ECDH + AES-GCM) z kodem weryfikacyjnym, **aplikacja lekarza**, LLM: notatka → zmiany, słowniki ATC/ICD-10, eksport/import z hasłem |
 
-### Własność folderów
+### Struktura kodu i repozytorium
 
-Aktualna tabela i zasady (bez folderów „wspólnych”): **`CLAUDE.md`**. W skrócie: `app/`, `ui/` i pliki root należą do A; `shared/types.ts`, `shared/contracts.ts`, `shared/demo-data.ts` do B. Zmiana w cudzym pliku = issue `[prośba] ...` z etykietą właściciela. Routing przez `features/*/route.tsx` + `import.meta.glob`, więc nowy ekran nie wymaga zmiany w `app/`.
+Wszystkie foldery projektu obsługuje jeden agent. Szczegóły architektury i konwencji: **`CLAUDE.md`**. Routing w PWA jest modularny przez `features/*/route.tsx` + `import.meta.glob`.
 
-### Gdzie się stykamy (kontrakty z T0.3)
+### Główne kontrakty między modułami (z T0.3)
 
-| Kto daje | Co | Kto używa | Atrapa do czasu oddania |
-|---|---|---|---|
-| A | `<VoiceInput mode>` | B: lista „powiem lekarzowi”, Po wizycie | zwykłe pole tekstowe |
-| A | `<DrugPicker>`, `searchDrugs` | B: Po wizycie (nowy lek) | 10 leków na sztywno |
-| A | `createReminder()` | B: kontrola z notatki po wizycie, przypomnienie o eksporcie | `console.log` |
-| A | `<Timeline data>` | B: widok lekarza (ten sam komponent albo jego kopia) | lista dat |
-| B | `db` (Dexie, potem szyfrowanie bez zmiany API) | A: wszystkie ekrany | **B oddaje w Fazie 0** |
-| B | `getActiveVisitList()` | A: nic / B: auto-pokazanie przed wizytą | — |
+| Moduł / Komponent | Zastosowanie |
+|---|---|
+| `<VoiceInput mode>` | Lista „powiem lekarzowi”, Po wizycie, Dodaj |
+| `<DrugPicker>`, `searchDrugs` | Dodawanie leków, Po wizycie (nowy lek) |
+| `createReminder()` | Kontrola z notatki po wizycie, przypomnienia o lekach, przypomnienie o eksporcie |
+| `<Timeline data>` | Oś czasu pacjenta, widok lekarza |
+| `db` (Dexie + szyfrowanie) | Wszystkie ekrany PWA |
+| `getActiveVisitList()` | Auto-pokazanie pytań przed wizytą |
 
 Priorytet: **M** = must (jest w happy path) · **S** = should (wyróżnik) · **C** = could (jeśli zostanie czas).
 
 ---
 
-### Faza 0: Start (razem)
+### Faza 0: Start
 
-- [ ] **T0.1** (A+B, M) Przeczytać treść zadania od organizatorów, porównać z tym planem.
-- [ ] **T0.2** (A, M) Monorepo: `patient-pwa/`, `doctor-app/`, `server/`, `shared/`, `data/`; workspaces, prettier. **Push jak najszybciej.**
-- [ ] **T0.3** (A+B, M) **Kontrakt (potem zamrożony):** `shared/types.ts` (sekcja 6), protokół, sygnatury z tabeli „Gdzie się stykamy” oraz:
+- [ ] **T0.1** (M) Przeczytać treść zadania od organizatorów, porównać z tym planem.
+- [ ] **T0.2** (M) Monorepo: `patient-pwa/`, `doctor-app/`, `server/`, `shared/`, `data/`; workspaces, prettier. **Push jak najszybciej.**
+- [ ] **T0.3** (M) **Kontrakt:** `shared/types.ts` (sekcja 6), protokół, sygnatury z tabeli kontraktów oraz:
   - transport: `createSession() → { sessionId, qrPayload }`, `connect(qrPayload)`, `sendSnapshot(snapshot)`, `onSnapshot(cb)`
   - głos: `parseEntry(text) → { symptoms[], medications[] }`
   - pytania: `askHistory(question) → QueryFilter`, `runFilter(filter, db)`
   - notatka: `parseVisitNote(text) → { stopMeds[], newMeds[], followUpDate? }`
-- [ ] **T0.4** (A+B, M) **Szkielet aplikacji pacjenta:** nawigacja (Oś czasu / Dodaj / Wizyta / Zapytaj / Profil), kolory, typografia, wspólne komponenty w `ui/` (przycisk, karta, lista, arkusz od dołu, duży przycisk mikrofonu). Puste ekrany z podpisem właściciela. Po tym każdy pracuje już tylko w swoich `features/`.
-- [ ] **T0.5** (B, M) `db/`: Dexie ze schematem z sekcji 6 (na razie bez szyfrowania) + `loadDemoData()` → push.
-- [ ] **T0.6** (B, M) `shared/demo-data.ts`: profil **Pani Anna** zgodny z happy path: nowotwór krwi wśród diagnoz; **suplement z grzybów przyjmowany codziennie przez cały okres** (dokładna nazwa i wyniki krwi: dostarczymy później; do tego czasu ogólnie, bez sugerowania mechanizmu); 2–3 kolejne leki z datami start–koniec i powodem zmiany; **morfologia po każdej zmianie leku ze złymi wynikami**; OTC (ibuprom); ~3 tygodnie potwierdzeń i objawów (zawroty po nowym leku); 1 wcześniejsza wizyta; lek przeciwzakrzepowy w przeszłości; zdjęcia (opcjonalnie); 1–2 przykładowe PDF-y „z IKP”.
-- [ ] **T0.7** (A, M) `README.md` (uruchomienie) + `CLAUDE.md` (zasady + tabele własności z tej sekcji).
-- [ ] **T0.8** (B, M) HTTPS od początku (tunel dla telefonu); postawić własny host (proces ciągły + WSS + certyfikat), deploy jednym poleceniem.
+- [ ] **T0.4** (M) **Szkielet aplikacji pacjenta:** nawigacja (Oś czasu / Dodaj / Wizyta / Zapytaj / Profil), kolory, typografia, wspólne komponenty w `ui/` (przycisk, karta, lista, arkusz od dołu, duży przycisk mikrofonu).
+- [ ] **T0.5** (M) `db/`: Dexie ze schematem z sekcji 6 (na razie bez szyfrowania) + `loadDemoData()` → push.
+- [ ] **T0.6** (M) `shared/demo-data.ts`: profil **Pani Anna** zgodny z happy path: nowotwór krwi wśród diagnoz; **suplement z grzybów przyjmowany codziennie przez cały okres** (dokładna nazwa i wyniki krwi: dostarczymy później; do tego czasu ogólnie, bez sugerowania mechanizmu); 2–3 kolejne leki z datami start–koniec i powodem zmiany; **morfologia po każdej zmianie leku ze złymi wynikami**; OTC (ibuprom); ~3 tygodnie potwierdzeń i objawów (zawroty po nowym leku); 1 wcześniejsza wizyta; lek przeciwzakrzepowy w przeszłości; zdjęcia (opcjonalnie); 1–2 przykładowe PDF-y „z IKP”.
+- [ ] **T0.7** (M) `README.md` (uruchomienie) + `CLAUDE.md` (zasady).
+- [ ] **T0.8** (M) HTTPS od początku (tunel dla telefonu); postawić własny host (proces ciągły + WSS + certyfikat), deploy jednym poleceniem.
 
 ---
 
 ### Faza 1: Rdzeń
 
-**A: dane**
+**Dane:**
 - [ ] **T1.1** (M) Profil: alergie, grupa krwi, **diagnozy** aktualne / przebyte.
 - [ ] **T1.2** (M) `data/` + `features/drugs/`: skrypt RPL (dane otwarte) → kompaktowy `drugs.json` (nazwa, substancja, moc, postać, ATC, link do ulotki); `searchDrugs` + `<DrugPicker>`.
 - [ ] **T1.3** (M) Leki: lista (recepta / OTC / suplement), dodawanie przez `<DrugPicker>`, harmonogram, od–do; przy odstawieniu lub zmianie **pytanie o powód**. Po dodaniu leków pytanie *„czy bierzesz coś jeszcze? suplementy, witaminy, zioła”* (suplementów może nie być w RPL, więc wpis wolnym tekstem).
@@ -279,35 +278,35 @@ Priorytet: **M** = must (jest w happy path) · **S** = should (wyróżnik) · **
 - [ ] **T1.5** (M) Objawy: szybkie dodawanie (nazwa, nasilenie opcjonalnie, czas).
 - [ ] **T1.6** (M) Badania: dodawanie ręczne (nazwa, data, wyniki), wartości poza normą wyróżnione; widoczne na osi czasu obok zmian leków (kluczowe dla kroku 3).
 
-**B: połączenie z lekarzem**
+**Połączenie z lekarzem:**
 - [ ] **T1.7** (M) Serwer `ws`: `create-session`, `join-session`, przekazywanie wiadomości (klucz publiczny pacjenta, kawałki szyfrogramu, „koniec”) między dwiema stronami sesji, wygasanie sesji, limit rozmiaru, nic nie zapisuje na dysku ani w logach.
 - [ ] **T1.8** (M) `shared/transport/` + `shared/crypto/`: ECDH → HKDF → AES-256-GCM, snapshot w zaszyfrowanych kawałkach (losowy nonce na kawałek) z potwierdzeniem, ponowne połączenie WebSocketu.
 - [ ] **T1.9** (M) Aplikacja webowa lekarza: ekran z QR (odświeżany po wygaśnięciu), status połączenia.
 - [ ] **T1.10** (M) Strona dev „symulator pacjenta” + test end-to-end na danych demo w dwóch kartach.
-- [ ] **T1.11** (M) Lista **„powiem lekarzowi”**: pływający przycisk z każdego ekranu, dodawanie tekstem (głos po oddaniu `VoiceInput` przez A), odhaczanie „omówione”.
+- [ ] **T1.11** (M) Lista **„powiem lekarzowi”**: pływający przycisk z każdego ekranu, dodawanie tekstem (głos po oddaniu `VoiceInput`), odhaczanie „omówione”.
 - [ ] **T1.12** (S) **Kod weryfikacyjny:** 4 cyfry ze skrótu SHA-256 obu kluczy publicznych, pokazane na telefonie i u lekarza; przycisk „kody się nie zgadzają” przerywa sesję.
 
-**🔁 Synchronizacja po Fazie 1:** merge do `main`. A: leki, objawy i badania działają na danych demo. B: transport działa między kartami, lista „powiem lekarzowi” gotowa.
+**🔁 Synchronizacja po Fazie 1:** merge do `main`. Leki, objawy i badania działają na danych demo. Transport działa między kartami, lista „powiem lekarzowi” gotowa.
 
 ---
 
 ### Faza 2: Happy path
 
-**A: głos, oś czasu, pytania**
-- [ ] **T2.1** (M) `features/voice/`: `VoiceInput` (zawsze z polem tekstowym obok mikrofonu) + interfejs `SpeechEngine { isAvailable(), start(lang), stop(), onPartial(cb), onFinal(cb), onError(cb) }`; jedyna implementacja na hackathon: `webSpeechEngine.ts` (Web Speech API `pl-PL`), wybór silnika w jednym miejscu (`engines/index.ts`); `VoiceInput` nie importuje nic z Web Speech bezpośrednio. Jednorazowa informacja przy pierwszym użyciu mikrofonu (O1) + `parseEntry` (lokalnie: słownik objawów + `searchDrugs`, „od rana”, „wieczorem”, „wzięłam”) → propozycja wpisów do zatwierdzenia jednym dotknięciem. **Oddać B jak najwcześniej.**
-- [ ] **T2.2** (M) **Oś czasu:** leki jako paski (start–koniec, z powodem odstawienia), potwierdzenia, objawy, zdjęcia (miniatury), badania, wizyty, dokumenty; filtr 7/30/90 dni. Związek „nowy lek → objaw” widoczny na pierwszy rzut oka. Komponent wielokrotnego użytku (B użyje go u lekarza).
+**Głos, oś czasu, pytania:**
+- [ ] **T2.1** (M) `features/voice/`: `VoiceInput` (zawsze z polem tekstowym obok mikrofonu) + interfejs `SpeechEngine { isAvailable(), start(lang), stop(), onPartial(cb), onFinal(cb), onError(cb) }`; jedyna implementacja na hackathon: `webSpeechEngine.ts` (Web Speech API `pl-PL`), wybór silnika w jednym miejscu (`engines/index.ts`); `VoiceInput` nie importuje nic z Web Speech bezpośrednio. Jednorazowa informacja przy pierwszym użyciu mikrofonu (O1) + `parseEntry` (lokalnie: słownik objawów + `searchDrugs`, „od rana”, „wieczorem”, „wzięłam”) → propozycja wpisów do zatwierdzenia jednym dotknięciem.
+- [ ] **T2.2** (M) **Oś czasu:** leki jako paski (start–koniec, z powodem odstawienia), potwierdzenia, objawy, zdjęcia (miniatury), badania, wizyty, dokumenty; filtr 7/30/90 dni. Związek „nowy lek → objaw” widoczny na pierwszy rzut oka. Komponent wielokrotnego użytku (używany również u lekarza).
 - [ ] **T2.3** (M) **Zdjęcia w czasie:** aparat lub galeria, kategoria (skóra / rana / obrzęk), seria, porównanie dwóch zdjęć obok siebie, miniatury na osi czasu.
 - [ ] **T2.4** (M) **Zapytaj:** mikrofon + 3 szybkie przyciski (scenariusze z happy path) → `server/src/llm/query.ts`: **tylko tekst pytania** → `QueryFilter` (np. „przeciwzakrzepowe” → `atcPrefix: B01`) → `runFilter` lokalnie → lista z datami. Fallback bez sieci: 3 gotowe filtry.
-- [ ] **T2.5** (M) **Przypomnienia:** o lekach („Czas na lek”, bez nazwy leku), z powiadomienia prosto do potwierdzenia; `createReminder()` dla B. **W PWA na demo:** bez Web Push i bez serwera; przypomnienia, których czas minął, widoczne po otwarciu aplikacji jako „Do potwierdzenia”, plus przycisk demo, który od razu pokazuje lokalne powiadomienie „Czas na lek”. Docelowo (mobilka): zaplanowane lokalne powiadomienia.
+- [ ] **T2.5** (M) **Przypomnienia:** o lekach („Czas na lek”, bez nazwy leku), z powiadomienia prosto do potwierdzenia; `createReminder()`. **W PWA na demo:** bez Web Push i bez serwera; przypomnienia, których czas minął, widoczne po otwarciu aplikacji jako „Do potwierdzenia”, plus przycisk demo, który od razu pokazuje lokalne powiadomienie „Czas na lek”. Docelowo (mobilka): zaplanowane lokalne powiadomienia.
 
-**B: wizyta i za granicą**
+**Wizyta i za granicą:**
 - [ ] **T2.6** (M) **Udostępnij lekarzowi** (ekran pacjenta): wybór zakresu → skan QR → `connect` + `sendSnapshot`; zmniejszanie zdjęć; status „przesłano”.
 - [ ] **T2.6b** (M) **Podsumowanie na wizytę:** funkcja `buildVisitSummary(db, od) → VisitSummary`, liczona **lokalnie, bez LLM**, domyślnie od ostatniej wizyty:
   - leki: nowe, odstawione (z powodem), zmienione; regularność przyjmowania (np. „8 pominięć z 30”),
   - objawy: lista z liczbą wystąpień, najwyższym nasileniem i datą pierwszego wystąpienia; zaznaczenie objawów, które zaczęły się w ciągu ~14 dni po starcie nowego leku (bez wniosków, tylko zestawienie dat),
   - nowe badania (z wynikami poza zakresem referencyjnym na górze), nowe zdjęcia, lista „powiem lekarzowi”.
-  Pacjent widzi podsumowanie przed wysłaniem i może odznaczyć sekcje. Podsumowanie jedzie w `ShareSnapshot` i jest **pierwszym ekranem u lekarza** (T2.7). Typ `VisitSummary` dopisać do `shared/types.ts` (uzgodnić z A).
-- [ ] **T2.7** (M) **Widok lekarza** wg „Układ widoku lekarza” (sekcja 5): pasek górny, nagłówek, lewa kolumna („Pacjent chce powiedzieć” + „Przyjmowane teraz” w trzech grupach na równi), prawa kolumna (pasek „Od ostatniej wizyty” z podsumowania T2.6b + oś czasu z `<Timeline>` od A + zakładki). Czytelny w 30 s. Koniec sesji: przycisk + timeout, czyszczenie pamięci. Dane **tylko w pamięci karty** (bez `localStorage` / IndexedDB / cache), nagłówki `no-store` + CSP.
+  Pacjent widzi podsumowanie przed wysłaniem i może odznaczyć sekcje. Podsumowanie jedzie w `ShareSnapshot` i jest **pierwszym ekranem u lekarza** (T2.7). Typ `VisitSummary` dopisać do `shared/types.ts`.
+- [ ] **T2.7** (M) **Widok lekarza** wg „Układ widoku lekarza” (sekcja 5): pasek górny, nagłówek, lewa kolumna („Pacjent chce powiedzieć” + „Przyjmowane teraz” w trzech grupach na równi), prawa kolumna (pasek „Od ostatniej wizyty” z podsumowania T2.6b + oś czasu z `<Timeline>` + zakładki). Czytelny w 30 s. Koniec sesji: przycisk + timeout, czyszczenie pamięci. Dane **tylko w pamięci karty** (bez `localStorage` / IndexedDB / cache), nagłówki `no-store` + CSP.
 - [ ] **T2.8** (M) **Po wizycie:** `VoiceInput mode="postVisit"` → endpoint `POST /llm/visit-note` → `{ stopMeds[], newMeds[], followUpDate? }` → lista zmian z checkboxami → zatwierdź → leki zaktualizowane (z powodem), `createReminder` na kontrolę, nagranie usunięte.
 - [ ] **T2.9** (M) Lista „powiem lekarzowi” **pokazuje się automatycznie przed wizytą** (gdy zbliża się data kontroli).
 - [ ] **T2.10** (M) **Za granicą:** podsumowanie **offline** (alergie, aktualne leki przez substancję czynną + ATC, choroby + ICD-10) w EN/DE/ES; słowniki w `shared/dict/`; widok na ekranie + PDF.
@@ -319,15 +318,15 @@ Priorytet: **M** = must (jest w happy path) · **S** = should (wyróżnik) · **
 
 ### Faza 3: Wyróżniki i bezpieczeństwo
 
-**A: import i informacje o lekach**
+**Import i informacje o lekach:**
 - [ ] **T3.1** (S) `features/ikp-import/`: wybór pliku jako ścieżka podstawowa (działa wszędzie) + Web Share Target jako dodatek w Chrome na Androidzie (PWA odbiera PDF z menu „Udostępnij”) → `Document` → tekst z PDF (pdf.js) → propozycje leków / diagnoz / badań do zatwierdzenia.
 - [ ] **T3.2** (S) `features/ocr/`: zdjęcie wyniku → Tesseract.js (`pol`) na urządzeniu → tekst + próba wyciągnięcia wyników (nazwa, wartość, jednostka) → formularz badania do zatwierdzenia.
 - [ ] **T3.3** (S) `<DrugInfoCard>`: substancja czynna, dawkowanie, informacje z ulotki (w tym przeciwwskazania) **jako fakty, bez ostrzeżeń**; link do pełnej ulotki.
 - ~~**T3.4** Akcent „Sport”~~: decyzja, nie robimy nic sportowego (ani w aplikacji, ani w pitchu).
 - [ ] **T3.5** (C) `parseEntry` przez LLM jako fallback dla dłuższych zdań (z jasną informacją, że tekst wpisu idzie do modelu).
 
-**B: szyfrowanie i kopia zapasowa**
-- [ ] **T3.6** (M) **Szyfrowanie bazy:** każdy rekord i blob AES-256-GCM (WebCrypto); klucz z PIN-u (Argon2id, ta sama funkcja co w T3.8) trzymany tylko w pamięci; **bez zmiany API `db`**, więc ekrany A działają dalej.
+**Szyfrowanie i kopia zapasowa:**
+- [ ] **T3.6** (M) **Szyfrowanie bazy:** każdy rekord i blob AES-256-GCM (WebCrypto); klucz z PIN-u (Argon2id, ta sama funkcja co w T3.8) trzymany tylko w pamięci; bez zmiany API `db`.
 - [ ] **T3.7** (M) **Blokada aplikacji:** PIN przy otwarciu i po powrocie do aplikacji po kilku minutach (odblokowuje klucz z T3.6; po zablokowaniu klucz usuwany z pamięci). (C) Biometria przez passkey z PRF, gdy działa na telefonie demo; PIN zawsze jako zapas.
 - [ ] **T3.8** (S) **Eksport:** hasło → Argon2id → AES-256-GCM całości (baza + zdjęcia) → jeden plik; wyraźny komunikat przy pierwszym eksporcie: brak odzyskiwania hasła.
 - [ ] **T3.9** (S) **Import:** plik + hasło → odszyfrowanie → zapis z nowym kluczem urządzenia; przypomnienie o eksporcie raz w miesiącu.
@@ -339,13 +338,13 @@ Priorytet: **M** = must (jest w happy path) · **S** = should (wyróżnik) · **
 
 ### Faza 4: Szlif i oddanie
 
-- [ ] **T4.1** (A+B, M) Design: każdy dopieszcza swoje ekrany; wspólnie pilnujemy spójności (`ui/`).
-- [ ] **T4.2** (B, M) Deploy + test na **prawdziwym telefonie i w sieci hackathonu**.
-- [ ] **T4.3** (A+B, M) Przejść happy path kilka razy bez błędów; nagrać **wideo demo** jako zabezpieczenie.
-- [ ] **T4.4** (A, M) Slajdy (max 10): przypadek pacjentki z nowotworem krwi i suplementem → problem → Pani Anna → rozwiązanie (zbieranie / codzienność / wizyta / pytania / za granicą) → demo (zrzuty) → prywatność i szyfrowanie (local-first, przesył end-to-end przez „listonosza z zaklejoną kopertą”, kod weryfikacyjny, kopia z hasłem) → vs mojeIKP i Bearable → aplikacja mobilna i rozwój (Capacitor, integracja z IKP, MyHealth@EU) → zespół.
-- [ ] **T4.5** (B, M) Opis projektu + README z linkami (repo, demo, wideo) + **opisany happy path** (sekcja 4).
-- [ ] **T4.6** (A+B, M) **Wysłać na HackTribe przed deadlinem** (z zapasem).
-- [ ] **T4.7** (A+B, S) Pitch i odpowiedzi na trudne pytania (poniżej). Każdy pokazuje swoją część happy path.
+- [ ] **T4.1** (M) Design: dopieszczenie ekranów; spójność stylów (`ui/`).
+- [ ] **T4.2** (M) Deploy + test na **prawdziwym telefonie i w sieci hackathonu**.
+- [ ] **T4.3** (M) Przejść happy path kilka razy bez błędów; nagrać **wideo demo** jako zabezpieczenie.
+- [ ] **T4.4** (M) Slajdy (max 10): przypadek pacjentki z nowotworem krwi i suplementem → problem → Pani Anna → rozwiązanie (zbieranie / codzienność / wizyta / pytania / za granicą) → demo (zrzuty) → prywatność i szyfrowanie (local-first, przesył end-to-end przez „listonosza z zaklejoną kopertą”, kod weryfikacyjny, kopia z hasłem) → vs mojeIKP i Bearable → aplikacja mobilna i rozwój (Capacitor, integracja z IKP, MyHealth@EU) → zespół.
+- [ ] **T4.5** (M) Opis projektu + README z linkami (repo, demo, wideo) + **opisany happy path** (sekcja 4).
+- [ ] **T4.6** (M) **Wysłać na HackTribe przed deadlinem** (z zapasem).
+- [ ] **T4.7** (S) Pitch i odpowiedzi na trudne pytania (poniżej). Prezentacja happy path.
 
 ---
 
@@ -383,11 +382,10 @@ Priorytet: **M** = must (jest w happy path) · **S** = should (wyróżnik) · **
 
 ## 10. Zasady pracy
 
-Pracują dwa agenty Claude Code (A u jednej osoby, B u drugiej). Pełny workflow: **`CLAUDE.md`** + skill **`/next-task`**.
+Pracuje jeden agent. Pełny workflow: **`CLAUDE.md`** + skill **`/next-task`**.
 
-- Każdy task to **issue na GitHubie** (`[A07] ...`, etykiety `agent-a|agent-b`, `prio-*`, `faza-*`); taski są atomowe i dotykają tylko folderów jednego agenta.
-- Gałąź na task (`a/A07-...`, `b/B12-...`) → PR z `Closes #N` → rebase na `main` + build → squash merge przez agenta.
-- Po każdym merge agent dopisuje linię do **swojego** `progress/agent-a.md` / `progress/agent-b.md` (lista zrobionych tasków, zero konfliktów).
-- Każdy edytuje tylko swoje foldery; potrzeba zmiany u drugiego = issue `[prośba] ...`, a do tego czasu atrapa zgodna z kontraktem.
+- Każdy task to **issue na GitHubie** (`[KLUCZ] ...`, etykiety `prio-*`, `faza-*`).
+- Gałąź na task (`<klucz>-...`) → PR z `Closes #N` → rebase na `main` + build → squash merge przez agenta.
+- Po każdym merge agent dopisuje linię do `progress/progress.md` (lista zrobionych tasków).
 - `main` zawsze się buduje. Jeśli „M” nie jest gotowe, porzucamy „S/C”.
 - Etykieta `human`: zadania dla ludzi (treść zadania, dane przypadku, LLM, hosting, wideo, wysyłka).

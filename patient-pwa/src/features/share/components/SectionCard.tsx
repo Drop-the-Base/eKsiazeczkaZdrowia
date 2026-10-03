@@ -16,7 +16,7 @@ export function SectionCard({ label, checked, onToggle, children }: Props) {
       <label className={styles.header}>
         <input type="checkbox" checked={checked} onChange={(e) => onToggle(e.target.checked)} />
         <span className={styles.label}>{label}</span>
-        {!checked && <span className={styles.badge}>nie wysyłam</span>}
+        {!checked && <span className={styles.badge}>wykluczone</span>}
       </label>
       {checked && <div className={styles.body}>{children}</div>}
     </Card>

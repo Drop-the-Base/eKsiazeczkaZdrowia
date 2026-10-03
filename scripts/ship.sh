@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Rebase bieżącej gałęzi na origin/main → install → build → test → push → squash merge PR.
-# Ponawia, gdy main zmienił się w trakcie (drugi agent zmergował). Użycie: scripts/ship.sh [nr PR]
+# Ponawia, gdy main zmienił się w trakcie. Użycie: scripts/ship.sh [nr PR]
 set -uo pipefail
 
 GH="${GH:-gh}"
@@ -18,7 +18,7 @@ for attempt in 1 2 3 4 5; do
       GIT_EDITOR=true git rebase --continue >/dev/null 2>&1 && break
     done
     if [ -d "$(git rev-parse --git-path rebase-merge)" ] || [ -d "$(git rev-parse --git-path rebase-apply)" ]; then
-      echo "KONFLIKT przy rebase – rozwiąż (tylko swoje pliki) albo zapytaj użytkownika." >&2
+      echo "KONFLIKT przy rebase – rozwiąż albo zapytaj użytkownika." >&2
       exit 1
     fi
   fi
@@ -28,7 +28,6 @@ for attempt in 1 2 3 4 5; do
     tail -30 /tmp/ship-build.log >&2
     exit 1
   fi
-  # SKIP_TESTS=1 tylko gdy czerwony test należy do drugiego agenta i jest na niego issue [prośba].
   if [ "${SKIP_TESTS:-}" != "1" ] && ! npm test >/tmp/ship-test.log 2>&1; then
     echo "TESTY nie przechodzą po rebase – log: /tmp/ship-test.log" >&2
     tail -30 /tmp/ship-test.log >&2

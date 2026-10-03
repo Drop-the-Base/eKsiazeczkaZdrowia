@@ -24,7 +24,7 @@ export async function parseVisitNote(text: string, today: IsoDate): Promise<Visi
     });
   } catch {
     throw new Error(
-      'Brak połączenia z internetem. Spróbuj ponownie albo wprowadź zmiany w lekach ręcznie.',
+      'Brak połączenia z internetem. Spróbuj ponownie lub wprowadź zmiany w lekach ręcznie.',
     );
   }
   if (!res.ok) throw new Error('Nie udało się odczytać notatki. Spróbuj ponownie.');

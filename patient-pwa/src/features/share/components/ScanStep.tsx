@@ -15,7 +15,7 @@ export function ScanStep({
   const [manual, setManual] = useState('');
   return (
     <div className={styles.step}>
-      <p className={styles.lead}>Skieruj aparat na kod QR na ekranie lekarza.</p>
+      <p className={styles.lead}>Skieruj aparat na kod QR wyświetlony na ekranie lekarza.</p>
       {isDemo && <DemoDoctorLink onPayload={onPayload} />}
       <QrScanner onResult={onPayload} />
       {error && (
@@ -24,7 +24,7 @@ export function ScanStep({
         </p>
       )}
       <details className={styles.manual}>
-        <summary>Nie działa aparat? Wklej kod</summary>
+        <summary>Aparat niedostępny? Wklej kod ręcznie</summary>
         <textarea
           className={styles.textarea}
           rows={3}

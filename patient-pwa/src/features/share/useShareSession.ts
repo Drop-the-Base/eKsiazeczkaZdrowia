@@ -10,9 +10,9 @@ export type ShareSessionState =
   | { step: 'ended'; reason: string };
 
 const ENDED: Record<string, string> = {
-  ended: 'Lekarz zakończył wizytę.',
-  expired: 'Sesja wygasła. Poproś lekarza o nowy kod.',
-  error: 'Połączenie przerwane. Poproś lekarza o nowy kod.',
+  ended: 'Wizyta została zakończona przez lekarza.',
+  expired: 'Sesja wygasła. Poproś lekarza o wygenerowanie nowego kodu.',
+  error: 'Połączenie zostało przerwane. Poproś lekarza o wygenerowanie nowego kodu.',
 };
 
 /** Phone side of sharing: join from the scanned QR, send the snapshot, leave or end. */
@@ -82,7 +82,7 @@ export function useShareSession() {
     setState({
       step: 'ended',
       reason:
-        'Kody się nie zgadzały, więc niczego nie wysłano. Poproś lekarza o nowy kod i zeskanuj go ponownie.',
+        'Kody weryfikacyjne były niezgodne, dlatego dane nie zostały wysłane. Poproś lekarza o nowy kod i zeskanuj go ponownie.',
     });
   }, []);
 
@@ -93,7 +93,7 @@ export function useShareSession() {
     c?.close();
     setState({
       step: 'ended',
-      reason: 'Udostępnianie zakończone. Lekarz nie widzi już Twoich danych.',
+      reason: 'Udostępnianie zakończone. Dane nie są już dostępne dla lekarza.',
     });
   }, []);
 

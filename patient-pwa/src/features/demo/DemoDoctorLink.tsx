@@ -44,11 +44,11 @@ export function DemoDoctorLink({ onPayload }: { onPayload: (payload: string) => 
 
   return (
     <div className={styles.box} role="status">
-      <strong>Demo bez kamery</strong>
+      <strong>Połączenie bez kamery</strong>
       <p>
         {waiting
-          ? 'Szukam otwartej karty z widokiem lekarza w tej przeglądarce…'
-          : 'Połączono z kartą lekarza.'}
+          ? 'Wyszukiwanie otwartej karty z widokiem lekarza w tej przeglądarce…'
+          : 'Połączono z widokiem lekarza.'}
       </p>
       {waiting && (
         <>

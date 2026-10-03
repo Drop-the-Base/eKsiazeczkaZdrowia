@@ -94,7 +94,7 @@ export function MedicationForm({ medication, mode = 'edit', onSaved }: Props) {
       {changing && (
         <>
           <ReasonPicker
-            label="Dlaczego zmiana?"
+            label="Powód zmiany"
             value={reason}
             onChange={setReason}
             error={reasonError}

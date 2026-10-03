@@ -18,18 +18,18 @@ export function SecurityScreen() {
       <PageHeader title="Zabezpieczenia" />
       <div className={styles.content} data-tour="security">
         <p className={styles.lead}>
-          Dane są zaszyfrowane kluczem z Twojego PIN-u. Aplikacja blokuje się sama po kilku minutach
-          w tle.
+          Dane są szyfrowane kluczem wyprowadzonym z PIN-u. Aplikacja blokuje się automatycznie po
+          kilku minutach działania w tle.
         </p>
         <Card className={styles.card}>
-          <h2 className={styles.heading}>Odblokowanie odciskiem palca lub twarzą</h2>
+          <h2 className={styles.heading}>Odblokowanie biometryczne</h2>
           {!sec.supported ? (
-            <p className={styles.lead}>Niedostępne w tej przeglądarce. Używaj PIN-u.</p>
+            <p className={styles.lead}>Funkcja niedostępna w tej przeglądarce. Użyj PIN-u.</p>
           ) : sec.enabled === undefined ? (
             <LoadingState />
           ) : sec.enabled ? (
             <>
-              <p className={styles.on}>✓ Włączone. PIN dalej działa jako zapas.</p>
+              <p className={styles.on}>Włączone. PIN pozostaje aktywny jako alternatywna metoda.</p>
               <Button variant="secondary" onClick={sec.disable} disabled={sec.busy}>
                 Wyłącz
               </Button>
@@ -37,11 +37,11 @@ export function SecurityScreen() {
           ) : (
             <form className={styles.form} onSubmit={submit}>
               <p className={styles.lead}>
-                Potwierdź PIN – telefon poprosi o odcisk palca albo skan twarzy.
+                Potwierdź PIN. Następnie urządzenie poprosi o weryfikację biometryczną.
               </p>
               <PinField label="PIN" value={pin} onChange={setPin} />
               <Button type="submit" disabled={sec.busy || pin.length < 4}>
-                {sec.busy ? 'Czekam na telefon…' : 'Włącz'}
+                {sec.busy ? 'Oczekiwanie na urządzenie…' : 'Włącz'}
               </Button>
             </form>
           )}

@@ -3,8 +3,8 @@ import styles from './Screens.module.css';
 
 const MESSAGES = {
   connecting: { title: 'Łączenie z serwerem…', lead: '' },
-  connected: { title: 'Telefon pacjenta połączony', lead: 'Czekamy, aż pacjent wyśle dane.' },
-  transferring: { title: 'Odbieranie danych…', lead: 'Dane są odszyfrowywane w tej karcie.' },
+  connected: { title: 'Telefon pacjenta połączony', lead: 'Oczekiwanie na przesłanie danych przez pacjenta.' },
+  transferring: { title: 'Odbieranie danych…', lead: 'Dane są odszyfrowywane lokalnie w tej karcie.' },
   error: { title: 'Nie udało się połączyć z serwerem', lead: 'Sprawdź połączenie z internetem.' },
 } as const;
 

@@ -18,21 +18,21 @@ export function BackupScreen() {
       <PageHeader title="Kopia zapasowa" />
       <div className={styles.content}>
         <p className={styles.lead}>
-          Twoje dane są tylko na tym telefonie. Zapisz zaszyfrowaną kopię (np. na dysku albo w
-          chmurze), żeby przenieść je na nowy telefon albo odzyskać po utracie tego.
+          Dane są przechowywane wyłącznie na tym urządzeniu. Zaszyfrowana kopia zapasowa (np. na
+          dysku lub w chmurze) umożliwia przeniesienie danych na nowe urządzenie lub ich odtworzenie.
         </p>
-        <h2 className={styles.heading}>Zapisz kopię</h2>
+        <h2 className={styles.heading}>Utwórz kopię</h2>
         <Card className={styles.warning} role="note">
-          <strong>Hasła nie da się odzyskać.</strong> Bez niego kopia jest bezużyteczna – także dla
-          nas. Zapisz je w bezpiecznym miejscu.
+          <strong>Hasła nie można odzyskać.</strong> Bez niego odtworzenie danych z kopii nie jest
+          możliwe. Przechowuj je w bezpiecznym miejscu.
         </Card>
         {exp.state.step === 'working' ? (
-          <LoadingState label="Szyfruję kopię…" />
+          <LoadingState label="Szyfrowanie kopii…" />
         ) : exp.state.step === 'done' ? (
           <Card>
-            <p className={styles.success}>✓ Kopia zapisana: {exp.state.fileName}</p>
+            <p className={styles.success}>Kopia zapisana: {exp.state.fileName}</p>
             <Button variant="secondary" onClick={exp.reset}>
-              Zrób kolejną
+              Utwórz kolejną
             </Button>
           </Card>
         ) : (
@@ -58,7 +58,7 @@ export function BackupScreen() {
           </form>
         )}
 
-        <h2 className={styles.heading}>Wczytaj kopię na tym telefonie</h2>
+        <h2 className={styles.heading}>Przywracanie danych z kopii</h2>
         <ImportForm />
       </div>
     </>

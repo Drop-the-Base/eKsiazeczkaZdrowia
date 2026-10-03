@@ -23,20 +23,20 @@ export function ProfileScreen() {
         ) : profile.data ? (
           <ProfileCard profile={profile.data} onEdit={() => setEditing(true)} />
         ) : (
-          <EmptyState title="Nie masz jeszcze profilu">
+          <EmptyState title="Profil nie został utworzony">
             <Button onClick={() => setEditing(true)}>Uzupełnij profil</Button>
           </EmptyState>
         )}
         <List>
           <ListItem
             title="Leki na dziś"
-            subtitle="Potwierdź: wziąłem / pominąłem"
+            subtitle="Potwierdzanie przyjęć"
             trailing="›"
             onClick={() => navigate('/dzis')}
           />
           <ListItem
             title="Leki i suplementy"
-            subtitle="Wszystko, co przyjmujesz"
+            subtitle="Leki, suplementy i zioła"
             trailing="›"
             onClick={() => navigate('/leki')}
           />
@@ -66,7 +66,7 @@ export function ProfileScreen() {
           />
           <ListItem
             title="Kopia zapasowa"
-            subtitle="Zaszyfrowany plik na nowy telefon"
+            subtitle="Eksport i przywracanie danych"
             trailing="›"
             onClick={() => navigate(BACKUP_PATH)}
           />
@@ -79,7 +79,7 @@ export function ProfileScreen() {
         </List>
         <DiagnosesSection />
         <Button variant="secondary" block onClick={lockNow}>
-          🔒 Zablokuj aplikację
+          Zablokuj aplikację
         </Button>
       </div>
       <ProfileSheet

@@ -31,7 +31,7 @@ export function useSecurity() {
           ? 'Nieprawidłowy PIN'
           : err instanceof BiometricUnavailableError
             ? err.message
-            : 'Nie udało się – spróbuj ponownie',
+            : 'Operacja nie powiodła się. Spróbuj ponownie.',
       );
     } finally {
       setBusy(false);

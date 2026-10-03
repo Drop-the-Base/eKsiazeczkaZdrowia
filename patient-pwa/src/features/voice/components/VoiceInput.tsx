@@ -50,9 +50,9 @@ export function VoiceInput({
       {pendingStart && !speech.noticeSeen && (
         <div className={styles.notice} role="note">
           <p>
-            Rozpoznawanie mowy w tej przeglądarce działa przez usługę Google – nagranie jest tam
-            zamieniane na tekst. Twoja historia zdrowia nie jest wysyłana. Zamiast mówić, możesz
-            zawsze wpisać tekst.
+            W tej przeglądarce rozpoznawanie mowy jest realizowane przez usługę Google, która
+            przetwarza nagranie na tekst. Historia zdrowia nie jest przesyłana. Zamiast dyktowania
+            można wpisać tekst.
           </p>
           <Button
             onClick={() => {
@@ -61,13 +61,13 @@ export function VoiceInput({
               speech.start();
             }}
           >
-            Rozumiem, mów
+            Akceptuję
           </Button>
         </div>
       )}
 
       <label htmlFor={fieldId} className={styles.label}>
-        {speech.listening ? 'Słucham…' : 'Powiedz albo wpisz'}
+        {speech.listening ? 'Nagrywanie…' : 'Podyktuj lub wpisz'}
       </label>
       <textarea
         id={fieldId}

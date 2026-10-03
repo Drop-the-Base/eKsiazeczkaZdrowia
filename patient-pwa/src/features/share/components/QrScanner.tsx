@@ -26,7 +26,7 @@ export function QrScanner({ onResult }: { onResult: (text: string) => void }) {
       .then(() => true)
       .catch(() => {
         setError(
-          'Brak dostępu do aparatu. Zezwól na aparat w przeglądarce albo wklej kod poniżej.',
+          'Brak dostępu do aparatu. Zezwól na dostęp w ustawieniach przeglądarki lub wklej kod poniżej.',
         );
         return false;
       });

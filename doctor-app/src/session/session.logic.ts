@@ -2,7 +2,7 @@ import type { TransportStatus } from '@ez/shared';
 
 const LABELS: Record<TransportStatus, string> = {
   connecting: 'Łączenie z serwerem…',
-  'waiting-for-patient': 'Czeka na pacjenta',
+  'waiting-for-patient': 'Oczekiwanie na pacjenta',
   connected: 'Połączono',
   transferring: 'Odbieranie danych…',
   received: 'Dane odebrane',

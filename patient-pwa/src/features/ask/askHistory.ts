@@ -15,7 +15,7 @@ export const askHistory: AskHistory = async (question) => {
   const body = (await res.json()) as Partial<LlmQueryResponse>;
   const entity = body.filter?.entity;
   if (entity !== 'medication' && entity !== 'symptom' && entity !== 'exam') {
-    throw new Error('Nie zrozumiałem pytania');
+    throw new Error('Nie rozpoznano pytania');
   }
   return body.filter!;
 };

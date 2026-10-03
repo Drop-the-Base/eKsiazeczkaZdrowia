@@ -1,5 +1,4 @@
-// Signatures where agents A and B meet (TASKS.md T0.3, "Gdzie się stykamy").
-// Frozen contract: changes only via a `[prośba]` issue to agent B.
+// Signatures for feature contracts (TASKS.md T0.3).
 import type {
   DateRange,
   Diagnosis,

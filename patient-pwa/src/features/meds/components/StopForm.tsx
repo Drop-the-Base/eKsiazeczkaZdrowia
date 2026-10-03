@@ -37,7 +37,7 @@ export function StopForm({ medication, onDone }: { medication: Medication; onDon
   return (
     <form className={styles.form} onSubmit={onSubmit} noValidate>
       <ReasonPicker
-        label="Dlaczego odstawiasz?"
+        label="Powód odstawienia"
         value={reason}
         onChange={setReason}
         error={error}

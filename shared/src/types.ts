@@ -1,4 +1,4 @@
-// Domain model (TASKS.md section 6). Frozen contract: changes only via a `[prośba]` issue to agent B.
+// Domain model (TASKS.md section 6).
 // All dates are ISO 8601 strings. Ids are `crypto.randomUUID()` strings.
 
 /** Full timestamp, e.g. `2026-10-03T18:40:00.000Z`. */

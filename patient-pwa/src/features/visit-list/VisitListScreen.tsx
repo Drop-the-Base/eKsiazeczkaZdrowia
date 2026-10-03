@@ -26,7 +26,7 @@ export function VisitListScreen() {
         )}
         <Link to={SHARE_PATH} className={styles.share}>
           Udostępnij lekarzowi
-          <span className={styles.shareHint}>Podsumowanie i historia przez kod QR, szyfrowane</span>
+          <span className={styles.shareHint}>Podsumowanie i historia leczenia, szyfrowane połączenie przez kod QR</span>
         </Link>
         <div className={styles.links}>
           <Link to={POST_VISIT_PATH} className={styles.secondaryLink}>
@@ -37,7 +37,7 @@ export function VisitListScreen() {
           </Link>
         </div>
         <Card>
-          <h2 className={styles.heading}>Powiem lekarzowi</h2>
+          <h2 className={styles.heading}>Do omówienia z lekarzem</h2>
           <NoteForm />
         </Card>
 
@@ -45,9 +45,9 @@ export function VisitListScreen() {
         {!list.active || !list.discussed ? (
           <LoadingState />
         ) : list.active.length === 0 ? (
-          <EmptyState title="Lista na wizytę jest pusta">
-            Zapisuj tu wszystko, o czym chcesz powiedzieć lekarzowi – przycisk „Powiem lekarzowi”
-            jest na każdym ekranie.
+          <EmptyState title="Brak spraw do omówienia">
+            Zapisuj pytania i obserwacje, które chcesz omówić z lekarzem. Przycisk dodawania jest
+            dostępny na każdym ekranie.
           </EmptyState>
         ) : (
           <ol className={styles.list} aria-label="Do omówienia">

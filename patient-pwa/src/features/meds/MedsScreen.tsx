@@ -32,8 +32,8 @@ export function MedsScreen() {
         {meds.status === 'loading' ? (
           <LoadingState />
         ) : meds.data.length === 0 ? (
-          <EmptyState title="Nie masz jeszcze leków">
-            Dodaj wszystko, co bierzesz – także leki bez recepty, suplementy i zioła.
+          <EmptyState title="Brak leków">
+            Dodaj wszystkie przyjmowane preparaty, w tym leki bez recepty, suplementy i zioła.
             <Button onClick={addNew}>Dodaj lek</Button>
           </EmptyState>
         ) : (

@@ -29,7 +29,7 @@ export async function showMedicationNotification(): Promise<'shown' | 'denied' |
   const registration = await navigator.serviceWorker.getRegistration();
   if (!registration) return 'unsupported';
   await registration.showNotification('Czas na lek', {
-    body: 'Potwierdź: wziąłem / pominąłem',
+    body: 'Potwierdź przyjęcie lub pominięcie dawki',
     icon: '/icon.svg',
     tag: 'medication',
     data: { url: isDemo ? `${DEMO_BASE}/dzis` : '/dzis' },

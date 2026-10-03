@@ -72,7 +72,7 @@ export function SinceLastVisit({ snapshot, onSelect }: Props) {
                 const days = Math.round(
                   (Date.parse(x.firstAt) - Date.parse(x.afterNewMed.startDate)) / DAY_MS,
                 );
-                parts.push(`${days} dni po początku: ${x.afterNewMed.medicationName}`);
+                parts.push(`${days} dni po rozpoczęciu: ${x.afterNewMed.medicationName}`);
               }
               const id = firstSymptomId(x.name);
               return id ? (

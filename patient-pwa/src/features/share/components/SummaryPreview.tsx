@@ -38,7 +38,7 @@ export function SummaryPreview({ full, photoCount, photosFailed, sections, onTog
           </p>
         ))}
         <p>{adherenceLine(s.adherence)}</p>
-        <p>Wszystkie leki, także bez recepty, suplementy i zioła: {full.medications.length}</p>
+        <p>Wszystkie leki, w tym bez recepty, suplementy i zioła: {full.medications.length}</p>
       </>
     ),
     visitNotes:
@@ -72,7 +72,7 @@ export function SummaryPreview({ full, photoCount, photosFailed, sections, onTog
           ))}
         </ul>
       ) : (
-        <p>Brak nowych badań; wcześniejsze: {full.exams.length}</p>
+        <p>Brak nowych badań. Wcześniejsze badania: {full.exams.length}</p>
       ),
     diagnoses:
       full.diagnoses.length > 0 ? (
@@ -83,7 +83,7 @@ export function SummaryPreview({ full, photoCount, photosFailed, sections, onTog
     photos: (
       <p>
         {photoCount > 0 ? `Zdjęć: ${photoCount} (zmniejszone)` : 'brak'}
-        {photosFailed > 0 && ` · nie udało się przygotować: ${photosFailed}`}
+        {photosFailed > 0 && ` · nie udało się przetworzyć: ${photosFailed}`}
       </p>
     ),
     visits: <p>{full.visits.length > 0 ? `Notatki z wizyt: ${full.visits.length}` : 'brak'}</p>,

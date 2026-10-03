@@ -33,6 +33,6 @@ describe('describeFilter / headline', () => {
         { entity: 'medication', item: xarelto },
       ]),
     ).toBe('Ostatnio: Xarelto, do 30.06.2025.');
-    expect(headline({ entity: 'exam' }, [])).toBe('Nic nie znalazłem w Twoich zapisach.');
+    expect(headline({ entity: 'exam' }, [])).toBe('Brak wyników.');
   });
 });

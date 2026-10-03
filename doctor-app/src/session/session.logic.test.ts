@@ -9,7 +9,7 @@ describe('session logic', () => {
   });
 
   it('labels statuses in Polish and marks terminal ones', () => {
-    expect(statusLabel('waiting-for-patient')).toBe('Czeka na pacjenta');
+    expect(statusLabel('waiting-for-patient')).toBe('Oczekiwanie na pacjenta');
     expect(isTerminal('expired')).toBe(true);
     expect(isTerminal('received')).toBe(false);
   });
