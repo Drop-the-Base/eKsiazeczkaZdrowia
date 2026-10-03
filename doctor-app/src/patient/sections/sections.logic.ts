@@ -35,7 +35,7 @@ export function sectionTabs(s: ShareSnapshot): SectionTab[] {
   const labels: Record<SectionId, string> = {
     summary: 'Podsumowanie',
     timeline: 'Oś czasu',
-    meds: 'Leki',
+    meds: 'Leki i suplementy',
     exams: 'Badania',
     photos: 'Zdjęcia',
     visits: 'Wizyty',

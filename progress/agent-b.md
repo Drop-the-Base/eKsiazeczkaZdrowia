@@ -42,3 +42,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B40] Widok lekarza: Podsumowanie + sekcje · issue #162 · 2026-10-03 19:44 · atrapy: brak
 - [x] [B39] Zmiana nazwy na „Prywatna Karta Zdrowia” (ekrany B, aplikacja lekarza) · issue #147 · 2026-10-03 19:46 · atrapy: brak
 - [x] [B29] Biometria przez passkey z PRF · issue #62 · 2026-10-03 19:49 · atrapy: brak (sprawdzone wirtualnym autentykatorem; telefon demo – do sprawdzenia)
+- [x] [D05] Widok lekarza: „Leki i suplementy” / „Wszystko, co przyjmuje” · issue #176 · 2026-10-03 20:13 · atrapy: brak
