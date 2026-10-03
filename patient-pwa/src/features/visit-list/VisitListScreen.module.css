@@ -21,3 +21,19 @@
   color: var(--color-text-muted);
   cursor: pointer;
 }
+.share {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  font-weight: 600;
+  font-size: var(--font-size-lg);
+  text-decoration: none;
+}
+.shareHint {
+  font-weight: 400;
+  font-size: var(--font-size-sm);
+  opacity: 0.9;
+}
