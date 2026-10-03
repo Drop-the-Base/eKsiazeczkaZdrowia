@@ -9,13 +9,14 @@ type Props = {
   /** Snapshot with every section on – the preview shows what each checkbox controls. */
   full: ShareSnapshot;
   photoCount: number;
+  photosFailed: number;
   sections: ReadonlySet<ShareSection>;
   onToggle: (section: ShareSection, on: boolean) => void;
 };
 
 const none = <p>brak</p>;
 
-export function SummaryPreview({ full, photoCount, sections, onToggle }: Props) {
+export function SummaryPreview({ full, photoCount, photosFailed, sections, onToggle }: Props) {
   const s = full.summary;
   const body: Record<ShareSection, JSX.Element> = {
     medications: (
@@ -79,7 +80,12 @@ export function SummaryPreview({ full, photoCount, sections, onToggle }: Props) 
       ) : (
         none
       ),
-    photos: <p>{photoCount > 0 ? `Zdjęć: ${photoCount} (zmniejszone)` : 'brak'}</p>,
+    photos: (
+      <p>
+        {photoCount > 0 ? `Zdjęć: ${photoCount} (zmniejszone)` : 'brak'}
+        {photosFailed > 0 && ` · nie udało się przygotować: ${photosFailed}`}
+      </p>
+    ),
     visits: <p>{full.visits.length > 0 ? `Notatki z wizyt: ${full.visits.length}` : 'brak'}</p>,
     documents: (
       <p>{full.documents.length > 0 ? full.documents.map((d) => d.title).join(', ') : 'brak'}</p>

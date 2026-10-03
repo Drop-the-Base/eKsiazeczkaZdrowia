@@ -190,6 +190,9 @@ export async function connect(
           pending = undefined;
         }
       },
+      disconnect() {
+        finish('ended');
+      },
       close() {
         if (finished) return;
         socket.send({ type: 'end-session' });

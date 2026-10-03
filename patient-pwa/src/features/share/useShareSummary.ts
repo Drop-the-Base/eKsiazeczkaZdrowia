@@ -3,9 +3,9 @@ import type { ShareSection } from '@ez/shared';
 import { todayIso } from '../../ui';
 import { buildShareSnapshot, defaultSince, earliestDate, SECTIONS } from './share.logic';
 import { useShareData } from './useShareData';
+import { useThumbnails } from './useThumbnails';
 
 const ALL = new Set<ShareSection>(SECTIONS.map((s) => s.id));
-const NO_THUMBNAILS = new Map<string, string>();
 
 /** Summary preview state: which sections go to the doctor and the resulting snapshot. */
 export function useShareSummary() {
@@ -13,26 +13,28 @@ export function useShareSummary() {
   const [sections, setSections] = useState<ReadonlySet<ShareSection>>(ALL);
   // Fixed for the lifetime of the screen, so the preview does not change under the patient's finger.
   const [now] = useState(() => new Date().toISOString());
+  const thumbs = useThumbnails(live.status === 'ready' ? live.data.data.photos : undefined);
 
   const built = useMemo(() => {
-    if (live.status !== 'ready' || !live.data.profile) return undefined;
+    if (live.status !== 'ready' || !live.data.profile || thumbs.status !== 'ready')
+      return undefined;
     const { profile, data } = live.data;
     const base = {
       profile,
       data,
       since: defaultSince(data.visits, now),
       range: { from: earliestDate(data, todayIso()), to: todayIso() },
-      // TODO(B17): downscaled photos.
-      thumbnails: NO_THUMBNAILS,
+      thumbnails: thumbs.thumbnails,
       now,
     };
     return {
       since: base.since,
       full: buildShareSnapshot({ ...base, sections: ALL }),
       selected: buildShareSnapshot({ ...base, sections }),
-      photoCount: data.photos.length,
+      photoCount: thumbs.thumbnails.size,
+      photosFailed: thumbs.failed,
     };
-  }, [live, sections, now]);
+  }, [live, sections, now, thumbs]);
 
   const toggle = (section: ShareSection, on: boolean) =>
     setSections((prev) => {

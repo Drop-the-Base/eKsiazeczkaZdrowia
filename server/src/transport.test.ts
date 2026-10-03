@@ -81,6 +81,18 @@ describe('transport (doctor ↔ relay ↔ patient)', () => {
     await waitFor(doctor.onStatus, 'ended');
   });
 
+  it('keeps the data at the doctor when the phone only disconnects', async () => {
+    const url = await startRelay();
+    const doctor = await createSession(url, socketFactory());
+    const statuses: TransportStatus[] = [];
+    doctor.onStatus((s) => statuses.push(s));
+    const patient = await connect(url, doctor.qrPayload, socketFactory());
+    await patient.sendSnapshot(demoSnapshot());
+    patient.disconnect();
+    await new Promise((r) => setTimeout(r, 200));
+    expect(statuses.at(-1)).toBe('received');
+  });
+
   it('finishes the transfer after the phone connection drops', async () => {
     const url = await startRelay();
     const doctor = await createSession(url, socketFactory());
