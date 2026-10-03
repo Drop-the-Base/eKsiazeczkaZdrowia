@@ -48,7 +48,7 @@ export function TimelineScreen() {
         <TodayCard medications={d.medications} intakes={d.intakes} />
         {empty ? (
           <EmptyState title="Twoja oś czasu jest pusta">
-            Dodaj leki, objawy albo wyniki badań – albo wczytaj dane demo w profilu.
+            Dodaj leki, objawy albo wyniki badań – pojawią się tutaj w czasie.
           </EmptyState>
         ) : (
           <>

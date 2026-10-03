@@ -1,4 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import { DEMO_PIN, isDemo } from '../../demoMode';
+import { dbReady } from '../../db';
 import { Button, LoadingState } from '../../ui';
 import { PinField } from './components/PinField';
 import { useAutoLock } from './autoLock';
@@ -81,7 +83,17 @@ function UnlockPin({ lock }: { lock: ReturnType<typeof useLock> }) {
 export function LockScreen() {
   const lock = useLock();
   const locked = lock.status !== 'unlocked';
-  useAutoLock(!locked);
+  const [demoError, setDemoError] = useState(false);
+  // The demo sets its PIN by itself, and a visitor leaving the tab for a while must not be locked out.
+  useAutoLock(!locked && !isDemo);
+  useEffect(() => {
+    if (!isDemo) return;
+    let active = true;
+    dbReady.catch(() => active && setDemoError(true));
+    return () => {
+      active = false;
+    };
+  }, []);
   // The page under the cover must not scroll (focus on the PIN field would scroll it and shift the cover).
   useEffect(() => {
     if (!locked) return;
@@ -115,10 +127,22 @@ export function LockScreen() {
         </svg>
         <span>Prywatna Karta Zdrowia</span>
       </div>
-      {lock.status === 'checking' && <LoadingState />}
-      {lock.status === 'no-pin' && <SetupPin lock={lock} />}
-      {lock.status === 'locked' && <UnlockPin lock={lock} />}
-      {lock.status === 'error' && (
+      {isDemo && !demoError && lock.status !== 'error' ? (
+        <div className={styles.card}>
+          <h1 className={styles.title}>Przygotowuję demo…</h1>
+          <p className={styles.lead}>
+            Dane Pani Anny są szyfrowane na tym urządzeniu PIN-em demo {DEMO_PIN}.
+          </p>
+          <LoadingState />
+        </div>
+      ) : (
+        <>
+          {lock.status === 'checking' && <LoadingState />}
+          {lock.status === 'no-pin' && <SetupPin lock={lock} />}
+          {lock.status === 'locked' && <UnlockPin lock={lock} />}
+        </>
+      )}
+      {(lock.status === 'error' || demoError) && (
         <div className={styles.card}>
           <h1 className={styles.title}>Nie udało się otworzyć danych</h1>
           <Button block onClick={() => window.location.reload()}>

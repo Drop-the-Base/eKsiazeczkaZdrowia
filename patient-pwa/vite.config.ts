@@ -29,7 +29,13 @@ export default defineConfig({
         // Kliknięcie powiadomienia „Czas na lek” → /dzis (features/reminders); „Udostępnij” → import (A28).
         importScripts: ['/sw-notifications.js', '/sw-share.js'],
         // Te ścieżki obsługuje serwer (aplikacja lekarza, LLM, przekaźnik) – SW PWA nie może ich podmieniać.
-        navigateFallbackDenylist: [/^\/lekarz/, /^\/llm/, /^\/relay/, /^\/health/],
+        navigateFallbackDenylist: [
+          /^\/lekarz/,
+          /^\/demo\/lekarz/,
+          /^\/llm/,
+          /^\/relay/,
+          /^\/health/,
+        ],
         // Baza leków (~2 MB) poza precache: pobierana przy pierwszym wyszukiwaniu, potem z cache (offline).
         runtimeCaching: [
           {

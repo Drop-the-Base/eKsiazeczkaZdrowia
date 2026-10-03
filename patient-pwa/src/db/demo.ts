@@ -24,29 +24,18 @@ export async function loadDemoData(dexie: HealthDatabase, db: Db, now: IsoDateTi
   await Promise.all(puts);
 }
 
-export type DemoInitResult = 'reset' | 'loaded' | 'skipped';
-
 /**
- * `?demo=reset` wipes everything (also the PIN) and loads the demo once a new PIN is set.
- * Otherwise the demo goes only into an empty database, only when `autoLoad` is on (dev / `VITE_DEMO=1`),
- * after the app is unlocked.
+ * Demo start: a fresh "Pani Anna" under `pin` on the first load in a tab (`fresh`), and only an
+ * automatic unlock on a reload, so what the visitor added stays. Never runs outside `/demo`.
  */
-export async function initDemoData(
+export async function startDemo(
   dexie: HealthDatabase,
   db: Db,
   vault: Vault,
-  opts: { search: string; autoLoad: boolean; now: IsoDateTime },
-): Promise<DemoInitResult> {
-  if (new URLSearchParams(opts.search).get('demo') === 'reset') {
-    await vault.wipe();
-    await vault.ready();
-    await loadDemoData(dexie, db, opts.now);
-    return 'reset';
-  }
-  if (!opts.autoLoad) return 'skipped';
-  const empty = (await dexie.profile.count()) === 0 && (await dexie.medications.count()) === 0;
-  if (!empty) return 'skipped';
-  await vault.ready();
+  opts: { pin: string; fresh: boolean; now: IsoDateTime },
+): Promise<void> {
+  if (!opts.fresh && (await dexie.meta.get('vault'))) return vault.unlock(opts.pin);
+  await vault.wipe();
+  await vault.setup(opts.pin);
   await loadDemoData(dexie, db, opts.now);
-  return 'loaded';
 }

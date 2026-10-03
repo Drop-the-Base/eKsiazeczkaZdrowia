@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Button, EmptyState, List, ListItem, LoadingState, PageHeader } from '../../ui';
 import { BACKUP_PATH } from '../backup';
 import { lockNow, SECURITY_PATH } from '../lock';
-import { DemoDataCard } from './components/DemoDataCard';
 import { DiagnosesSection } from './components/DiagnosesSection';
 import { ProfileCard } from './components/ProfileCard';
 import { ProfileSheet } from './components/ProfileSheet';
@@ -79,7 +78,6 @@ export function ProfileScreen() {
           />
         </List>
         <DiagnosesSection />
-        <DemoDataCard />
         <Button variant="secondary" block onClick={lockNow}>
           🔒 Zablokuj aplikację
         </Button>
