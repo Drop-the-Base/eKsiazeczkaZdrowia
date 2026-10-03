@@ -121,6 +121,7 @@ export const STEPS: TourStep[] = [
       'Podsumowanie w języku lekarza: alergie, leki i rozpoznania z kodami ATC i ICD-10. Dostępne offline, z możliwością zapisu do PDF.',
     ],
     showMe: { action: 'abroad-es' },
+    targetAfterShowMe: 'abroad-meds',
     why: 'Leki są opisywane nazwą substancji czynnej, ponieważ nazwy handlowe różnią się między krajami.',
   },
   {
