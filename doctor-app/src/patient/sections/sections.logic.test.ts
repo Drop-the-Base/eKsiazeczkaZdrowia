@@ -13,11 +13,6 @@ describe('section tabs', () => {
     expect(tabs.photos).toMatchObject({ count: 0, disabled: true });
   });
 
-  it('marks sections the patient did not share', () => {
-    const tabs = sectionTabs({ ...s, exams: [], omitted: ['exams'] });
-    expect(tabs.find((t) => t.id === 'exams')).toMatchObject({ omitted: true, disabled: true });
-  });
-
   it('sends summary clicks to the right section', () => {
     expect(targetOf({ entity: 'exam', id: 'e' })).toBe('exams');
     expect(targetOf({ entity: 'photo', id: 'p' })).toBe('photos');

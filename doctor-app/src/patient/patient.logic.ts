@@ -4,8 +4,6 @@ import type {
   Medication,
   MedicationCategory,
   MedicationSchedule,
-  ShareSection,
-  ShareSnapshot,
 } from '@ez/shared';
 
 /** Always this order and the same look: the doctor sees supplements on a par with prescriptions. */
@@ -61,6 +59,3 @@ export function intakeSummary(med: Medication, intakes: Intake[]): string | unde
   if (med.schedule.type === 'asNeeded') return `przyjęty ${taken}×`;
   return `${Math.round((100 * taken) / own.length)}% przyjęć`;
 }
-
-export const isOmitted = (snapshot: ShareSnapshot, section: ShareSection): boolean =>
-  snapshot.omitted?.includes(section) ?? false;

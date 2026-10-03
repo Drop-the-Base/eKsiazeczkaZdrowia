@@ -6,7 +6,6 @@ import {
   describeDose,
   describeSchedule,
   intakeSummary,
-  isOmitted,
   MED_GROUPS,
 } from './patient.logic';
 import styles from './PatientView.module.css';
@@ -70,7 +69,6 @@ export function CurrentMeds({
   compact?: boolean;
 }) {
   const groups = currentByGroup(snapshot.medications, snapshot.createdAt.slice(0, 10));
-  if (isOmitted(snapshot, 'medications')) return <p className={styles.muted}>nie udostępniono</p>;
   return (
     <div className={styles.groups}>
       {MED_GROUPS.map(({ category, label, color }) => (

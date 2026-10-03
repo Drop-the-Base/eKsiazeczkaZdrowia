@@ -102,3 +102,4 @@ Zmergowane taski (dopisuje agent po każdym merge, patrz `CLAUDE.md`).
 - [x] [D13] Demo: po „Pokaż mi” podświetlenie przechodzi na nowy kontent · issue #196 · 2026-10-03 23:44 · atrapy: brak
 - [x] [D14] Demo: krok „Wizyta za granicą” – naprawa akcji „Pokaż mi” · issue #197 · 2026-10-03 23:53 · atrapy: brak
 - [x] [D15] Demo: płynne przejście do demo lekarza po zakończeniu demo pacjenta · issue #198 · 2026-10-03 23:55 · atrapy: brak
+- [x] [B41] Usunięcie wybiórczego odznaczania danych przy udostępnianiu lekarzowi · issue #210 · 2026-10-04 00:00 · atrapy: brak

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import type { ShareSnapshot, TimelineRef } from '@ez/shared';
 import { formatDateTime } from '../format';
-import { isOmitted } from './patient.logic';
 import { PatientHeader } from './PatientHeader';
 import { DocumentsSection } from './sections/DocumentsSection';
 import { ExamsSection } from './sections/ExamsSection';
@@ -28,7 +27,6 @@ export function PatientView({ snapshot }: { snapshot: ShareSnapshot }) {
     setHighlight(ref);
     setSection(targetOf(ref));
   };
-  const notShared = (id: SectionId) => tabs.find((t) => t.id === id)?.omitted;
 
   const sections: { id: SectionId; title: string; hint?: string; body: React.ReactNode }[] = [
     {
@@ -75,11 +73,7 @@ export function PatientView({ snapshot }: { snapshot: ShareSnapshot }) {
         >
           {s.id !== 'summary' && <h2 className={sectionStyles.sectionTitle}>{s.title}</h2>}
           {s.hint && <p className={sectionStyles.muted}>{s.hint}</p>}
-          {notShared(s.id) || (s.id === 'meds' && isOmitted(snapshot, 'medications')) ? (
-            <p className={sectionStyles.muted}>nie udostępniono</p>
-          ) : (
-            s.body
-          )}
+          {s.body}
         </section>
       ))}
     </div>
