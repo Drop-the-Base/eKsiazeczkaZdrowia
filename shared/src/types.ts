@@ -222,17 +222,6 @@ export interface DateRange {
   to: IsoDate;
 }
 
-/** Parts of the snapshot the patient can leave out before sending. */
-export type ShareSection =
-  | 'medications'
-  | 'diagnoses'
-  | 'symptoms'
-  | 'exams'
-  | 'photos'
-  | 'visitNotes'
-  | 'visits'
-  | 'documents';
-
 export interface ShareSnapshot {
   summary: VisitSummary;
   profile: Profile;
@@ -247,8 +236,6 @@ export interface ShareSnapshot {
   visits: Visit[];
   range: DateRange;
   createdAt: IsoDateTime;
-  /** Sections the patient chose not to share (empty arrays there mean "not shared", not "none"). */
-  omitted?: ShareSection[];
 }
 
 // ---------- "Zapytaj" (LLM turns a question into a filter, the filter runs locally) ----------

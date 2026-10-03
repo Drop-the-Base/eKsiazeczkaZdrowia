@@ -118,18 +118,6 @@ export async function runShowMe(action: ShowMe): Promise<void> {
       return;
     }
 
-    if (action.action === 'share-toggle') {
-      const checkbox = await waitForTarget('share-toggle-symptoms');
-      if (!checkbox) throw new Error('Nie znaleziono sekcji do wykluczenia');
-      checkbox.scrollIntoView({ block: 'center', behavior: 'smooth' });
-      await sleep(400);
-      await clickWithEffect(checkbox);
-      await sleep(1200);
-      await clickWithEffect(checkbox);
-      await sleep(500);
-      return;
-    }
-
     if (action.action === 'abroad-es') {
       const esBtn = await waitForTarget('lang-es');
       if (!esBtn) throw new Error('Nie znaleziono wyboru języka');

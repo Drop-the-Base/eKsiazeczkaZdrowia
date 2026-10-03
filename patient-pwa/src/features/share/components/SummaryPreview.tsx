@@ -1,24 +1,42 @@
-import type { ShareSection, ShareSnapshot } from '@ez/shared';
+import type { ShareSnapshot } from '@ez/shared';
 import { describeDose } from '../../meds';
 import { formatDate } from '../../../ui';
-import { SECTIONS } from '../share.logic';
 import { adherenceLine, outOfRangeLine, symptomLine } from '../summaryText.logic';
 import { SectionCard } from './SectionCard';
 
+type Section =
+  | 'medications'
+  | 'visitNotes'
+  | 'symptoms'
+  | 'exams'
+  | 'diagnoses'
+  | 'photos'
+  | 'visits'
+  | 'documents';
+
+const SECTIONS: { id: Section; label: string }[] = [
+  { id: 'medications', label: 'Leki i regularność' },
+  { id: 'visitNotes', label: 'Do omówienia z lekarzem' },
+  { id: 'symptoms', label: 'Objawy' },
+  { id: 'exams', label: 'Badania' },
+  { id: 'diagnoses', label: 'Choroby' },
+  { id: 'photos', label: 'Zdjęcia' },
+  { id: 'visits', label: 'Poprzednie wizyty' },
+  { id: 'documents', label: 'Dokumenty' },
+];
+
 type Props = {
-  /** Snapshot with every section on – the preview shows what each checkbox controls. */
-  full: ShareSnapshot;
+  /** Exactly what goes to the doctor. */
+  snapshot: ShareSnapshot;
   photoCount: number;
   photosFailed: number;
-  sections: ReadonlySet<ShareSection>;
-  onToggle: (section: ShareSection, on: boolean) => void;
 };
 
 const none = <p>brak</p>;
 
-export function SummaryPreview({ full, photoCount, photosFailed, sections, onToggle }: Props) {
+export function SummaryPreview({ snapshot: full, photoCount, photosFailed }: Props) {
   const s = full.summary;
-  const body: Record<ShareSection, JSX.Element> = {
+  const body: Record<Section, JSX.Element> = {
     medications: (
       <>
         {s.medsStarted.map((m) => (
@@ -95,13 +113,7 @@ export function SummaryPreview({ full, photoCount, photosFailed, sections, onTog
   return (
     <>
       {SECTIONS.map(({ id, label }) => (
-        <SectionCard
-          key={id}
-          label={label}
-          checked={sections.has(id)}
-          onToggle={(on) => onToggle(id, on)}
-          dataTour={id === 'symptoms' ? 'share-toggle-symptoms' : undefined}
-        >
+        <SectionCard key={id} label={label}>
           {body[id]}
         </SectionCard>
       ))}

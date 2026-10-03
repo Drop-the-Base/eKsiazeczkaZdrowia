@@ -9,7 +9,6 @@ export type ShowMe =
         | 'timeline-zoom-scroll'
         | 'meds-detail'
         | 'today-confirm'
-        | 'share-toggle'
         | 'abroad-es'
         | 'security-fill';
     };
@@ -106,10 +105,9 @@ export const STEPS: TourStep[] = [
     target: 'share-sections',
     title: 'Kontrola udostępnianych danych',
     text: [
-      'Pacjent widzi podsumowanie od ostatniej wizyty i może wykluczyć wybrane sekcje. Następnie skanuje kod QR wyświetlony przez lekarza.',
+      'Pacjent widzi podgląd tego, co otrzyma lekarz: pełne podsumowanie od ostatniej wizyty i całą historię leczenia. Następnie skanuje kod QR wyświetlony przez lekarza.',
       'Widok lekarza można otworzyć w nowej karcie tej samej przeglądarki.',
     ],
-    showMe: { action: 'share-toggle' },
     why: 'Szyfrowanie end-to-end (ECDH, AES-256-GCM): serwer przekazuje wyłącznie szyfrogram. Kod weryfikacyjny na obu ekranach chroni przed podmianą klucza. Lekarz nie potrzebuje konta ani instalacji, a dane są usuwane po zamknięciu karty.',
   },
   {

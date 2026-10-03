@@ -8,26 +8,13 @@ import {
   type IsoDate,
   type IsoDateTime,
   type Profile,
-  type ShareSection,
   type ShareSnapshot,
   type SnapshotPhoto,
 } from '@ez/shared';
 
-export const SECTIONS: { id: ShareSection; label: string }[] = [
-  { id: 'medications', label: 'Leki i regularność' },
-  { id: 'visitNotes', label: 'Do omówienia z lekarzem' },
-  { id: 'symptoms', label: 'Objawy' },
-  { id: 'exams', label: 'Badania' },
-  { id: 'diagnoses', label: 'Choroby' },
-  { id: 'photos', label: 'Zdjęcia' },
-  { id: 'visits', label: 'Poprzednie wizyty' },
-  { id: 'documents', label: 'Dokumenty' },
-];
-
 export interface ShareInput {
   profile: Profile;
   data: HealthData & { diagnoses: Diagnosis[]; documents: DocumentMeta[] };
-  sections: ReadonlySet<ShareSection>;
   /** Start of the visit summary (default: last visit). */
   since: IsoDate;
   /** History sent for the timeline; `from` may be earlier than `since`. */
@@ -37,33 +24,27 @@ export interface ShareInput {
   now: IsoDateTime;
 }
 
-/** What goes to the doctor. Unchecked sections are removed from the summary and from the history. */
+/**
+ * What goes to the doctor: always the full record within the range. The patient decides only
+ * whether to share at all, never which parts – a hidden part could mislead the doctor.
+ */
 export function buildShareSnapshot(input: ShareInput): ShareSnapshot {
-  const { data, sections, range, now } = input;
-  const on = (s: ShareSection) => sections.has(s);
+  const { data, range, now } = input;
   const inRange = (value: string) => value >= range.from && value <= now;
-  const empty: never[] = [];
 
-  const medications = on('medications')
-    ? data.medications.filter(
-        (m) => m.startDate <= now && (m.endDate === undefined || m.endDate >= range.from),
-      )
-    : empty;
-  const photos = on('photos')
-    ? data.photos.flatMap(({ blob: _blob, ...meta }): SnapshotPhoto[] => {
-        const thumbnailDataUrl = input.thumbnails.get(meta.id);
-        return thumbnailDataUrl && inRange(meta.takenAt) ? [{ ...meta, thumbnailDataUrl }] : [];
-      })
-    : empty;
+  const photos = data.photos.flatMap(({ blob: _blob, ...meta }): SnapshotPhoto[] => {
+    const thumbnailDataUrl = input.thumbnails.get(meta.id);
+    return thumbnailDataUrl && inRange(meta.takenAt) ? [{ ...meta, thumbnailDataUrl }] : [];
+  });
 
   const summary = buildVisitSummary(
     {
-      medications: on('medications') ? data.medications : empty,
-      intakes: on('medications') ? data.intakes : empty,
-      symptoms: on('symptoms') ? data.symptoms : empty,
-      exams: on('exams') ? data.exams : empty,
-      photos: on('photos') ? data.photos.filter((p) => input.thumbnails.has(p.id)) : empty,
-      visitNoteItems: on('visitNotes') ? data.visitNoteItems : empty,
+      medications: data.medications,
+      intakes: data.intakes,
+      symptoms: data.symptoms,
+      exams: data.exams,
+      photos: data.photos.filter((p) => input.thumbnails.has(p.id)),
+      visitNoteItems: data.visitNoteItems,
       visits: data.visits,
     },
     input.since,
@@ -73,18 +54,19 @@ export function buildShareSnapshot(input: ShareInput): ShareSnapshot {
   return {
     summary,
     profile: input.profile,
-    medications,
-    intakes: on('medications') ? data.intakes.filter((i) => inRange(i.scheduledAt)) : empty,
-    symptoms: on('symptoms') ? data.symptoms.filter((s) => inRange(s.startedAt)) : empty,
-    diagnoses: on('diagnoses') ? data.diagnoses : empty,
-    exams: on('exams') ? data.exams.filter((e) => inRange(e.date)) : empty,
+    medications: data.medications.filter(
+      (m) => m.startDate <= now && (m.endDate === undefined || m.endDate >= range.from),
+    ),
+    intakes: data.intakes.filter((i) => inRange(i.scheduledAt)),
+    symptoms: data.symptoms.filter((s) => inRange(s.startedAt)),
+    diagnoses: data.diagnoses,
+    exams: data.exams.filter((e) => inRange(e.date)),
     photos,
-    documents: on('documents') ? data.documents.filter((d) => inRange(d.date)) : empty,
-    visitNoteItems: on('visitNotes') ? summary.visitNoteItems : empty,
-    visits: on('visits') ? data.visits.filter((v) => inRange(v.date)) : empty,
+    documents: data.documents.filter((d) => inRange(d.date)),
+    visitNoteItems: summary.visitNoteItems,
+    visits: data.visits.filter((v) => inRange(v.date)),
     range,
     createdAt: now,
-    omitted: SECTIONS.map((s) => s.id).filter((s) => !on(s)),
   };
 }
 

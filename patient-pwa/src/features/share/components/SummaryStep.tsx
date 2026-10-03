@@ -13,7 +13,7 @@ type Props = {
 export function SummaryStep({ onContinue }: Props) {
   const share = useShareSummary();
   if (share.status === 'loading') return <LoadingState />;
-  if (share.status === 'no-profile' || !share.full || !share.selected) {
+  if (share.status === 'no-profile' || !share.snapshot) {
     return (
       <EmptyState title="Najpierw uzupełnij profil">
         Podsumowanie dla lekarza obejmuje imię, wiek i alergie.{' '}
@@ -21,22 +21,20 @@ export function SummaryStep({ onContinue }: Props) {
       </EmptyState>
     );
   }
-  const selected = share.selected;
+  const snapshot = share.snapshot;
   return (
     <div className={styles.step} data-tour="share-sections">
       <p className={styles.lead}>
-        Lekarz otrzyma podsumowanie od {formatDate(share.since ?? '')} oraz historię leczenia.
-        Odznacz sekcje, których nie chcesz udostępniać.
+        Po zeskanowaniu kodu lekarz otrzyma pełne podsumowanie od {formatDate(share.since ?? '')}{' '}
+        oraz całą historię leczenia.
       </p>
       <SummaryPreview
-        full={share.full}
+        snapshot={snapshot}
         photoCount={share.photoCount ?? 0}
         photosFailed={share.photosFailed ?? 0}
-        sections={share.sections}
-        onToggle={share.toggle}
       />
       <div className={styles.footer}>
-        <Button block disabled={!onContinue} onClick={() => onContinue?.(selected)}>
+        <Button block disabled={!onContinue} onClick={() => onContinue?.(snapshot)}>
           Dalej: skanowanie kodu QR
         </Button>
       </div>
