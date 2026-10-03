@@ -15,3 +15,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B11] Aplikacja lekarza: ekran z QR i status połączenia · issue #25 · 2026-10-03 18:00 · atrapy: po odebraniu danych tymczasowe podsumowanie (widok w B18)
 - [x] [B12] Symulator pacjenta + test end-to-end w dwóch kartach · issue #27 · 2026-10-03 18:04 · atrapy: summary w createDemoSnapshot uproszczone do B15
 - [x] [B13] Lista „powiem lekarzowi” + pływający przycisk · issue #29 · 2026-10-03 18:07 · atrapy: pole tekstowe zamiast VoiceInput (A16)
+- [x] [B15] buildVisitSummary(db, od) – lokalnie, bez LLM · issue #34 · 2026-10-03 18:10 · atrapy: brak
