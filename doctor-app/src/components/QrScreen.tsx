@@ -1,3 +1,4 @@
+import { DOCTOR_DEMO_PATH, isDemo } from '../demo/demoMode';
 import { useSession } from '../session/SessionContext';
 import { formatRemaining } from '../session/session.logic';
 import { useNow } from '../session/useNow';
@@ -32,6 +33,11 @@ export function QrScreen() {
         {qr.error && <p className={styles.error}>{qr.error}</p>}
         {!qr.src && !qr.error && <p className={styles.muted}>Generowanie kodu…</p>}
       </div>
+      {!isDemo && (
+        <a className={styles.demoLink} href={DOCTOR_DEMO_PATH}>
+          Zobacz przykład →
+        </a>
+      )}
       {expiresAt && (
         <p className={styles.muted}>
           Kod ważny jeszcze {formatRemaining(expiresAt, now)}; potem odświeży się sam.

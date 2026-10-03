@@ -66,9 +66,10 @@
   font-family: ui-monospace, monospace;
   font-size: var(--font-size-sm);
 }
-.devLink {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
+.demoLink {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
 }
 .notice {
   margin: 0;
