@@ -75,7 +75,11 @@ export interface HealthData {
 }
 
 /** Pure: `since` defaults to the last visit date at the call site. */
-export type BuildVisitSummary = (data: HealthData, since: IsoDate, now: IsoDateTime) => VisitSummary;
+export type BuildVisitSummary = (
+  data: HealthData,
+  since: IsoDate,
+  now: IsoDateTime,
+) => VisitSummary;
 
 // ---------- Drugs (A, `features/drugs/`) ----------
 
@@ -238,7 +242,8 @@ export type ClientMessage =
 
 export type SessionEndReason = 'ended' | 'expired' | 'peer-left';
 
-export type RelayErrorCode = 'bad-message' | 'too-large' | 'no-session' | 'session-full' | 'no-peer';
+export type RelayErrorCode =
+  'bad-message' | 'too-large' | 'no-session' | 'session-full' | 'no-peer';
 
 /** Messages the relay server sends to a browser. */
 export type ServerMessage =
@@ -293,7 +298,10 @@ export interface PatientConnection {
   /** 4 digits from SHA-256 of both public keys. */
   verificationCode: string;
   /** Resolves when every chunk is acknowledged. */
-  sendSnapshot(snapshot: ShareSnapshot, onProgress?: (sent: number, total: number) => void): Promise<void>;
+  sendSnapshot(
+    snapshot: ShareSnapshot,
+    onProgress?: (sent: number, total: number) => void,
+  ): Promise<void>;
   onStatus(cb: (status: TransportStatus) => void): () => void;
   close(): void;
 }

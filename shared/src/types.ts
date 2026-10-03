@@ -36,8 +36,7 @@ export type MedicationCategory = 'prescription' | 'otc' | 'supplement';
 
 export type MedicationSchedule =
   /** Fixed times of day, `HH:mm` local time. */
-  | { type: 'daily'; times: string[] }
-  | { type: 'asNeeded' };
+  { type: 'daily'; times: string[] } | { type: 'asNeeded' };
 
 export type MedicationSource = 'manual' | 'voice' | 'ikp' | 'visit';
 
