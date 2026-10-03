@@ -1,6 +1,7 @@
 import type { ShareSnapshot } from '@ez/shared';
 import { CurrentMeds } from './CurrentMeds';
 import { PatientHeader } from './PatientHeader';
+import { RightColumn } from './right/RightColumn';
 import { TellDoctor } from './TellDoctor';
 import styles from './PatientView.module.css';
 
@@ -14,7 +15,7 @@ export function PatientView({ snapshot }: { snapshot: ShareSnapshot }) {
         <CurrentMeds snapshot={snapshot} />
       </aside>
       <section className={styles.right} aria-label="Historia">
-        {/* B19: "Od ostatniej wizyty", timeline, tabs. */}
+        <RightColumn snapshot={snapshot} />
       </section>
     </div>
   );

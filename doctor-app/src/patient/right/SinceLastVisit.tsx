@@ -1,0 +1,121 @@
+import { isOutOfRange, type ShareSnapshot, type TimelineRef } from '@ez/shared';
+import { formatDate, formatNumber } from '../../format';
+import { describeDose, isOmitted } from '../patient.logic';
+import { localDay, rangeFlag } from './timeline.logic';
+import styles from './Right.module.css';
+
+type Props = { snapshot: ShareSnapshot; onSelect: (ref: TimelineRef) => void };
+
+const DAY_MS = 24 * 3600 * 1000;
+
+/** Compact "what changed since the last visit" bar (T2.6b). Clicking an item highlights it on the timeline. */
+export function SinceLastVisit({ snapshot, onSelect }: Props) {
+  const s = snapshot.summary;
+  const item = (ref: TimelineRef, text: string, strong?: boolean) => (
+    <button
+      key={`${ref.entity}-${ref.id}-${text}`}
+      type="button"
+      className={styles.item}
+      onClick={() => onSelect(ref)}
+    >
+      {strong ? <strong>{text}</strong> : text}
+    </button>
+  );
+  const firstSymptomId = (name: string) =>
+    snapshot.symptoms.find(
+      (x) =>
+        x.name.trim().toLowerCase() === name.trim().toLowerCase() &&
+        localDay(x.startedAt) >= s.since,
+    )?.id;
+
+  const rows: { label: string; content: JSX.Element[] | string }[] = [];
+  if (!isOmitted(snapshot, 'medications')) {
+    const meds = [
+      ...s.medsStarted.map((m) =>
+        item({ entity: 'medication', id: m.id }, `nowy: ${m.name} ${describeDose(m)}`),
+      ),
+      ...s.medsChanged.map((c) =>
+        item(
+          { entity: 'medication', id: c.to.id },
+          `zmiana: ${c.to.name} ${describeDose(c.from)} → ${describeDose(c.to)}`,
+        ),
+      ),
+      ...s.medsStopped.map((m) =>
+        item(
+          { entity: 'medication', id: m.id },
+          `odstawiony: ${m.name}${m.stopReason ? ` (${m.stopReason})` : ''}`,
+        ),
+      ),
+    ];
+    rows.push({ label: 'Leki', content: meds.length > 0 ? meds : 'bez zmian' });
+    const total = s.adherence.taken + s.adherence.skipped;
+    rows.push({
+      label: 'Regularność',
+      content:
+        total > 0 ? `potwierdzone ${s.adherence.taken} z ${total} dawek` : 'brak potwierdzeń',
+    });
+  }
+  if (!isOmitted(snapshot, 'symptoms')) {
+    rows.push({
+      label: 'Objawy',
+      content:
+        s.symptoms.length > 0
+          ? s.symptoms.map((x) => {
+              const parts = [`${x.name} ×${x.count}`];
+              if (x.maxSeverity) parts.push(`maks. ${x.maxSeverity}/5`);
+              parts.push(`od ${formatDate(x.firstAt)}`);
+              if (x.afterNewMed) {
+                const days = Math.round(
+                  (Date.parse(x.firstAt) - Date.parse(x.afterNewMed.startDate)) / DAY_MS,
+                );
+                parts.push(`${days} dni po początku: ${x.afterNewMed.medicationName}`);
+              }
+              const id = firstSymptomId(x.name);
+              return id ? (
+                item({ entity: 'symptom', id }, parts.join(', '))
+              ) : (
+                <span key={x.name}>{parts.join(', ')}</span>
+              );
+            })
+          : 'brak',
+    });
+  }
+  if (!isOmitted(snapshot, 'exams')) {
+    rows.push({
+      label: 'Nowe badania',
+      content:
+        s.newExams.length > 0
+          ? s.newExams.map((e) => {
+              const out = e.results
+                .filter(isOutOfRange)
+                .map((r) => `${r.name} ${formatNumber(r.value)}${rangeFlag(r)}`);
+              return item(
+                { entity: 'exam', id: e.id },
+                `${e.name} ${formatDate(e.date)}${out.length > 0 ? `: ${out.join(', ')}` : ''}`,
+                out.length > 0,
+              );
+            })
+          : 'brak',
+    });
+  }
+  if (!isOmitted(snapshot, 'photos') && s.newPhotos.length > 0) {
+    rows.push({
+      label: 'Nowe zdjęcia',
+      content: s.newPhotos.map((p) => item({ entity: 'photo', id: p.id }, formatDate(p.takenAt))),
+    });
+  }
+
+  return (
+    <section className={styles.since} aria-label="Od ostatniej wizyty">
+      <h2 className={styles.title}>Od ostatniej wizyty ({formatDate(s.since)})</h2>
+      <dl className={styles.rows}>
+        {rows.map((r) => (
+          <div key={r.label} className={styles.row}>
+            <dt>{r.label}</dt>
+            <dd>{r.content}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  );
+}

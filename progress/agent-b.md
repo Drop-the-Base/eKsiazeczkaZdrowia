@@ -19,3 +19,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B16] Ekran podsumowania przed wysłaniem (odznaczanie sekcji) · issue #36 · 2026-10-03 18:14 · atrapy: przycisk „Dalej” nieaktywny do B17, zdjęcia bez miniatur do B17
 - [x] [B17] Udostępnij lekarzowi: skan QR, wysyłka, status · issue #38 · 2026-10-03 18:18 · atrapy: brak (porównanie kodów z przyciskami w B14)
 - [x] [B18] Widok lekarza: pasek górny, nagłówek, lewa kolumna · issue #40 · 2026-10-03 18:24 · atrapy: prawa kolumna pusta do B19
+- [x] [B19] Widok lekarza: „Od ostatniej wizyty”, oś czasu, zakładki · issue #42 · 2026-10-03 18:29 · atrapy: TimelineStandIn zamiast <Timeline> od A (B37)
