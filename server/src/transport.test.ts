@@ -10,6 +10,7 @@ import {
   type TransportStatus,
 } from '@ez/shared';
 import { createApp } from './app';
+import { handleVisitNote } from './llm/visit-note';
 import { handleQueryStub } from './queryStub';
 
 const cleanups: (() => void)[] = [];
@@ -20,6 +21,7 @@ async function startRelay(): Promise<string> {
     patientDist: '/nope',
     doctorDist: '/nope',
     llmQuery: handleQueryStub,
+    llmVisitNote: handleVisitNote,
   });
   await new Promise<void>((r) => server.listen(0, '127.0.0.1', r));
   cleanups.push(() => server.close());

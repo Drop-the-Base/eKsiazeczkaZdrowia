@@ -5,6 +5,7 @@ import { join, resolve } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { WebSocket } from 'ws';
 import { createApp } from './app';
+import { handleVisitNote } from './llm/visit-note';
 import { handleQueryStub } from './queryStub';
 import { resolveStaticPath } from './static';
 
@@ -20,7 +21,12 @@ beforeAll(async () => {
   await writeFile(join(patient, 'index.html'), 'patient');
   await writeFile(join(patient, 'assets', 'a.js'), 'js');
   await writeFile(join(doctor, 'index.html'), 'doctor');
-  const server = createApp({ patientDist: patient, doctorDist: doctor, llmQuery: handleQueryStub });
+  const server = createApp({
+    patientDist: patient,
+    doctorDist: doctor,
+    llmQuery: handleQueryStub,
+    llmVisitNote: handleVisitNote,
+  });
   await new Promise<void>((r) => server.listen(0, '127.0.0.1', r));
   base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
   close = () => server.close();
@@ -61,6 +67,27 @@ describe('server', () => {
     });
     expect((await fetch(`${base}/llm/query`, { method: 'POST', body: '{' })).status).toBe(400);
     expect((await fetch(`${base}/llm/query`, { method: 'POST', body: '{}' })).status).toBe(400);
+  });
+
+  it('reads a post-visit note and rejects bad bodies', async () => {
+    const res = await fetch(`${base}/llm/visit-note`, {
+      method: 'POST',
+      body: JSON.stringify({
+        text: 'odstawić suplement, kontrola morfologii za dwa tygodnie',
+        today: '2026-10-03',
+      }),
+    });
+    expect(res.headers.get('cache-control')).toBe('no-store');
+    expect(await res.json()).toEqual({
+      stopMeds: [{ name: 'suplement' }],
+      newMeds: [],
+      followUpDate: '2026-10-17',
+    });
+    const bad = await fetch(`${base}/llm/visit-note`, {
+      method: 'POST',
+      body: JSON.stringify({ text: 'x' }),
+    });
+    expect(bad.status).toBe(400);
   });
 
   it('accepts WebSocket upgrades only on /relay', async () => {
