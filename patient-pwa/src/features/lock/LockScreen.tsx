@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { Button, LoadingState } from '../../ui';
 import { PinField } from './components/PinField';
 import { useAutoLock } from './autoLock';
@@ -75,8 +75,23 @@ function UnlockPin({ lock }: { lock: ReturnType<typeof useLock> }) {
 /** Covers the whole app until the encrypted database is unlocked. */
 export function LockScreen() {
   const lock = useLock();
-  useAutoLock(lock.status === 'unlocked');
-  if (lock.status === 'unlocked') return null;
+  const locked = lock.status !== 'unlocked';
+  useAutoLock(!locked);
+  // The page under the cover must not scroll (focus on the PIN field would scroll it and shift the cover).
+  useEffect(() => {
+    if (!locked) return;
+    const { documentElement: html, body } = document;
+    html.style.overflow = 'hidden';
+    body.style.overflow = 'hidden';
+    body.style.height = '100dvh';
+    window.scrollTo(0, 0);
+    return () => {
+      html.style.overflow = '';
+      body.style.overflow = '';
+      body.style.height = '';
+    };
+  }, [locked]);
+  if (!locked) return null;
   return (
     <div className={styles.cover} role="dialog" aria-modal="true" aria-label="Blokada aplikacji">
       <div className={styles.brand} aria-hidden="true">
