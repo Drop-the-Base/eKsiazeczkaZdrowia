@@ -1,16 +1,16 @@
-import { createServer } from 'node:http';
+import { fileURLToPath } from 'node:url';
+import { createApp } from './app.js';
+import { handleQueryStub } from './queryStub.js';
 
-// Szkielet z A01. Właściwy serwer (statyki, WebSocket, nagłówki, LLM): B05.
 const port = Number(process.env.PORT ?? 8787);
+const host = process.env.HOST ?? '0.0.0.0';
 
-createServer((req, res) => {
-  if (req.url === '/health') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true }));
-    return;
-  }
-  res.writeHead(404);
-  res.end();
-}).listen(port, () => {
-  console.log(`server: http://localhost:${port}`);
+const server = createApp({
+  patientDist: fileURLToPath(new URL('../../patient-pwa/dist', import.meta.url)),
+  doctorDist: fileURLToPath(new URL('../../doctor-app/dist', import.meta.url)),
+  llmQuery: handleQueryStub,
+});
+
+server.listen(port, host, () => {
+  console.log(`server: http://localhost:${port}  (lekarz: /lekarz/)`);
 });
