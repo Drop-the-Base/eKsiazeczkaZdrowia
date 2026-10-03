@@ -25,3 +25,4 @@ Zmergowane taski (dopisuje agent A po każdym merge, patrz `CLAUDE.md`).
 - [x] [A17] parseEntry lokalnie + zatwierdzanie wpisu jednym dotknięciem · issue #37 · 2026-10-03 18:46 · atrapy: brak
 - [x] [A23] Serwer: LlmClient + POST /llm/query (z atrapą) · issue #49 · 2026-10-03 18:49 · atrapy: reguły zamiast modelu bez LLM_HOST; podpięcie w index.ts – prośba do B
 - [x] [A24] runFilter(filter, db) lokalnie · issue #51 · 2026-10-03 18:50 · atrapy: brak
+- [x] [A25] Ekran „Zapytaj” · issue #53 · 2026-10-03 18:55 · atrapy: brak
