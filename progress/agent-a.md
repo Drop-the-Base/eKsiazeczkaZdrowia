@@ -39,3 +39,4 @@ Zmergowane taski (dopisuje agent A po każdym merge, patrz `CLAUDE.md`).
 - [x] [A33] Slajdy (max 10): treść + zrzuty ekranu · issue #72 · 2026-10-03 19:41 · atrapy: [członkowie zespołu] do uzupełnienia; zrzut lekarza ze starą nazwą do czasu B39
 - [x] [prośba #160] Profil: pozycja „Kopia zapasowa” · issue #160 · 2026-10-03 19:44 · atrapy: brak
 - [x] [prośba #169] Profil: pozycja „Zabezpieczenia” · issue #169 · 2026-10-03 19:56 · atrapy: brak
+- [x] [A33] odświeżenie slajdów po B39/B40 (nowa nazwa, nowy widok lekarza) · issue #72 · 2026-10-03 19:58 · atrapy: [członkowie zespołu]
