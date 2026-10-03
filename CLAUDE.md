@@ -56,6 +56,57 @@ Po każdym zmergowanym tasku dopisz linię do **swojego** pliku `progress/agent-
 
 Każdy agent edytuje tylko swój plik, więc nie ma konfliktów. Issue zamyka się samo przez `Closes #N`.
 
+## Architektura kodu
+
+Cel: **prosto, czytelnie, bez bugów**. To hackathon, nie platforma – żadnego overengineeringu.
+
+**Feature folders (pionowe plastry).** Każda funkcja w `patient-pwa/src/features/<nazwa>/`:
+
+```
+features/meds/
+  route.tsx        # ekran(y) + rejestracja w routerze ({ path, element, tab? })
+  components/      # komponenty tej funkcji
+  useMeds.ts       # hooki: stan ekranu + odczyt/zapis przez db
+  meds.logic.ts    # czysta logika (bez Reacta, bez db) – tu są testy
+  index.ts         # publiczne API dla innych funkcji (tylko to wolno importować z zewnątrz)
+```
+
+**Warstwy i kierunek zależności** (strzałka = „może importować”):
+
+`route/components` → `hooki` → `db` (B) / czysta logika → `shared/`
+
+- **Komponenty** tylko renderują i wołają hooki; **nigdy** nie dotykają Dexie, `fetch` ani WebCrypto bezpośrednio.
+- **Hooki** (`useX`) trzymają stan ekranu i rozmawiają z `db` (odczyt reaktywny: `useLiveQuery` z `dexie-react-hooks`) i z serwerem.
+- **Czysta logika** (`*.logic.ts`, np. `parseEntry`, `buildVisitSummary`, `runFilter`): funkcje dane → dane, bez efektów ubocznych. Daty przekazuj parametrem (`now`), nie wołaj `new Date()` w środku.
+- **`db/`** to jedyne miejsce z Dexie; API po encjach (`db.medications.list()`, `add`, `update`…), zwraca typy z `shared/types.ts`.
+- **`shared/`**: czysty TypeScript – bez Reacta i bez DOM (wyjątek: WebCrypto w `shared/crypto/`).
+- **Inna funkcja** importowana tylko przez jej `index.ts`; bez cykli między funkcjami.
+- **`server/`**: cienki. `index.ts` = routing i nagłówki; jeden plik na handler; jedyny stan to sesje przekaźnika w pamięci.
+- **`doctor-app/`**: ten sam podział (komponenty → hooki → logika), stan sesji w jednym hooku / kontekście, nic trwałego.
+
+**Wzorce i konwencje**
+- **TypeScript `strict`**, zero `any` (w ostateczności `unknown` + zawężenie). Typy domenowe tylko z `shared/types.ts` – nie twórz równoległych kopii.
+- **Walidacja na granicach**: body żądań na serwerze, payload z QR, odebrany snapshot, plik importu – sprawdź kształt przed użyciem (prosty type guard albo `zod`, tylko tam).
+- **Stan**: `useState` / `useReducer` lokalnie, dane trwałe z `db` przez `useLiveQuery`. Bez Reduxa / Zustanda; React Context tylko dla stanu globalnego (blokada aplikacji, sesja lekarza).
+- **Daty**: w bazie i w protokole ISO 8601 (string); formatowanie do wyświetlenia w jednym helperze.
+- **Style**: CSS Modules + zmienne z `ui/`. Bez bibliotek UI.
+- **Nazwy**: komponenty `PascalCase.tsx`, hooki `useX.ts`, logika `x.logic.ts`, testy `x.test.ts` obok pliku. Kod i nazwy po angielsku, teksty w UI po polsku.
+- **Testy**: Vitest dla czystej logiki, kryptografii i transportu (to tam są bugi). Testów UI nie wymagamy.
+
+**Żeby nie było bugów**
+- Każdy ekran z danymi obsługuje 4 stany: **ładowanie, pusto, błąd, dane**.
+- Żadnych cichych `catch {}` – błąd trafia do stanu ekranu (komunikat po polsku) albo jest rzucany dalej. Żadnych „wiszących” promise'ów (`await` albo jawne `void` z obsługą błędu).
+- `useEffect` sprząta po sobie (subskrypcje, timery, WebSocket, kamera, mikrofon).
+- Wartości z formularzy parsuj i sprawdzaj (liczby, daty) przed zapisem.
+- Przed PR: `npm run build` (z `tsc --noEmit`) i `npm test` przechodzą, ekran sprawdzony ręcznie.
+
+**Bez overengineeringu**
+- Abstrakcja dopiero przy **drugim** użyciu; nie przygotowujemy „na przyszłość”.
+- Bez generycznych repozytoriów, DI, fabryk, event busów, własnych frameworków. Funkcja + hook wystarczą.
+- Nowa zależność npm tylko, gdy oszczędza realną pracę (np. Dexie, `qrcode`, `html5-qrcode`, pdf.js, Tesseract, `hash-wasm`).
+- Małe pliki i funkcje; jeśli plik ma > ~250 linii, podziel go według tego układu, nie wymyślaj nowego.
+- Bez zakomentowanego kodu i martwych opcji konfiguracji. Komentarz tylko tam, gdzie „dlaczego” nie wynika z kodu.
+
 ## Zasady produktu (skrót z TASKS.md)
 
 - Interfejs po polsku; inne języki tylko w „Za granicą”.
