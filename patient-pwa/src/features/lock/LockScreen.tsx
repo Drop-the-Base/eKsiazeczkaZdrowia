@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { DEMO_PIN, isDemo } from '../../demoMode';
+import { DEMO_BASE, DEMO_PIN, isDemo } from '../../demoMode';
 import { dbReady } from '../../db';
 import { Button, LoadingState } from '../../ui';
 import { PinField } from './components/PinField';
@@ -140,6 +140,11 @@ export function LockScreen() {
           {lock.status === 'checking' && <LoadingState />}
           {lock.status === 'no-pin' && <SetupPin lock={lock} />}
           {lock.status === 'locked' && <UnlockPin lock={lock} />}
+          {(lock.status === 'no-pin' || lock.status === 'locked') && (
+            <a className={styles.demoLink} href={DEMO_BASE}>
+              Zobacz demo w 3 minuty →
+            </a>
+          )}
         </>
       )}
       {(lock.status === 'error' || demoError) && (

@@ -4,6 +4,15 @@ Prywatna oś czasu zdrowia na telefonie pacjenta, uzupełniana głosem, którą 
 
 Plan, architektura i taski: [`TASKS.md`](TASKS.md). Zasady pracy agentów: [`CLAUDE.md`](CLAUDE.md).
 
+## Demo
+
+Dla osoby, która ma kilka minut: dane Pani Anny (fikcyjne, oparte na prawdziwym przypadku) są wczytane od razu, a przewodnik prowadzi przez najważniejsze funkcje.
+
+- `/demo`: aplikacja pacjentki z przewodnikiem (PIN demo `1234`, ustawiany sam, osobna baza w przeglądarce).
+- `/demo/lekarz`: widok lekarza z przewodnikiem; „Symuluj telefon pacjentki” łączy się prawdziwym, szyfrowanym kanałem. Z kartą `/demo` w tej samej przeglądarce kod QR przekazuje się sam.
+- `?bez-przewodnika` wyłącza przewodnik (zrzuty ekranu). Prawdziwa aplikacja (`/`, `/lekarz/`) nie zawiera danych demo.
+- Lokalnie: `npm run build && npm start`, potem `http://localhost:8787/demo` (`/demo/lekarz` obsługuje tylko serwer, nie `npm run dev`).
+
 ## Struktura
 
 | Folder | Co to jest |

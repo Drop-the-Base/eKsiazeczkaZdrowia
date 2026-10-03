@@ -46,3 +46,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [D01] Tryb demo /demo: osobna baza, PIN sam, prawdziwa aplikacja bez danych demo · issue #172 · 2026-10-03 20:17 · atrapy: arkusz „wizyta za 3 dni” wyskakuje w demo do D02
 - [x] [D02] Przewodnik demo: wyszarzenie, podświetlenie, karty, „Pokaż mi” · issue #173 · 2026-10-03 20:26 · atrapy: połączenie z kartą lekarza w D03
 - [x] [D03] /demo/lekarz: widok lekarza z przewodnikiem, symulowany telefon, połączenie z kartą pacjentki · issue #174 · 2026-10-03 20:38 · atrapy: brak (dodatkowo: przewodnik pacjentki blokuje klikanie i przewijanie poza podświetleniem)
+- [x] [D04] Odnośniki do demo: ekran startowy, /lekarz, README · issue #175 · 2026-10-03 20:39 · atrapy: brak

@@ -54,6 +54,11 @@
   color: var(--color-text-muted);
   text-decoration: underline;
 }
+.demoLink {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
 .forgot {
   display: flex;
   flex-direction: column;
