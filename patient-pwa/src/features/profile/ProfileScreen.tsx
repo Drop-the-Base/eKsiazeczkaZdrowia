@@ -45,6 +45,12 @@ export function ProfileScreen() {
             trailing="›"
             onClick={() => navigate('/objawy')}
           />
+          <ListItem
+            title="Badania"
+            subtitle="Wyniki z normami"
+            trailing="›"
+            onClick={() => navigate('/badania')}
+          />
         </List>
         <DiagnosesSection />
         <DemoDataCard />

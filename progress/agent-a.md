@@ -17,3 +17,4 @@ Zmergowane taski (dopisuje agent A po każdym merge, patrz `CLAUDE.md`).
 - [x] [A12] Pytanie „czy bierzesz coś jeszcze?” (suplementy, zioła) · issue #26 · 2026-10-03 18:13 · atrapy: brak
 - [x] [A13] Potwierdzanie leków na dziś · issue #28 · 2026-10-03 18:16 · atrapy: ekran pod /dzis (wejście z profilu) do czasu osi czasu A20
 - [x] [A14] Objawy: szybkie dodawanie · issue #30 · 2026-10-03 18:19 · atrapy: brak
+- [x] [A15] Badania: ręczne dodawanie wyników z normami · issue #32 · 2026-10-03 18:23 · atrapy: brak
