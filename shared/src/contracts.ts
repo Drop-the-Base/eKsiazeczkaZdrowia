@@ -199,6 +199,8 @@ export interface TimelineProps {
 
 export interface LlmQueryRequest {
   question: string;
+  /** The phone's local date, so "last 2 months" counts from the patient's day. */
+  today?: IsoDate;
 }
 export interface LlmQueryResponse {
   filter: QueryFilter;

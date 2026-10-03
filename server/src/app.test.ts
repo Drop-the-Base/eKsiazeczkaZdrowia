@@ -5,8 +5,8 @@ import { join, resolve } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { WebSocket } from 'ws';
 import { createApp } from './app';
-import { handleVisitNote } from './llm/visit-note';
-import { handleQueryStub } from './queryStub';
+import { createVisitNoteHandler } from './llm/visit-note';
+import { createQueryHandler } from './llm/query';
 import { resolveStaticPath } from './static';
 
 let base = '';
@@ -24,8 +24,8 @@ beforeAll(async () => {
   const server = createApp({
     patientDist: patient,
     doctorDist: doctor,
-    llmQuery: handleQueryStub,
-    llmVisitNote: handleVisitNote,
+    llmQuery: createQueryHandler(null),
+    llmVisitNote: createVisitNoteHandler(null),
   });
   await new Promise<void>((r) => server.listen(0, '127.0.0.1', r));
   base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
