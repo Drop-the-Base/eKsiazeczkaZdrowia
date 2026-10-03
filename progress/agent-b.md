@@ -48,3 +48,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [D03] /demo/lekarz: widok lekarza z przewodnikiem, symulowany telefon, połączenie z kartą pacjentki · issue #174 · 2026-10-03 20:38 · atrapy: brak (dodatkowo: przewodnik pacjentki blokuje klikanie i przewijanie poza podświetleniem)
 - [x] [D04] Odnośniki do demo: ekran startowy, /lekarz, README · issue #175 · 2026-10-03 20:39 · atrapy: brak
 - [x] [N01] Nazwa z powrotem: eKsiazeczkaZdrowia (aplikacje, manifest, kopia zapasowa, README, slajdy + PDF) · issue #177 · 2026-10-03 20:43 · atrapy: brak
+- [x] [D06] /demo/lekarz bez „Ekranu w budowie”: dev proxy, odzysk po starym service workerze, ekran „Nie znaleziono” · issue #184 · 2026-10-03 20:45 · atrapy: brak
