@@ -31,6 +31,7 @@ export function Timeline({ data, range, highlight, onSelect }: TimelineProps) {
           onClick={z.zoomOut}
           disabled={!z.canZoomOut}
           aria-label="Oddal oś czasu"
+          data-tour="timeline-zoom-out"
         >
           −
         </button>
@@ -40,11 +41,12 @@ export function Timeline({ data, range, highlight, onSelect }: TimelineProps) {
           onClick={z.zoomIn}
           disabled={!z.canZoomIn}
           aria-label="Przybliż oś czasu"
+          data-tour="timeline-zoom-in"
         >
           +
         </button>
       </div>
-      <div className={styles.scroller} ref={z.scrollerRef}>
+      <div className={styles.scroller} ref={z.scrollerRef} data-tour="timeline-scroller">
         <div className={styles.content} style={{ '--tl-zoom': z.zoom } as CSSProperties}>
           <div className={styles.row}>
             <span className={styles.axisCorner} />

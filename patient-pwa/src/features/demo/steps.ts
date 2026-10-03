@@ -1,7 +1,10 @@
 import { DEMO_PIN } from '../../demoMode';
 
-/** What "Pokaż mi" does: types a sentence into the voice field and sends it, or presses a button. */
-export type ShowMe = { say: string } | { press: string };
+/** What "Pokaż mi" does: types a sentence into the voice field and sends it, presses a button, or demonstrates zoom/scroll. */
+export type ShowMe =
+  | { say: string }
+  | { press: string }
+  | { action: 'timeline-zoom-scroll' };
 
 export interface TourStep {
   id: string;
@@ -44,7 +47,9 @@ export const STEPS: TourStep[] = [
     text: [
       'Leki, objawy, badania i wizyty w jednym widoku chronologicznym. Po każdym z leków (imatynib, nilotynib, dazatynib) wyniki morfologii były nieprawidłowe.',
       'Jedyną pozycją przyjmowaną nieprzerwanie przez cały okres jest suplement z grzybów (kolor fioletowy).',
+      'Oś można przybliżać (+ / −, gest uszczypnięcia) i przewijać w poziomie.',
     ],
+    showMe: { action: 'timeline-zoom-scroll' },
     story: 'Lekarze analizowali wyniki osobno, bez wspólnego kontekstu czasowego.',
     why: 'IKP zawiera leki przepisane przez lekarza. Aplikacja uzupełnia je o to, co pacjent faktycznie przyjmuje.',
   },
@@ -59,7 +64,7 @@ export const STEPS: TourStep[] = [
     ],
     story:
       'Pytanie dotyczyło wyłącznie leków, dlatego informacja o suplemencie nie została przekazana.',
-    why: 'Aplikacja nie generuje automatycznych ostrzeżeń. Suplementy rzadko występują w bazach interakcji, więc brak ostrzeżenia mógłby dawać fałszywe poczucie bezpieczeństwa, a fałszywy alarm skłaniać do samodzielnego odstawienia leku. Ocena kliniczna należy do lekarza, a aplikacja zapewnia mu pełną informację.',
+    why: 'Aplikacja nie generuje automatycznych ostrzeżeń ani nie sugeruje odstawiania preparatów. Ocena kliniczna należy wyłącznie do lekarza, a aplikacja zapewnia mu pełną informację.',
   },
   {
     id: 'today',
@@ -70,17 +75,6 @@ export const STEPS: TourStep[] = [
       'Każdą dawkę, również suplementu, pacjent oznacza jako przyjętą lub pominiętą. Ze względu na poufność przypomnienia nie zawierają nazwy leku.',
     ],
     why: 'Lekarz otrzymuje dane o regularności przyjmowania, które zwykle są niedostępne.',
-  },
-  {
-    id: 'add',
-    path: '/dodaj',
-    target: 'voice',
-    title: 'Wprowadzanie głosowe',
-    text: [
-      'Na podstawie jednego zdania, wypowiedzianego lub wpisanego, aplikacja rozpoznaje objaw i lek. Wpis wymaga zatwierdzenia przez użytkownika.',
-    ],
-    showMe: { say: 'od rana boli mnie głowa, wzięłam ibuprom' },
-    why: 'Analiza wpisu odbywa się na urządzeniu. Obsługa głosowa ułatwia korzystanie z aplikacji osobom starszym i z ograniczoną sprawnością.',
   },
   {
     id: 'visit',
@@ -103,29 +97,6 @@ export const STEPS: TourStep[] = [
       'Widok lekarza można otworzyć w nowej karcie tej samej przeglądarki.',
     ],
     why: 'Szyfrowanie end-to-end (ECDH, AES-256-GCM): serwer przekazuje wyłącznie szyfrogram. Kod weryfikacyjny na obu ekranach chroni przed podmianą klucza. Lekarz nie potrzebuje konta ani instalacji, a dane są usuwane po zamknięciu karty.',
-  },
-  {
-    id: 'post-visit',
-    path: '/wizyta/po-wizycie',
-    target: 'voice',
-    title: 'Notatka po wizycie',
-    text: [
-      'Na podstawie krótkiej notatki aplikacja proponuje zmiany: odstawienie suplementu wraz z powodem oraz przypomnienie o kontroli. Zmiany są zapisywane dopiero po zatwierdzeniu.',
-    ],
-    showMe: { say: 'odstawić suplement z grzybów, kontrola morfologii za dwa tygodnie' },
-    story: 'Każdy kolejny lek wchodził w interakcję z tym suplementem.',
-    why: 'Do modelu językowego przekazywana jest wyłącznie treść notatki, bez danych osobowych i historii leczenia.',
-  },
-  {
-    id: 'ask',
-    path: '/zapytaj',
-    target: 'voice',
-    title: 'Wyszukiwanie w historii',
-    text: [
-      'Przed oddaniem krwi, zabiegiem lub wizytą u nowego lekarza pacjent może zapytać o leki z wybranego okresu. Wynik zawiera daty i obejmuje również suplementy.',
-    ],
-    showMe: { say: 'jakie leki brałam w ostatnich dwóch miesiącach?' },
-    why: 'Model językowy przekształca pytanie w filtr, a odpowiedź jest generowana z lokalnej bazy. Model nie ma dostępu do danych pacjenta.',
   },
   {
     id: 'abroad',

@@ -14,7 +14,7 @@ export const MODE_TEXT: Record<VoiceInputMode, { placeholder: string; submit: st
   ask: { placeholder: 'np. jakie leki brałam w ostatnich 2 miesiącach?', submit: 'Zapytaj' },
   tellDoctor: { placeholder: 'np. po nowym leku kręci mi się w głowie', submit: 'Dodaj do listy' },
   postVisit: {
-    placeholder: 'np. odstawić suplement, kontrola morfologii za dwa tygodnie',
+    placeholder: 'np. kontrola morfologii za dwa tygodnie, zmiana dawki',
     submit: 'Dalej',
   },
 };
