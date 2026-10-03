@@ -104,3 +104,4 @@ Zmergowane taski (dopisuje agent po każdym merge, patrz `CLAUDE.md`).
 - [x] [D15] Demo: płynne przejście do demo lekarza po zakończeniu demo pacjenta · issue #198 · 2026-10-03 23:55 · atrapy: brak
 - [x] [B41] Usunięcie wybiórczego odznaczania danych przy udostępnianiu lekarzowi · issue #210 · 2026-10-04 00:00 · atrapy: brak
 - [x] [D20] Demo: poprawki demonstracji (karta, suplement, dawki, opisy) · issue #219 · 2026-10-04 00:15 · atrapy: brak
+- [x] [D21] Demo: ekran bazowy przed każdą demonstracją · issue #221 · 2026-10-04 00:19 · atrapy: brak
