@@ -22,6 +22,13 @@ export function biometricSupported(): boolean {
   );
 }
 
+const aesKey = (out: BufferSource): Promise<CryptoKey> => {
+  const bytes = ArrayBuffer.isView(out)
+    ? new Uint8Array(out.buffer, out.byteOffset, out.byteLength)
+    : new Uint8Array(out);
+  return crypto.subtle.importKey('raw', bytes.slice(), 'AES-GCM', false, ['encrypt', 'decrypt']);
+};
+
 /** Asks the authenticator (fingerprint / face) for the PRF output and turns it into an AES key. */
 async function prfKey(credentialId: Uint8Array, salt: Uint8Array): Promise<CryptoKey> {
   const cred = (await navigator.credentials.get({
@@ -35,11 +42,7 @@ async function prfKey(credentialId: Uint8Array, salt: Uint8Array): Promise<Crypt
   })) as PublicKeyCredential | null;
   const out = cred?.getClientExtensionResults().prf?.results?.first;
   if (!out) throw new BiometricUnavailableError();
-  const bytes =
-    out instanceof ArrayBuffer
-      ? new Uint8Array(out)
-      : new Uint8Array(out.buffer, out.byteOffset, out.byteLength);
-  return crypto.subtle.importKey('raw', bytes.slice(), 'AES-GCM', false, ['encrypt', 'decrypt']);
+  return aesKey(out);
 }
 
 export function createBiometric(dexie: HealthDatabase, vault: Vault) {
@@ -51,9 +54,10 @@ export function createBiometric(dexie: HealthDatabase, vault: Vault) {
     async enable(pin: string): Promise<void> {
       if (!biometricSupported()) throw new BiometricUnavailableError();
       await vault.verifyPin(pin);
+      const salt = random(32);
       const created = (await navigator.credentials.create({
         publicKey: {
-          rp: { name: RP_NAME, id: window.location.hostname },
+          rp: { name: RP_NAME },
           user: { id: random(16), name: 'pacjent', displayName: 'Pacjent' },
           challenge: random(32),
           pubKeyCredParams: [
@@ -66,14 +70,16 @@ export function createBiometric(dexie: HealthDatabase, vault: Vault) {
             residentKey: 'preferred',
           },
           timeout: 60_000,
-          extensions: { prf: {} },
+          // Most authenticators return the secret right away; a second prompt is only a fallback
+          // (Safari refuses a second WebAuthn call without a fresh tap).
+          extensions: { prf: { eval: { first: salt } } },
         },
       })) as PublicKeyCredential | null;
-      if (!created || created.getClientExtensionResults().prf?.enabled === false)
-        throw new BiometricUnavailableError();
+      const prf = created?.getClientExtensionResults().prf;
+      if (!created || (!prf?.enabled && !prf?.results)) throw new BiometricUnavailableError();
       const credentialId = new Uint8Array(created.rawId);
-      const salt = random(32);
-      const key = await prfKey(credentialId, salt);
+      const first = prf.results?.first;
+      const key = first ? await aesKey(first) : await prfKey(credentialId, salt);
       const sealedPin = await sealBytes(key, new TextEncoder().encode(pin), 'biometric');
       await dexie.biometric.put({ id: 'biometric', credentialId, salt, sealedPin });
     },
