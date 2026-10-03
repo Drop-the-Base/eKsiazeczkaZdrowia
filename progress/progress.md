@@ -94,3 +94,4 @@ Zmergowane taski (dopisuje agent po każdym merge, patrz `CLAUDE.md`).
 - [x] [D16] Skrócenie demo pacjenta (usunięcie kroków 4, 7, 8) + demonstracja zoomu i scrolla osi czasu · issue #200 · 2026-10-03 21:43 · atrapy: brak
 - [x] [D17] Demo: płynna animacja zoom in / zoom out i scrolla na osi czasu z blokadą klikania · issue #202 · 2026-10-03 21:47 · atrapy: brak
 - [x] [D09] Demo: zaokrąglenie wycięcia maski podświetlenia zgodne z ramką · issue #191 · 2026-10-03 22:23 · atrapy: brak
+- [x] [D10] Widok lekarza: szczegóły po kliknięciu znacznika na osi czasu (badania/romb) + krok w demo · issue #193 · 2026-10-03 22:28 · atrapy: brak
