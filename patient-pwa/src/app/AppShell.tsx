@@ -1,16 +1,22 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { ErrorBoundary } from './ErrorBoundary';
 import { overlays } from './registry';
 import { tabs } from './tabs';
 import styles from './AppShell.module.css';
 
 export function AppShell() {
+  const { pathname } = useLocation();
   return (
     <div className={styles.shell}>
       <main className={styles.content}>
-        <Outlet />
+        <ErrorBoundary resetKey={pathname}>
+          <Outlet />
+        </ErrorBoundary>
       </main>
       {overlays.map((Overlay, i) => (
-        <Overlay key={i} />
+        <ErrorBoundary key={i}>
+          <Overlay />
+        </ErrorBoundary>
       ))}
       <nav className={styles.nav} aria-label="Główna nawigacja">
         {tabs.map((tab) => (
