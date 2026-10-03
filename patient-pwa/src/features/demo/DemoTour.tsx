@@ -21,6 +21,9 @@ function DoctorLink({ children }: { children: string }) {
   );
 }
 
+/** New tab: the patient tab stays open, it hands the QR over to the doctor tab (DEMO_QR_CHANNEL). */
+const openDoctorDemo = () => window.open(DOCTOR_DEMO_PATH, '_blank', 'noopener');
+
 function StepBody({ step }: { step: TourStep }) {
   return (
     <>
@@ -139,7 +142,7 @@ export function DemoTour() {
       await runDemo();
     } else {
       if (step.full && last) {
-        tour.close();
+        openDoctorDemo();
       } else {
         tour.next();
       }
@@ -208,10 +211,16 @@ export function DemoTour() {
               </>
             ) : (
               <>
-                <Button onClick={tour.close} title="Przejdź do aplikacji (→)">
+                <p className={styles.handover}>
+                  Zobacz, jak te same dane, w tym suplement i oś czasu, widzi lekarz podczas wizyty.
+                </p>
+                <Button onClick={openDoctorDemo} title="Przejdź do widoku lekarza (→)">
+                  Przejdź do widoku lekarza →
+                </Button>
+                <Button variant="secondary" onClick={tour.close}>
                   Przejdź do aplikacji
                 </Button>
-                <Button variant="secondary" onClick={restartDemo}>
+                <Button variant="ghost" onClick={restartDemo}>
                   Uruchom ponownie
                 </Button>
                 <a className={styles.link} href="/">
