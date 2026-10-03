@@ -12,3 +12,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B08] Przekaźnik WebSocket: sesje, przekazywanie, wygasanie · issue #19 · 2026-10-03 17:50 · atrapy: brak
 - [x] [B09] shared/crypto: ECDH → HKDF → AES-256-GCM + kod weryfikacyjny · issue #21 · 2026-10-03 17:52 · atrapy: brak
 - [x] [B10] shared/transport: zaszyfrowany snapshot w kawałkach · issue #23 · 2026-10-03 17:56 · atrapy: brak
+- [x] [B11] Aplikacja lekarza: ekran z QR i status połączenia · issue #25 · 2026-10-03 18:00 · atrapy: po odebraniu danych tymczasowe podsumowanie (widok w B18)
