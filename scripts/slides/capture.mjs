@@ -68,7 +68,7 @@ try {
   const guide = (label) =>
     doctor.evaluate((text) => {
       const b = [...document.querySelectorAll('aside[aria-label="Przewodnik demo"] button')].find(
-        (el) => el.textContent?.trim() === text,
+        (el) => el.textContent?.trim() === text || el.getAttribute('aria-label') === text,
       );
       if (!b) throw new Error(`brak przycisku ${text}`);
       b.click();

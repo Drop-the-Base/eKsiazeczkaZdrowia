@@ -139,8 +139,8 @@ function Summary({ s }: { s: AbroadSummary }) {
         {s.hasUntranslated && <p>(PL) = {l.untranslated}</p>}
         <p>
           {l.generated}:{' '}
-          {date(`${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`)} · Prywatna
-          Karta Zdrowia · {l.disclaimer}
+          {date(`${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`)} ·
+          eKsiazeczkaZdrowia · {l.disclaimer}
         </p>
       </footer>
     </article>

@@ -9,7 +9,7 @@ export function TopBar() {
   const live = status === 'connected' || status === 'transferring' || status === 'received';
   return (
     <header className={styles.bar}>
-      <strong className={styles.brand}>Prywatna Karta Zdrowia</strong>
+      <strong className={styles.brand}>eKsiazeczkaZdrowia</strong>
       <span className={styles.status} data-status={status}>
         <span className={styles.dot} aria-hidden />
         {statusLabel(status)}
