@@ -1,4 +1,4 @@
-import { PIN_PATTERN } from '../../db';
+import { PIN_PATTERN } from '../../db/vault';
 
 /** Error for the new-PIN form, or undefined when it can be saved. */
 export function validateNewPin(pin: string, repeat: string): string | undefined {
