@@ -84,17 +84,26 @@ export function useTimelineZoom(range: DateRange, highlight: TimelineRef | undef
       if (e.touches.length < 2) pinch = null;
     };
 
+    const onCustomZoom = (e: Event) => {
+      const custom = e as CustomEvent<{ zoom: number; anchorX?: number }>;
+      if (typeof custom.detail?.zoom === 'number') {
+        zoomTo(custom.detail.zoom, custom.detail.anchorX);
+      }
+    };
+
     el.addEventListener('wheel', onWheel, { passive: false });
     el.addEventListener('touchstart', onTouchStart, { passive: true });
     el.addEventListener('touchmove', onTouchMove, { passive: false });
     el.addEventListener('touchend', onTouchEnd);
     el.addEventListener('touchcancel', onTouchEnd);
+    el.addEventListener('timeline:zoom', onCustomZoom);
     return () => {
       el.removeEventListener('wheel', onWheel);
       el.removeEventListener('touchstart', onTouchStart);
       el.removeEventListener('touchmove', onTouchMove);
       el.removeEventListener('touchend', onTouchEnd);
       el.removeEventListener('touchcancel', onTouchEnd);
+      el.removeEventListener('timeline:zoom', onCustomZoom);
     };
   }, [zoomTo]);
 

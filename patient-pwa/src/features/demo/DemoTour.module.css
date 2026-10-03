@@ -242,3 +242,38 @@
   box-shadow: var(--shadow-fab);
   cursor: pointer;
 }
+
+.inputBlocker {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  cursor: wait;
+  pointer-events: all;
+  background: transparent;
+}
+
+.hintBadge {
+  position: fixed;
+  top: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  box-shadow: 0 4px 20px rgb(0 0 0 / 0.2);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.hintIcon {
+  font-size: var(--font-size-md);
+  color: var(--color-primary);
+}
