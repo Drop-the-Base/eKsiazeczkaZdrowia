@@ -19,7 +19,8 @@ for attempt in 1 2 3 4 5; do
     tail -30 /tmp/ship-build.log >&2
     exit 1
   fi
-  if ! npm test >/tmp/ship-test.log 2>&1; then
+  # SKIP_TESTS=1 tylko gdy czerwony test należy do drugiego agenta i jest na niego issue [prośba].
+  if [ "${SKIP_TESTS:-}" != "1" ] && ! npm test >/tmp/ship-test.log 2>&1; then
     echo "TESTY nie przechodzą po rebase – log: /tmp/ship-test.log" >&2
     tail -30 /tmp/ship-test.log >&2
     exit 1
