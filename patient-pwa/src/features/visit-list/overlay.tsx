@@ -38,7 +38,6 @@ export default function TellDoctorOverlay() {
       )}
       <BottomSheet open={open} onClose={() => setOpen(false)} title="Powiem lekarzowi">
         <NoteForm
-          autoFocus
           onSaved={() => {
             setOpen(false);
             setSaved(true);

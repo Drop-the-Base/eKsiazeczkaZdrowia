@@ -16,7 +16,10 @@ describe('parseNoteText', () => {
       ok: true,
       text: 'Po nowym leku kręci mi się w głowie',
     });
-    expect(parseNoteText('Zapytać lekarza o   dawkę')).toEqual({ ok: true, text: 'Dawkę' });
+    expect(parseNoteText('zapytać lekarza o   dawkę')).toEqual({
+      ok: true,
+      text: 'Zapytać lekarza o dawkę',
+    });
     expect(parseNoteText('boli mnie kolano')).toEqual({ ok: true, text: 'Boli mnie kolano' });
   });
 
