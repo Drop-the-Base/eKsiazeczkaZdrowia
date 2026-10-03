@@ -12,12 +12,14 @@ import {
   MicButton,
   PageHeader,
 } from '../ui';
+import { DrugPicker } from '../features/drugs';
 
 /** Podgląd komponentów `ui/` pod `/dev/ui` (bez zakładki w nawigacji). */
 export function DevUi() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [listening, setListening] = useState(false);
   const [selected, setSelected] = useState('30');
+  const [picked, setPicked] = useState('');
 
   return (
     <>
@@ -49,6 +51,17 @@ export function DevUi() {
           <Chip dotColor="var(--color-otc)">Bez recepty</Chip>
           <Chip dotColor="var(--color-supplement)">Suplementy i zioła</Chip>
         </div>
+
+        <Card>
+          <DrugPicker
+            onSelect={({ drug, name }) =>
+              setPicked(
+                drug ? `${drug.name} ${drug.strength} (${drug.atcCode})` : `${name} (spoza RPL)`,
+              )
+            }
+          />
+          {picked && <p>Wybrano: {picked}</p>}
+        </Card>
 
         <List>
           <ListItem title="Ibuprom 200 mg" subtitle="doraźnie" onClick={() => setSheetOpen(true)} />
