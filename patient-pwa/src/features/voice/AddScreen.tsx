@@ -60,6 +60,9 @@ export function AddScreen() {
           <Button variant="secondary" onClick={() => setSheet('exam')}>
             Wyniki badań
           </Button>
+          <Button variant="secondary" onClick={() => navigate('/import')}>
+            Dokument z IKP
+          </Button>
           <Button variant="secondary" onClick={() => navigate('/zdjecia')}>
             Zdjęcie
           </Button>

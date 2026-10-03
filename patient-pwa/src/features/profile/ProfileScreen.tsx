@@ -57,6 +57,12 @@ export function ProfileScreen() {
             trailing="›"
             onClick={() => navigate('/zdjecia')}
           />
+          <ListItem
+            title="Dokumenty z IKP"
+            subtitle="Import kart, wyników i e-recept"
+            trailing="›"
+            onClick={() => navigate('/import')}
+          />
         </List>
         <DiagnosesSection />
         <DemoDataCard />
