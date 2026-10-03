@@ -88,3 +88,4 @@ Zmergowane taski (dopisuje agent po każdym merge, patrz `CLAUDE.md`).
 - [x] [N01] Nazwa z powrotem: eKsiazeczkaZdrowia (aplikacje, manifest, kopia zapasowa, README, slajdy + PDF) · issue #177 · 2026-10-03 20:43 · atrapy: brak
 - [x] [D06] /demo/lekarz bez „Ekranu w budowie”: dev proxy, odzysk po starym service workerze, ekran „Nie znaleziono” · issue #184 · 2026-10-03 20:45 · atrapy: brak
 - [x] [D07] Karta przewodnika lekarza na lewo, gdy podświetlenie po prawej · issue #186 · 2026-10-03 20:49 · atrapy: brak
+- [x] [T00] Teksty w aplikacji: rzeczowy, profesjonalny ton (pacjent, lekarz, demo) · bez issue · 2026-10-03 21:14 · atrapy: brak
