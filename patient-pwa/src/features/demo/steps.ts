@@ -57,7 +57,8 @@ export const STEPS: TourStep[] = [
       'Po dodaniu leku aplikacja pyta o pozostałe preparaty: suplementy, witaminy, zioła i herbaty ziołowe. Podpowiedzi ułatwiają kompletne wypełnienie listy.',
       'Suplementy są prezentowane na równi z lekami na receptę. Po wybraniu leku wyświetlane są dane z Rejestru Produktów Leczniczych.',
     ],
-    story: 'Pytanie dotyczyło wyłącznie leków, dlatego informacja o suplemencie nie została przekazana.',
+    story:
+      'Pytanie dotyczyło wyłącznie leków, dlatego informacja o suplemencie nie została przekazana.',
     why: 'Aplikacja nie generuje automatycznych ostrzeżeń. Suplementy rzadko występują w bazach interakcji, więc brak ostrzeżenia mógłby dawać fałszywe poczucie bezpieczeństwa, a fałszywy alarm skłaniać do samodzielnego odstawienia leku. Ocena kliniczna należy do lekarza, a aplikacja zapewnia mu pełną informację.',
   },
   {
@@ -156,6 +157,7 @@ export const STEPS: TourStep[] = [
       'Każdy kolejny lek wchodził w interakcję z suplementem z grzybów, co tłumaczy nieprawidłowe wyniki toksykologiczne po każdej zmianie leczenia.',
       'Pytanie dotyczyło leków i odpowiedź dotyczyła leków. Informacja o suplemencie dotarła do lekarzy przypadkiem, od córki pacjentki.',
     ],
-    punchline: 'Aplikacja gromadzi pełną informację o przyjmowanych preparatach. Ocena kliniczna pozostaje po stronie lekarza.',
+    punchline:
+      'Aplikacja gromadzi pełną informację o przyjmowanych preparatach. Ocena kliniczna pozostaje po stronie lekarza.',
   },
 ];

@@ -1,11 +1,10 @@
-/* Layers: page < dim 50 < card 150. The dim takes the clicks outside the lit element. */
+/* Layers: page < dim 50 < card 150. The dim takes the clicks outside the lit element, not scrolling. */
 
 .dim,
 .panel {
   position: fixed;
   z-index: 50;
   background: rgb(15 23 42 / 0.55);
-  touch-action: none;
 }
 
 .dim {

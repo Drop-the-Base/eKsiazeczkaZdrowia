@@ -90,3 +90,4 @@ Zmergowane taski (dopisuje agent po każdym merge, patrz `CLAUDE.md`).
 - [x] [D07] Karta przewodnika lekarza na lewo, gdy podświetlenie po prawej · issue #186 · 2026-10-03 20:49 · atrapy: brak
 - [x] [T00] Teksty w aplikacji: rzeczowy, profesjonalny ton (pacjent, lekarz, demo) · bez issue · 2026-10-03 21:14 · atrapy: brak
 - [x] [A35] Oś czasu: przewijanie lewo/prawo, przybliżanie skali, stała lewa kolumna etykiet · issue #188 · 2026-10-03 21:23 · atrapy: brak
+- [x] [D08] Demo: odblokowanie przewijania strony w przewodniku pacjenta i lekarza · issue #190 · 2026-10-03 21:32 · atrapy: brak

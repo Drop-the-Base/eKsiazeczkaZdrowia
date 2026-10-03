@@ -1,5 +1,6 @@
 /* Layers: app (header 5, nav 10, fab 11) < dim 50 < sheets 100 < card 150 < lock screen 1000.
-   The dim takes the clicks outside the lit element. Sheets stay above it, so "Pokaż mi" results
+   The dim takes the clicks outside the lit element, but not scrolling (wheel and touch pass through
+   to the page; the light follows the element). Sheets stay above it, so "Pokaż mi" results
    are visible and usable. */
 
 .dim,
@@ -7,7 +8,6 @@
   position: fixed;
   z-index: 50;
   background: rgb(15 23 42 / 0.55);
-  touch-action: none;
 }
 
 .dim {
