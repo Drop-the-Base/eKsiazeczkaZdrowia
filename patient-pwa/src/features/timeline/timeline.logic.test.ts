@@ -4,7 +4,9 @@ import { localDateTime } from '../intake/intake.logic';
 import {
   axisTicks,
   boundsOf,
+  examLanes,
   focusRange,
+  symptomLanes,
   medicationLanes,
   pct,
   rangeFor,
@@ -138,5 +140,48 @@ describe('focusRange', () => {
     ];
     expect(focusRange(meds, '2026-10-03')).toEqual({ from: '2026-04-06', to: '2026-10-03' });
     expect(focusRange([med({ startDate: '2022-12-03' })], '2026-10-03').from).toBe('2026-07-06');
+  });
+});
+
+describe('tracks below medications', () => {
+  it('exam lanes label the first out-of-range value', () => {
+    const lanes = examLanes(
+      [
+        {
+          id: 'e1',
+          name: 'Morfologia krwi',
+          date: '2026-09-23',
+          results: [
+            { name: 'Leukocyty (WBC)', value: 5, unit: 'tys/µl', refLow: 4, refHigh: 10 },
+            { name: 'Hemoglobina (HGB)', value: 8.9, unit: 'g/dl', refLow: 12, refHigh: 16 },
+          ],
+        },
+        { id: 'old', name: 'Morfologia krwi', date: '2025-01-01', results: [] },
+      ],
+      range,
+    );
+    expect(lanes).toHaveLength(1);
+    expect(lanes[0]!.marks.map((m) => [m.label, m.outOfRange])).toEqual([['HGB 8,9↓', true]]);
+  });
+
+  it('symptom lanes per name in order of first occurrence', () => {
+    const s = (id: string, name: string, day: string) => ({
+      id,
+      name,
+      startedAt: localDateTime(day, '09:00'),
+      source: 'manual' as const,
+    });
+    const lanes = symptomLanes(
+      [
+        s('a', 'ból głowy', '2026-09-20'),
+        s('b', 'zawroty głowy', '2026-09-10'),
+        s('c', 'Zawroty głowy', '2026-09-25'),
+      ],
+      range,
+    );
+    expect(lanes.map((l) => [l.name, l.marks.length])).toEqual([
+      ['zawroty głowy', 2],
+      ['ból głowy', 1],
+    ]);
   });
 });

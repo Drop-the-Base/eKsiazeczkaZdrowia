@@ -1,4 +1,16 @@
-import type { DateRange, Intake, IsoDate, Medication, MedicationCategory } from '@ez/shared';
+import type {
+  DateRange,
+  DocumentMeta,
+  Exam,
+  Intake,
+  IsoDate,
+  Medication,
+  MedicationCategory,
+  Symptom,
+  TimelinePhoto,
+  Visit,
+} from '@ez/shared';
+import { FLAG_ARROW, flagOf } from '../exams/exams.logic';
 import { CATEGORY_ORDER, describeDose } from '../meds/meds.logic';
 
 // Czysta logika osi czasu – bez Reacta i bazy, bo komponent używa też aplikacja lekarza.
@@ -202,3 +214,68 @@ export function axisTicks(range: DateRange): Tick[] {
   }
   return ticks;
 }
+
+// ---------- Tory pod lekami: badania, objawy, wizyty, zdjęcia, dokumenty (A19) ----------
+
+export interface Mark<T> {
+  item: T;
+  left: number;
+}
+
+function marks<T>(items: T[], dateOf: (t: T) => string, range: DateRange): Mark<T>[] {
+  const b = boundsOf(range);
+  return items
+    .map((item) => ({ item, t: toTime(dateOf(item)) }))
+    .filter(({ t }) => inBounds(t, b))
+    .sort((a, z) => a.t - z.t)
+    .map(({ item, t }) => ({ item, left: pct(t, b) }));
+}
+
+export interface ExamLane {
+  name: string;
+  marks: (Mark<Exam> & { label: string; outOfRange: boolean })[];
+}
+
+const shortName = (name: string) => /\(([^)]+)\)/.exec(name)?.[1] ?? name.split(' ')[0] ?? name;
+const fmt = (n: number) => n.toLocaleString('pl-PL', { maximumFractionDigits: 1 });
+
+/** Tor na rodzaj badania; przy znaczniku pierwsza wartość poza normą (albo pierwsza w ogóle). */
+export function examLanes(exams: Exam[], range: DateRange): ExamLane[] {
+  const byName = new Map<string, ExamLane>();
+  for (const m of marks(exams, (e) => e.date, range)) {
+    const flagged = m.item.results.find((r) => flagOf(r));
+    const shown = flagged ?? m.item.results[0];
+    const flag = shown && flagOf(shown);
+    const label = shown
+      ? `${shortName(shown.name)} ${fmt(shown.value)}${flag ? FLAG_ARROW[flag] : ''}`
+      : '';
+    const lane = byName.get(m.item.name) ?? { name: m.item.name, marks: [] };
+    lane.marks.push({ ...m, label, outOfRange: flagged !== undefined });
+    byName.set(m.item.name, lane);
+  }
+  return [...byName.values()];
+}
+
+export interface SymptomLane {
+  name: string;
+  marks: Mark<Symptom>[];
+}
+
+/** Tor na objaw (np. „zawroty głowy”), w kolejności pierwszego wystąpienia w zakresie. */
+export function symptomLanes(symptoms: Symptom[], range: DateRange): SymptomLane[] {
+  const byName = new Map<string, SymptomLane>();
+  for (const m of marks(symptoms, (s) => s.startedAt, range)) {
+    const key = m.item.name.toLocaleLowerCase('pl');
+    const lane = byName.get(key) ?? { name: m.item.name, marks: [] };
+    lane.marks.push(m);
+    byName.set(key, lane);
+  }
+  return [...byName.values()];
+}
+
+export const visitMarks = (visits: Visit[], range: DateRange) =>
+  marks(visits, (v) => v.date, range);
+export const photoMarks = (photos: TimelinePhoto[], range: DateRange) =>
+  marks(photos, (p) => p.takenAt, range);
+export const documentMarks = (docs: DocumentMeta[], range: DateRange) =>
+  marks(docs, (d) => d.date, range);
