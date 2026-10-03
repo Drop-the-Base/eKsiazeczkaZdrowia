@@ -8,6 +8,20 @@ import { useSpot, type Spot } from './useSpot';
 import styles from './DemoGuide.module.css';
 
 const RING_PADDING = 6;
+const RADIUS = 12;
+
+function getMaskPath(left: number, top: number, width: number, height: number, r: number): string {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  if (width <= 0 || height <= 0) {
+    return `M 0 0 H ${w} V ${h} H 0 Z`;
+  }
+  if (r <= 0) {
+    return `M 0 0 H ${w} V ${h} H 0 Z M ${left} ${top} h ${width} v ${height} h -${width} Z`;
+  }
+  return `M 0 0 H ${w} V ${h} H 0 Z M ${left + r} ${top} h ${width - 2 * r} a ${r} ${r} 0 0 1 ${r} ${r} v ${height - 2 * r} a ${r} ${r} 0 0 1 -${r} ${r} h -${width - 2 * r} a ${r} ${r} 0 0 1 -${r} -${r} v -${height - 2 * r} a ${r} ${r} 0 0 1 ${r} -${r} Z`;
+}
+
 /** Card width and its gap to the screen edge (DemoGuide.module.css): the strip it occupies on the right. */
 const CARD_STRIP = 400 + 24;
 
@@ -26,16 +40,20 @@ function Mask({ spot }: { spot: Spot | null }) {
   const left = Math.max(spot.left - RING_PADDING, 0);
   const bottom = Math.min(spot.top + spot.height + RING_PADDING, window.innerHeight);
   const right = Math.min(spot.left + spot.width + RING_PADDING, window.innerWidth);
+  const width = Math.max(right - left, 0);
+  const height = Math.max(bottom - top, 0);
+  const r = Math.max(0, Math.min(RADIUS, width / 2, height / 2));
+
   return (
     <div aria-hidden="true">
-      <div className={styles.panel} style={{ top: 0, left: 0, right: 0, height: top }} />
-      <div className={styles.panel} style={{ top: bottom, left: 0, right: 0, bottom: 0 }} />
-      <div className={styles.panel} style={{ top, left: 0, width: left, height: bottom - top }} />
-      <div className={styles.panel} style={{ top, left: right, right: 0, height: bottom - top }} />
-      <div
-        className={styles.ring}
-        style={{ top, left, width: right - left, height: bottom - top }}
-      />
+      <svg className={styles.mask}>
+        <path
+          className={styles.maskPath}
+          fillRule="evenodd"
+          d={getMaskPath(left, top, width, height, r)}
+        />
+      </svg>
+      <div className={styles.ring} style={{ top, left, width, height }} />
     </div>
   );
 }

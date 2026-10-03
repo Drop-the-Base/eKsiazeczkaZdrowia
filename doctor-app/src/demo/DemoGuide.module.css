@@ -1,14 +1,24 @@
 /* Layers: page < dim 50 < card 150. The dim takes the clicks outside the lit element, not scrolling. */
 
-.dim,
-.panel {
+.dim {
   position: fixed;
+  inset: 0;
   z-index: 50;
   background: rgb(15 23 42 / 0.55);
 }
 
-.dim {
+.mask {
+  position: fixed;
   inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.maskPath {
+  fill: rgb(15 23 42 / 0.55);
+  pointer-events: auto;
 }
 
 .ring {
@@ -207,7 +217,7 @@
 
 @media print {
   .dim,
-  .panel,
+  .mask,
   .ring,
   .card,
   .reopen {
