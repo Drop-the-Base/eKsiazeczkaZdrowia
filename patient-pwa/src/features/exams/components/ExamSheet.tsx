@@ -12,16 +12,25 @@ import {
 import { addExam } from '../useExams';
 import styles from './ExamSheet.module.css';
 
-export function ExamSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
+type Props = {
+  open: boolean;
+  onClose: () => void;
+  /** Wstępnie wypełniony formularz (np. z OCR zdjęcia wydruku). */
+  initial?: ExamForm;
+};
+
+export function ExamSheet({ open, onClose, initial }: Props) {
   return (
     <BottomSheet open={open} onClose={onClose} title="Nowe badanie">
-      {open && <ExamFormView onDone={onClose} />}
+      {open && <ExamFormView initial={initial} onDone={onClose} />}
     </BottomSheet>
   );
 }
 
-function ExamFormView({ onDone }: { onDone: () => void }) {
-  const [form, setForm] = useState<ExamForm>({ name: '', date: todayIso(), rows: [emptyRow()] });
+function ExamFormView({ initial, onDone }: { initial?: ExamForm; onDone: () => void }) {
+  const [form, setForm] = useState<ExamForm>(
+    () => initial ?? { name: '', date: todayIso(), rows: [emptyRow()] },
+  );
   const [errors, setErrors] = useState<ExamErrors>({ rowErrors: [] });
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
