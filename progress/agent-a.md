@@ -33,3 +33,4 @@ Zmergowane taski (dopisuje agent A po każdym merge, patrz `CLAUDE.md`).
 - [x] [A30] <DrugInfoCard>: fakty z RPL bez ostrzeżeń · issue #63 · 2026-10-03 19:13 · atrapy: brak
 - [x] [A27] Import z IKP: wybór pliku PDF → propozycje · issue #57 · 2026-10-03 19:19 · atrapy: brak
 - [x] [A28] Web Share Target (Chrome Android) dla importu · issue #59 · 2026-10-03 19:23 · atrapy: brak
+- [x] [prośba #143] Profil: przycisk „Zablokuj aplikację” · issue #143 · 2026-10-03 19:26 · atrapy: brak
