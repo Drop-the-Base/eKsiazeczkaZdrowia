@@ -127,3 +127,37 @@
     overflow: visible;
   }
 }
+
+.printHeader {
+  display: none;
+}
+
+@media print {
+  .view {
+    display: block;
+    padding: 0;
+  }
+  .view > * + * {
+    margin-top: var(--space-3);
+  }
+  .left {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+  .header,
+  .block {
+    border: none;
+    padding: 0;
+  }
+  .group {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .printHeader {
+    display: block;
+    margin: 0 0 var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+}

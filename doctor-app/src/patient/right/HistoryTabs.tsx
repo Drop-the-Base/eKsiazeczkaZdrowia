@@ -168,7 +168,6 @@ function Documents({ snapshot }: { snapshot: ShareSnapshot }) {
 
 export function HistoryTabs({ snapshot }: { snapshot: ShareSnapshot }) {
   const [tab, setTab] = useState<Tab>('exams');
-  const current = TABS.find((t) => t.id === tab)!;
   return (
     <section className={styles.tabs}>
       <div role="tablist" className={styles.tabList}>
@@ -185,21 +184,29 @@ export function HistoryTabs({ snapshot }: { snapshot: ShareSnapshot }) {
           </button>
         ))}
       </div>
-      <div role="tabpanel" className={styles.panel}>
-        {isOmitted(snapshot, current.section) ? (
-          <p className={styles.muted}>nie udostępniono</p>
-        ) : tab === 'exams' ? (
-          <Exams snapshot={snapshot} />
-        ) : tab === 'photos' ? (
-          <Photos photos={snapshot.photos} />
-        ) : tab === 'visits' ? (
-          <Visits snapshot={snapshot} />
-        ) : tab === 'stopped' ? (
-          <Stopped snapshot={snapshot} />
-        ) : (
-          <Documents snapshot={snapshot} />
-        )}
-      </div>
+      {/* All panels are rendered: on screen only the selected one, in print one below another. */}
+      {TABS.map((t) => (
+        <div
+          key={t.id}
+          role="tabpanel"
+          className={t.id === tab ? styles.panel : `${styles.panel} ${styles.printOnly}`}
+        >
+          <h3 className={styles.panelTitle}>{t.label}</h3>
+          {isOmitted(snapshot, t.section) ? (
+            <p className={styles.muted}>nie udostępniono</p>
+          ) : t.id === 'exams' ? (
+            <Exams snapshot={snapshot} />
+          ) : t.id === 'photos' ? (
+            <Photos photos={snapshot.photos} />
+          ) : t.id === 'visits' ? (
+            <Visits snapshot={snapshot} />
+          ) : t.id === 'stopped' ? (
+            <Stopped snapshot={snapshot} />
+          ) : (
+            <Documents snapshot={snapshot} />
+          )}
+        </div>
+      ))}
     </section>
   );
 }
