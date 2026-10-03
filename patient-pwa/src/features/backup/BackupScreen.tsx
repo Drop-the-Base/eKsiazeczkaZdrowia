@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { MIN_PASSWORD } from '../../db';
+import { DEMO_BACKUP_PASSWORD, isDemo } from '../../demoMode';
 import { Button, Card, LoadingState, PageHeader, TextField } from '../../ui';
 import { ImportForm } from './components/ImportForm';
 import { useExport } from './useExport';
@@ -27,6 +28,23 @@ export function BackupScreen() {
           <strong>Hasła nie można odzyskać.</strong> Bez niego odtworzenie danych z kopii nie jest
           możliwe. Przechowuj je w bezpiecznym miejscu.
         </Card>
+        {isDemo && (
+          <div className={styles.demoHint}>
+            <span>
+              Hasło do testów demo: <strong>{DEMO_BACKUP_PASSWORD}</strong>
+            </span>
+            <button
+              type="button"
+              className={styles.demoFill}
+              onClick={() => {
+                setPassword(DEMO_BACKUP_PASSWORD);
+                setRepeat(DEMO_BACKUP_PASSWORD);
+              }}
+            >
+              Uzupełnij
+            </button>
+          </div>
+        )}
         {exp.state.step === 'working' ? (
           <LoadingState label="Szyfrowanie kopii…" />
         ) : exp.state.step === 'done' ? (

@@ -52,6 +52,16 @@ function UnlockPin({ lock }: { lock: ReturnType<typeof useLock> }) {
         </Button>
       )}
       <PinField label="PIN" value={pin} onChange={setPin} autoFocus />
+      {isDemo && (
+        <div className={styles.demoHint}>
+          <span>
+            PIN w trybie demo: <strong>{DEMO_PIN}</strong>
+          </span>
+          <button type="button" className={styles.demoFill} onClick={() => setPin(DEMO_PIN)}>
+            Uzupełnij
+          </button>
+        </div>
+      )}
       {lock.error && (
         <p className={styles.error} role="alert">
           {lock.error}
@@ -83,13 +93,16 @@ function UnlockPin({ lock }: { lock: ReturnType<typeof useLock> }) {
 export function LockScreen() {
   const lock = useLock();
   const locked = lock.status !== 'unlocked';
+  const [demoReady, setDemoReady] = useState(!isDemo);
   const [demoError, setDemoError] = useState(false);
   // The demo sets its PIN by itself, and a visitor leaving the tab for a while must not be locked out.
   useAutoLock(!locked && !isDemo);
   useEffect(() => {
     if (!isDemo) return;
     let active = true;
-    dbReady.catch(() => active && setDemoError(true));
+    dbReady
+      .then(() => active && setDemoReady(true))
+      .catch(() => active && setDemoError(true));
     return () => {
       active = false;
     };
@@ -127,7 +140,7 @@ export function LockScreen() {
         </svg>
         <span>eKsiazeczkaZdrowia</span>
       </div>
-      {isDemo && !demoError && lock.status !== 'error' ? (
+      {isDemo && !demoReady && !demoError && lock.status !== 'error' ? (
         <div className={styles.card}>
           <h1 className={styles.title}>Przygotowywanie wersji demonstracyjnej…</h1>
           <p className={styles.lead}>

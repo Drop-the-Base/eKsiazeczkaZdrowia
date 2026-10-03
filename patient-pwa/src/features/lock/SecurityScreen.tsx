@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { DEMO_PIN, isDemo } from '../../demoMode';
 import { Button, Card, LoadingState, PageHeader } from '../../ui';
 import { lockNow } from './autoLock';
 import { PinField } from './components/PinField';
@@ -21,6 +22,13 @@ export function SecurityScreen() {
           Dane są szyfrowane kluczem wyprowadzonym z PIN-u. Aplikacja blokuje się automatycznie po
           kilku minutach działania w tle.
         </p>
+        {isDemo && (!sec.supported || sec.enabled) && (
+          <div className={styles.demoHint}>
+            <span>
+              PIN w trybie demo: <strong>{DEMO_PIN}</strong>
+            </span>
+          </div>
+        )}
         <Card className={styles.card}>
           <h2 className={styles.heading}>Odblokowanie biometryczne</h2>
           {!sec.supported ? (
@@ -40,6 +48,20 @@ export function SecurityScreen() {
                 Potwierdź PIN. Następnie urządzenie poprosi o weryfikację biometryczną.
               </p>
               <PinField label="PIN" value={pin} onChange={setPin} />
+              {isDemo && (
+                <div className={styles.demoHint}>
+                  <span>
+                    PIN w trybie demo: <strong>{DEMO_PIN}</strong>
+                  </span>
+                  <button
+                    type="button"
+                    className={styles.demoFill}
+                    onClick={() => setPin(DEMO_PIN)}
+                  >
+                    Uzupełnij
+                  </button>
+                </div>
+              )}
               <Button type="submit" disabled={sec.busy || pin.length < 4}>
                 {sec.busy ? 'Oczekiwanie na urządzenie…' : 'Włącz'}
               </Button>

@@ -1,14 +1,24 @@
 import { useEffect } from 'react';
+import { isDemo } from '../../demoMode';
 import { vault } from '../../db';
 import { shouldLock } from './lock.logic';
 
+export const DEMO_LOCKED_KEY = 'demo-locked';
+
 /**
- * Forgets the key and reloads the page: React state and detached DOM may still hold decrypted data,
- * a fresh page is the only way to be sure it is gone. The URL stays, so after the PIN the patient
- * is back on the same screen.
+ * Forgets the key. In production reloads the page to clear decrypted memory; in demo keeps
+ * the state and records the lock so automatic startDemo does not unlock it immediately.
  */
 export function lockNow(): void {
   vault.lock();
+  if (isDemo) {
+    try {
+      sessionStorage.setItem(DEMO_LOCKED_KEY, '1');
+    } catch {
+      // storage blocked
+    }
+    return;
+  }
   window.location.reload();
 }
 

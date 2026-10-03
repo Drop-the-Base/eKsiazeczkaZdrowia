@@ -50,7 +50,15 @@ export function useLock() {
     if (invalid) return setError(invalid);
     void run(() => vault.setup(pin), 'Nie udało się zapisać PIN-u');
   };
-  const unlock = (pin: string) => void run(() => vault.unlock(pin), 'Nie udało się odblokować');
+  const unlock = (pin: string) =>
+    void run(async () => {
+      await vault.unlock(pin);
+      try {
+        sessionStorage.removeItem('demo-locked');
+      } catch {
+        // storage blocked
+      }
+    }, 'Nie udało się odblokować');
   const wipe = () => void run(() => vault.wipe(), 'Nie udało się usunąć danych');
   const unlockBiometric = () =>
     void run(() => biometric.unlock(), 'Odblokowanie biometryczne nie powiodło się. Wpisz PIN.');

@@ -34,7 +34,12 @@ export async function startDemo(
   vault: Vault,
   opts: { pin: string; fresh: boolean; now: IsoDateTime },
 ): Promise<void> {
-  if (!opts.fresh && (await dexie.meta.get('vault'))) return vault.unlock(opts.pin);
+  const isManuallyLocked =
+    typeof sessionStorage !== 'undefined' && sessionStorage.getItem('demo-locked') === '1';
+  if (!opts.fresh && (await dexie.meta.get('vault'))) {
+    if (!isManuallyLocked) return vault.unlock(opts.pin);
+    return;
+  }
   await vault.wipe();
   await vault.setup(opts.pin);
   await loadDemoData(dexie, db, opts.now);
