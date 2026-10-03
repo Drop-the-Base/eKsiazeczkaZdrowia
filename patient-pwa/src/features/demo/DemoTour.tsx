@@ -136,6 +136,17 @@ export function DemoTour() {
 
   return (
     <>
+      {tour.showing && (
+        <>
+          <div className={styles.inputBlocker} aria-hidden="true" />
+          <div className={styles.hintBadge} role="status" aria-live="polite">
+            <span className={styles.hintIcon} aria-hidden="true">
+              ↔
+            </span>
+            Możesz przybliżać oś (+ / −) i przewijać ją w poziomie
+          </div>
+        </>
+      )}
       <Mask spot={tour.spot} />
       <aside
         className={collapsed ? `${styles.card} ${styles.collapsed}` : styles.card}

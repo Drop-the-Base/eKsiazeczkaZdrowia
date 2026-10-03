@@ -18,42 +18,59 @@ function setText(field: HTMLTextAreaElement, text: string): void {
   field.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
+function animateZoom(
+  el: HTMLElement,
+  from: number,
+  to: number,
+  durationMs: number,
+): Promise<void> {
+  return new Promise((resolve) => {
+    const start = performance.now();
+    const step = (now: number) => {
+      const elapsed = now - start;
+      const t = Math.min(1, elapsed / durationMs);
+      // Smooth ease-in-out curve
+      const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      const cur = from + (to - from) * ease;
+      el.dispatchEvent(new CustomEvent('timeline:zoom', { detail: { zoom: cur } }));
+      if (t < 1) {
+        requestAnimationFrame(step);
+      } else {
+        resolve();
+      }
+    };
+    requestAnimationFrame(step);
+  });
+}
+
 /**
  * "Pokaż mi": does what the visitor would do, in the real app. Types the sentence into the voice
  * field (visibly, letter by letter) and sends it; confirms a one-time notice if one appears.
  */
 export async function runShowMe(action: ShowMe): Promise<void> {
   if ('action' in action) {
-    const zoomIn = await waitForTarget('timeline-zoom-in');
-    const zoomOut = await waitForTarget('timeline-zoom-out');
     const scroller = await waitForTarget('timeline-scroller');
+    if (!scroller) throw new Error('Nie znaleziono osi czasu');
 
-    // 1. Przybliżenie (zoom in)
-    if (zoomIn) {
-      zoomIn.click();
-      await sleep(350);
-      zoomIn.click();
-      await sleep(500);
-    }
+    // 1. Płynne przybliżenie (zoom in)
+    await animateZoom(scroller, 1, 2.2, 1200);
+    await sleep(400);
 
-    // 2. Przewijanie lewo / prawo
-    if (scroller) {
-      const scrollStep = Math.min(300, Math.max(150, scroller.clientWidth / 2));
-      scroller.scrollBy({ left: -scrollStep, behavior: 'smooth' });
-      await sleep(650);
-      scroller.scrollBy({ left: -scrollStep, behavior: 'smooth' });
-      await sleep(650);
-      scroller.scrollBy({ left: scrollStep * 2, behavior: 'smooth' });
-      await sleep(700);
-    }
+    // 2. Płynne przewinięcie w lewo
+    const scrollDistance = Math.min(350, Math.max(160, scroller.clientWidth * 0.7));
+    scroller.scrollBy({ left: -scrollDistance, behavior: 'smooth' });
+    await sleep(1300);
 
-    // 3. Oddalenie z powrotem (zoom out)
-    if (zoomOut) {
-      zoomOut.click();
-      await sleep(350);
-      zoomOut.click();
-      await sleep(400);
-    }
+    // 3. Płynne przewinięcie w prawo
+    scroller.scrollBy({ left: scrollDistance, behavior: 'smooth' });
+    await sleep(1300);
+
+    // 4. Pauza przed oddaleniem
+    await sleep(400);
+
+    // 5. Płynne oddalenie (zoom out) do pełnego dopasowania
+    await animateZoom(scroller, 2.2, 1, 1100);
+    await sleep(300);
     return;
   }
   if ('press' in action) {
