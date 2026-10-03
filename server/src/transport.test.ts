@@ -140,6 +140,23 @@ describe('transport (doctor ↔ relay ↔ patient)', () => {
     await waitFor(patient.onStatus, 'error');
   });
 
+  it('accepts the patient again after the page was reloaded, with a new code', async () => {
+    const url = await startRelay();
+    const doctor = await createSession(url, socketFactory());
+    const codes: string[] = [];
+    doctor.onVerificationCode((c) => codes.push(c));
+    const first = await connect(url, doctor.qrPayload, socketFactory());
+    first.disconnect();
+    await new Promise((r) => setTimeout(r, 100));
+    const second = await connect(url, doctor.qrPayload, socketFactory());
+    await new Promise((r) => setTimeout(r, 100));
+    expect(codes).toEqual([first.verificationCode, second.verificationCode]);
+    const received = new Promise<ShareSnapshot>((r) => doctor.onSnapshot(r));
+    await second.sendSnapshot(demoSnapshot());
+    expect((await received).profile.name).toBe('Anna Kowalska');
+    second.disconnect();
+  });
+
   it('rejects a foreign QR code and an unknown session', async () => {
     const url = await startRelay();
     await expect(connect(url, 'https://example.com', socketFactory())).rejects.toThrow('kod QR');

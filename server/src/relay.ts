@@ -87,7 +87,8 @@ export function createRelay({ ttlMs = SESSION_TTL_MS, maxSessions = 1000 }: Rela
         if (member) return error('bad-message', 'Połączenie ma już sesję');
         const session = sessions.get(msg.sessionId);
         if (!session) return error('no-session', 'Sesja nie istnieje albo wygasła');
-        if (session.patient) return error('session-full', 'Do sesji dołączył już pacjent');
+        // A disconnected patient (e.g. the page was reloaded) may be replaced; the doctor re-checks the code.
+        if (session.patient?.ws) return error('session-full', 'Do sesji dołączył już pacjent');
         session.patient = { ws, resumeToken: token(24) };
         attach(ws, session, 'patient');
         send(ws, {
