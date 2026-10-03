@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Button, Card, EmptyState, LoadingState, PageHeader, formatDate } from '../../ui';
 import { ExamResults } from './components/ExamResults';
+import { OcrButton } from '../ocr';
 import { ExamSheet } from './components/ExamSheet';
+import type { ExamForm } from './exams.logic';
 import { FLAG_ARROW, flagOf, newestFirst, outOfRange } from './exams.logic';
 import { removeExam, useExams } from './useExams';
 import styles from './ExamsScreen.module.css';
@@ -9,6 +11,7 @@ import styles from './ExamsScreen.module.css';
 export function ExamsScreen() {
   const exams = useExams();
   const [adding, setAdding] = useState(false);
+  const [initial, setInitial] = useState<ExamForm>();
   const [error, setError] = useState<string | null>(null);
 
   const onRemove = (id: string, name: string) => {
@@ -30,6 +33,12 @@ export function ExamsScreen() {
         }
       />
       <div className={styles.content}>
+        <OcrButton
+          onRecognized={(form) => {
+            setInitial(form);
+            setAdding(true);
+          }}
+        />
         {error && (
           <p className={styles.error} role="alert">
             {error}
@@ -70,7 +79,14 @@ export function ExamsScreen() {
           })
         )}
       </div>
-      <ExamSheet open={adding} onClose={() => setAdding(false)} />
+      <ExamSheet
+        open={adding}
+        initial={initial}
+        onClose={() => {
+          setAdding(false);
+          setInitial(undefined);
+        }}
+      />
     </>
   );
 }
