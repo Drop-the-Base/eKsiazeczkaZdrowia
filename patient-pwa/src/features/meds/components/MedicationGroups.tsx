@@ -16,7 +16,11 @@ export function MedicationGroups({ current, stopped, onOpen }: Props) {
   return (
     <div className={styles.groups}>
       {CATEGORY_ORDER.map((category) => (
-        <section key={category} className={styles.group}>
+        <section
+          key={category}
+          className={styles.group}
+          data-tour={category === 'supplement' ? 'supplements' : undefined}
+        >
           <h2 className={styles.label}>
             <span className={styles.dot} style={{ background: CATEGORY_COLOR[category] }} />
             {CATEGORY_LABEL[category]}

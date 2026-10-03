@@ -152,11 +152,16 @@ export function AbroadScreen() {
   return (
     <>
       <PageHeader title="Za granicą" />
-      <div className={styles.content}>
+      <div className={styles.content} data-tour="abroad">
         <p className={styles.lead}>Pokaż lekarzowi albo wydrukuj do PDF. Działa bez internetu.</p>
         <div className={styles.langs} role="group" aria-label="Język lekarza">
           {LANGUAGES.map((l) => (
-            <Chip key={l} selected={abroad.lang === l} onClick={() => abroad.setLang(l)}>
+            <Chip
+              key={l}
+              selected={abroad.lang === l}
+              onClick={() => abroad.setLang(l)}
+              data-tour={`lang-${l}`}
+            >
               {ABROAD_LABELS[l].languageName}
             </Chip>
           ))}

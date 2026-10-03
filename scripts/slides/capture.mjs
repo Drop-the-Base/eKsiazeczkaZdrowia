@@ -21,7 +21,9 @@ async function phone(name, path, steps = async () => {}) {
   const context = await browser.createBrowserContext();
   const page = await context.newPage();
   await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 2 });
-  await page.goto(`${BASE}/demo${path === '/' ? '' : path}`, { waitUntil: 'networkidle0' });
+  await page.goto(`${BASE}/demo${path === '/' ? '' : path}?bez-przewodnika`, {
+    waitUntil: 'networkidle0',
+  });
   await sleep(1500);
   const close = await page.$(xpButton('Zamknij'));
   if (close) await close.click();
