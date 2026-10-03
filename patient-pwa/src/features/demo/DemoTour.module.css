@@ -257,6 +257,12 @@
   margin-top: var(--space-4);
 }
 
+.handover {
+  flex-basis: 100%;
+  margin: 0;
+  font-weight: 600;
+}
+
 .reopen {
   position: fixed;
   z-index: 12;
