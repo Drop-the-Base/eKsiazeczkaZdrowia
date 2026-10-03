@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Card, EmptyState, ErrorState, LoadingState, PageHeader } from '../../ui';
+import { ABROAD_PATH } from '../abroad';
 import { POST_VISIT_PATH } from '../post-visit';
 import { SHARE_PATH } from '../share';
 import { NoteForm } from './components/NoteForm';
@@ -17,9 +18,14 @@ export function VisitListScreen() {
           Udostępnij lekarzowi
           <span className={styles.shareHint}>Podsumowanie i historia przez kod QR, szyfrowane</span>
         </Link>
-        <Link to={POST_VISIT_PATH} className={styles.secondaryLink}>
-          Po wizycie: zapisz, co ustalił lekarz
-        </Link>
+        <div className={styles.links}>
+          <Link to={POST_VISIT_PATH} className={styles.secondaryLink}>
+            Po wizycie
+          </Link>
+          <Link to={ABROAD_PATH} className={styles.secondaryLink}>
+            Za granicą
+          </Link>
+        </div>
         <Card>
           <h2 className={styles.heading}>Powiem lekarzowi</h2>
           <NoteForm />

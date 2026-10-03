@@ -16,9 +16,11 @@ export default function TellDoctorOverlay() {
   const [saved, setSaved] = useState(false);
 
   if (pathname === VISIT_PATH) return null;
+  // Not over the visit flows (sharing, post-visit, the summary shown to a doctor abroad).
+  const inVisitFlow = pathname.startsWith(`${VISIT_PATH}/`);
   return (
     <>
-      <BeforeVisitSheet />
+      {!inVisitFlow && <BeforeVisitSheet />}
       <button
         type="button"
         className={styles.fab}

@@ -1,0 +1,128 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+.lead {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+.langs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.sheet h3 {
+  margin: 0 0 var(--space-1);
+  font-size: var(--font-size-md);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+.sheet h4 {
+  margin: var(--space-2) 0 var(--space-1);
+  font-size: var(--font-size-md);
+}
+.sheet ul {
+  margin: 0;
+  padding-left: var(--space-5);
+}
+.title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+}
+.intro,
+.muted {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+.facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+}
+.facts dt {
+  color: var(--color-text-muted);
+}
+.facts dd {
+  margin: 0;
+  font-weight: 600;
+}
+.allergies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+}
+.allergy {
+  padding: 2px var(--space-2);
+  border: 1px solid var(--color-text);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+.group + .group {
+  margin-top: var(--space-1);
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+.table th,
+.table td {
+  padding: var(--space-1);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+}
+.table th {
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+.brand,
+.code {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+.pl {
+  color: var(--color-text-muted);
+  font-size: 0.75em;
+}
+.footer {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
+.footer p {
+  margin: 0;
+}
+
+/* Print / PDF: only the summary sheet, without the app around it. */
+@media print {
+  :global(body *) {
+    visibility: hidden;
+  }
+  .sheet,
+  .sheet * {
+    visibility: visible;
+  }
+  .sheet {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    border: none;
+  }
+}

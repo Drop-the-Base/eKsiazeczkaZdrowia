@@ -27,3 +27,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B23] Lista „powiem lekarzowi” pokazuje się przed wizytą · issue #50 · 2026-10-03 18:48 · atrapy: brak
 - [x] [prośba #130 + B38] handleQuery (A23) podpięte, today w LlmQueryRequest, /llm/visit-note przez LlmClient z regułami · issue #130, #123 · 2026-10-03 18:51 · atrapy: brak
 - [x] [B24] shared/dict: ATC, ICD-10, tłumaczenia EN/DE/ES · issue #52 · 2026-10-03 18:55 · atrapy: brak
+- [x] [B25] Ekran „Za granicą”: podsumowanie offline + PDF · issue #54 · 2026-10-03 18:58 · atrapy: brak
