@@ -8,3 +8,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B04] loadDemoData() i reset danych demo · issue #11 · 2026-10-03 17:41 · atrapy: brak
 - [x] [B05] Serwer: szkielet Node + ws, statyki, nagłówki, podpięcie LLM · issue #12 · 2026-10-03 17:44 · atrapy: POST /llm/query (do A23), /relay odpowiada błędem (do B08)
 - [x] [B06] HTTPS w dev: tunel dla telefonu · issue #13 · 2026-10-03 17:46 · atrapy: brak
+- [x] [prośba #89] resolveStaticPath na Windowsie · issue #89 · 2026-10-03 17:48 · atrapy: brak

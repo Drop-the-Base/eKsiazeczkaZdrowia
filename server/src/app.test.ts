@@ -1,7 +1,7 @@
 import { mkdtemp, mkdir, writeFile } from 'node:fs/promises';
 import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { WebSocket } from 'ws';
 import { createApp } from './app';
@@ -85,6 +85,9 @@ describe('resolveStaticPath', () => {
     expect(resolveStaticPath('/srv/app', '/../etc/passwd')).toBeNull();
     expect(resolveStaticPath('/srv/app', '/%2e%2e/etc/passwd')).toBeNull();
     expect(resolveStaticPath('/srv/app', '/%E0%A4%A')).toBeNull();
-    expect(resolveStaticPath('/srv/app', '/assets/a.js')).toBe('/srv/app/assets/a.js');
+    expect(resolveStaticPath('/srv/app', '/..\\..\\etc\\passwd')).toBeNull();
+    expect(resolveStaticPath('/srv/app', '/assets/a.js')).toBe(
+      join(resolve('/srv/app'), 'assets', 'a.js'),
+    );
   });
 });
