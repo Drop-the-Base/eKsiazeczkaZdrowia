@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, EmptyState, List, ListItem, LoadingState, PageHeader } from '../../ui';
+import { BACKUP_PATH } from '../backup';
 import { lockNow } from '../lock';
 import { DemoDataCard } from './components/DemoDataCard';
 import { DiagnosesSection } from './components/DiagnosesSection';
@@ -63,6 +64,12 @@ export function ProfileScreen() {
             subtitle="Import kart, wyników i e-recept"
             trailing="›"
             onClick={() => navigate('/import')}
+          />
+          <ListItem
+            title="Kopia zapasowa"
+            subtitle="Zaszyfrowany plik na nowy telefon"
+            trailing="›"
+            onClick={() => navigate(BACKUP_PATH)}
           />
         </List>
         <DiagnosesSection />
