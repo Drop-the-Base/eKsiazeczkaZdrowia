@@ -130,6 +130,16 @@ describe('transport (doctor ↔ relay ↔ patient)', () => {
     await expect(patient.sendSnapshot(demoSnapshot())).rejects.toThrow();
   });
 
+  it('aborts on the doctor side when the patient rejects the code', async () => {
+    const url = await startRelay();
+    const doctor = await createSession(url, socketFactory());
+    const patient = await connect(url, doctor.qrPayload, socketFactory());
+    await new Promise<void>((r) => doctor.onVerificationCode(() => r()));
+    patient.rejectVerification();
+    await waitFor(doctor.onStatus, 'error');
+    await waitFor(patient.onStatus, 'error');
+  });
+
   it('rejects a foreign QR code and an unknown session', async () => {
     const url = await startRelay();
     await expect(connect(url, 'https://example.com', socketFactory())).rejects.toThrow('kod QR');

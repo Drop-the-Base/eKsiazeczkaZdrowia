@@ -190,6 +190,12 @@ export async function connect(
           pending = undefined;
         }
       },
+      rejectVerification() {
+        if (finished) return;
+        socket.send({ type: 'relay', payload: { kind: 'verify-mismatch' } });
+        socket.send({ type: 'end-session' });
+        finish('error');
+      },
       disconnect() {
         finish('ended');
       },

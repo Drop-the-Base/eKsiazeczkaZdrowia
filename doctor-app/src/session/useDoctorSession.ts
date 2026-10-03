@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   createSession,
   relayUrl,
@@ -8,7 +8,7 @@ import {
 } from '@ez/shared';
 import { isTerminal } from './session.logic';
 
-export type EndReason = 'ended' | 'expired' | 'error';
+export type EndReason = 'ended' | 'expired' | 'error' | 'mismatch';
 
 export interface DoctorSessionState {
   status: TransportStatus;
@@ -17,6 +17,8 @@ export interface DoctorSessionState {
   code?: string;
   /** Patient data – only ever in this state, never persisted. */
   snapshot?: ShareSnapshot;
+  /** The doctor confirmed that the code matches the phone; data is shown only after that. */
+  verified: boolean;
   error?: string;
 }
 
@@ -27,6 +29,7 @@ export interface DoctorSessionApi extends DoctorSessionState {
   end(): void;
   /** Tries again after the server could not be reached. */
   retry(): void;
+  confirmCode(): void;
   rejectVerification(): void;
 }
 
@@ -51,12 +54,16 @@ const PREVIOUS_END: EndReason | undefined = (() => {
   if (!reason) return undefined;
   url.searchParams.delete(END_PARAM);
   window.history.replaceState(null, '', url);
-  return reason === 'ended' || reason === 'expired' || reason === 'error' ? reason : undefined;
+  return reason === 'ended' || reason === 'expired' || reason === 'error' || reason === 'mismatch'
+    ? reason
+    : undefined;
 })();
 
 export function useDoctorSession(): DoctorSessionApi {
   const [session, setSession] = useState<DoctorSession>();
-  const [state, setState] = useState<DoctorSessionState>({ status: 'connecting' });
+  /** Set when the doctor pressed "codes differ", so the next page says why the visit ended. */
+  const rejected = useRef(false);
+  const [state, setState] = useState<DoctorSessionState>({ status: 'connecting', verified: false });
 
   useEffect(() => {
     let cancelled = false;
@@ -74,8 +81,14 @@ export function useDoctorSession(): DoctorSessionApi {
         offs.push(
           s.onStatus((status) => {
             // Any end of the session: start over in a fresh page. An unused QR code is replaced silently.
-            if (isTerminal(status))
-              return reloadClean(patientJoined ? (status as EndReason) : undefined);
+            if (isTerminal(status)) {
+              const reason = rejected.current
+                ? 'mismatch'
+                : patientJoined
+                  ? (status as EndReason)
+                  : undefined;
+              return reloadClean(reason);
+            }
             setState((st) => ({ ...st, status }));
           }),
           s.onVerificationCode((code) => {
@@ -89,6 +102,7 @@ export function useDoctorSession(): DoctorSessionApi {
         if (!cancelled) {
           setState({
             status: 'error',
+            verified: false,
             error: err instanceof Error ? err.message : 'Nie udało się połączyć',
           });
         }
@@ -111,7 +125,12 @@ export function useDoctorSession(): DoctorSessionApi {
 
   const end = useCallback(() => session?.close(), [session]);
   const retry = useCallback(() => reloadClean(), []);
-  const rejectVerification = useCallback(() => session?.rejectVerification(), [session]);
+  const confirmCode = useCallback(() => setState((st) => ({ ...st, verified: true })), []);
+  const rejectVerification = useCallback(() => {
+    if (!session) return;
+    rejected.current = true;
+    session.rejectVerification();
+  }, [session]);
 
-  return { ...state, previousEnd: PREVIOUS_END, end, retry, rejectVerification };
+  return { ...state, previousEnd: PREVIOUS_END, end, retry, confirmCode, rejectVerification };
 }

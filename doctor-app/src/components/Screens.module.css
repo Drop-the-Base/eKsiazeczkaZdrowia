@@ -76,3 +76,22 @@
   border-radius: var(--radius-sm);
   background: var(--color-primary-soft);
 }
+.code {
+  margin: 0;
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  font-variant-numeric: tabular-nums;
+}
+.actions {
+  display: flex;
+  gap: var(--space-3);
+}
+.danger {
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-danger);
+  font-weight: 600;
+}

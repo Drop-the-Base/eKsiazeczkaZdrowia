@@ -32,3 +32,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B27] Szyfrowanie bazy AES-256-GCM, klucz z PIN-u (Argon2id) · issue #58 · 2026-10-03 19:06 · atrapy: brak (auto-blokada po czasie w B28)
 - [x] [B28] Blokada aplikacji PIN-em · issue #60 · 2026-10-03 19:09 · atrapy: przycisk „Zablokuj” w Profilu – prośba do A
 - [x] [B33] Szlif designu ekranów B i widoku lekarza · issue #73 · 2026-10-03 19:13 · atrapy: brak
+- [x] [B14] Kod weryfikacyjny na telefonie i u lekarza · issue #31 · 2026-10-03 19:17 · atrapy: brak
