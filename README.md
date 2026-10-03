@@ -67,3 +67,13 @@ Zrzut ekranu z klikaniem (sprawdzanie ekranów bez ręcznego klikania; puppeteer
 npm run build -w patient-pwa && npx vite preview --port 4173 -c patient-pwa/vite.config.ts patient-pwa &
 node scripts/shot.mjs "http://localhost:4173/leki?demo=reset" out.png "click:+ Dodaj" "type:input[type=search]|ibupr" "wait:1000"
 ```
+
+## Slajdy
+
+`docs/slides/prywatna-karta-zdrowia.pdf` (10 slajdów, 1280×720) z `docs/slides/index.html`. Odświeżenie zrzutów i PDF:
+
+```bash
+npm run build && PORT=8799 npm start &       # serwer z PWA, aplikacją lekarza i przekaźnikiem
+node scripts/slides/capture.mjs              # zrzuty ekranów → docs/slides/img/
+node scripts/slides/build-pdf.mjs --png      # PDF (+ podglądy preview-N.png, poza gitem)
+```
