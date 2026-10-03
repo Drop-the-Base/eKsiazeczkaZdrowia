@@ -91,3 +91,4 @@ Zmergowane taski (dopisuje agent po każdym merge, patrz `CLAUDE.md`).
 - [x] [T00] Teksty w aplikacji: rzeczowy, profesjonalny ton (pacjent, lekarz, demo) · bez issue · 2026-10-03 21:14 · atrapy: brak
 - [x] [A35] Oś czasu: przewijanie lewo/prawo, przybliżanie skali, stała lewa kolumna etykiet · issue #188 · 2026-10-03 21:23 · atrapy: brak
 - [x] [D08] Demo: odblokowanie przewijania strony w przewodniku pacjenta i lekarza · issue #190 · 2026-10-03 21:32 · atrapy: brak
+- [x] [D16] Skrócenie demo pacjenta (usunięcie kroków 4, 7, 8) + demonstracja zoomu i scrolla osi czasu · issue #200 · 2026-10-03 21:43 · atrapy: brak

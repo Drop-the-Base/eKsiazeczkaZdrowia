@@ -196,9 +196,10 @@ export function DemoTour() {
             <Button
               variant="secondary"
               disabled={tour.showing}
-              onClick={() => {
+              onClick={async () => {
                 setCollapsed(true);
-                tour.showMe();
+                await tour.showMe();
+                setCollapsed(false);
               }}
             >
               {tour.showing ? 'Trwa demonstracja…' : 'Zademonstruj'}

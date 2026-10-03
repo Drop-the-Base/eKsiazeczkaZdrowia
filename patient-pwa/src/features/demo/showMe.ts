@@ -23,6 +23,39 @@ function setText(field: HTMLTextAreaElement, text: string): void {
  * field (visibly, letter by letter) and sends it; confirms a one-time notice if one appears.
  */
 export async function runShowMe(action: ShowMe): Promise<void> {
+  if ('action' in action) {
+    const zoomIn = await waitForTarget('timeline-zoom-in');
+    const zoomOut = await waitForTarget('timeline-zoom-out');
+    const scroller = await waitForTarget('timeline-scroller');
+
+    // 1. Przybliżenie (zoom in)
+    if (zoomIn) {
+      zoomIn.click();
+      await sleep(350);
+      zoomIn.click();
+      await sleep(500);
+    }
+
+    // 2. Przewijanie lewo / prawo
+    if (scroller) {
+      const scrollStep = Math.min(300, Math.max(150, scroller.clientWidth / 2));
+      scroller.scrollBy({ left: -scrollStep, behavior: 'smooth' });
+      await sleep(650);
+      scroller.scrollBy({ left: -scrollStep, behavior: 'smooth' });
+      await sleep(650);
+      scroller.scrollBy({ left: scrollStep * 2, behavior: 'smooth' });
+      await sleep(700);
+    }
+
+    // 3. Oddalenie z powrotem (zoom out)
+    if (zoomOut) {
+      zoomOut.click();
+      await sleep(350);
+      zoomOut.click();
+      await sleep(400);
+    }
+    return;
+  }
   if ('press' in action) {
     const button = await waitForTarget(action.press);
     if (!button) throw new Error('Nie znaleziono przycisku na ekranie');
