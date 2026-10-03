@@ -4,9 +4,9 @@ import type { DrugEntry } from '../drugs.logic';
 import { useDrugSearch } from '../useDrugSearch';
 import styles from './DrugPicker.module.css';
 
-type Props = DrugPickerProps & {
+type Props = Omit<DrugPickerProps, 'onSelect'> & {
   label?: string;
-  /** Wybór z RPL z informacją o OTC (podpowiedź grupy leku). */
+  /** Jak w kontrakcie, ale lek z RPL ma informację o OTC (podpowiedź grupy leku). */
   onSelect: (pick: { drug?: DrugEntry; name: string }) => void;
 };
 
