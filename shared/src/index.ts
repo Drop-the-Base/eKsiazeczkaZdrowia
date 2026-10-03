@@ -5,3 +5,4 @@ export * from './demo-snapshot.js';
 export * from './crypto/index.js';
 export * from './transport/index.js';
 export * from './summary/buildVisitSummary.js';
+export * from './dict/index.js';
