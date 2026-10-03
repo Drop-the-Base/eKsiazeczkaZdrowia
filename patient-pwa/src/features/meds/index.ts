@@ -8,3 +8,5 @@ export {
   isCurrent,
 } from './meds.logic';
 export { useMedications } from './useMedications';
+export { MedicationSheet } from './components/MedicationSheet';
+export { saveMedication } from './saveMedication';
