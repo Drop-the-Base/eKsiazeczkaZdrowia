@@ -40,3 +40,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B30] Eksport: zaszyfrowany plik z hasła · issue #64 · 2026-10-03 19:35 · atrapy: wejście z Profilu – prośba do A
 - [x] [B31] Import kopii + przypomnienie o eksporcie · issue #66 · 2026-10-03 19:38 · atrapy: brak
 - [x] [B40] Widok lekarza: Podsumowanie + sekcje · issue #162 · 2026-10-03 19:44 · atrapy: brak
+- [x] [B39] Zmiana nazwy na „Prywatna Karta Zdrowia” (ekrany B, aplikacja lekarza) · issue #147 · 2026-10-03 19:46 · atrapy: brak
