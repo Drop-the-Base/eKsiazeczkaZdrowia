@@ -50,7 +50,7 @@ export function SinceLastVisit({ snapshot, onSelect }: Props) {
         ),
       ),
     ];
-    rows.push({ label: 'Leki', content: meds.length > 0 ? meds : 'bez zmian' });
+    rows.push({ label: 'Leki i suplementy', content: meds.length > 0 ? meds : 'bez zmian' });
     const total = s.adherence.taken + s.adherence.skipped;
     rows.push({
       label: 'Regularność',

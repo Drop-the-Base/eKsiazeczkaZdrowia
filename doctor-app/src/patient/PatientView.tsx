@@ -30,7 +30,7 @@ export function PatientView({ snapshot }: { snapshot: ShareSnapshot }) {
   };
   const notShared = (id: SectionId) => tabs.find((t) => t.id === id)?.omitted;
 
-  const sections: { id: SectionId; title: string; body: React.ReactNode }[] = [
+  const sections: { id: SectionId; title: string; hint?: string; body: React.ReactNode }[] = [
     {
       id: 'summary',
       title: 'Podsumowanie',
@@ -41,7 +41,12 @@ export function PatientView({ snapshot }: { snapshot: ShareSnapshot }) {
       title: 'Oś czasu',
       body: <TimelineSection snapshot={snapshot} highlight={highlight} onSelect={setHighlight} />,
     },
-    { id: 'meds', title: 'Leki', body: <MedsSection snapshot={snapshot} /> },
+    {
+      id: 'meds',
+      title: 'Wszystko, co przyjmuje',
+      hint: 'leki z recepty, bez recepty, suplementy i zioła',
+      body: <MedsSection snapshot={snapshot} />,
+    },
     { id: 'exams', title: 'Badania', body: <ExamsSection snapshot={snapshot} /> },
     { id: 'photos', title: 'Zdjęcia', body: <PhotosSection photos={snapshot.photos} /> },
     { id: 'visits', title: 'Wizyty', body: <VisitsSection snapshot={snapshot} /> },
@@ -68,6 +73,7 @@ export function PatientView({ snapshot }: { snapshot: ShareSnapshot }) {
           }
         >
           {s.id !== 'summary' && <h2 className={sectionStyles.sectionTitle}>{s.title}</h2>}
+          {s.hint && <p className={sectionStyles.muted}>{s.hint}</p>}
           {notShared(s.id) || (s.id === 'meds' && isOmitted(snapshot, 'medications')) ? (
             <p className={sectionStyles.muted}>nie udostępniono</p>
           ) : (
