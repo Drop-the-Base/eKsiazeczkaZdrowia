@@ -15,3 +15,4 @@ Zmergowane taski (dopisuje agent A po każdym merge, patrz `CLAUDE.md`).
 - [x] [A10] Dodawanie i edycja leku · issue #22 · 2026-10-03 18:04 · atrapy: brak
 - [x] [A11] Odstawienie / zmiana leku z pytaniem o powód · issue #24 · 2026-10-03 18:10 · atrapy: brak
 - [x] [A12] Pytanie „czy bierzesz coś jeszcze?” (suplementy, zioła) · issue #26 · 2026-10-03 18:13 · atrapy: brak
+- [x] [A13] Potwierdzanie leków na dziś · issue #28 · 2026-10-03 18:16 · atrapy: ekran pod /dzis (wejście z profilu) do czasu osi czasu A20

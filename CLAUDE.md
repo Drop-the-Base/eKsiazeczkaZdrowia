@@ -80,7 +80,7 @@ features/meds/
 - **Czysta logika** (`*.logic.ts`, np. `parseEntry`, `buildVisitSummary`, `runFilter`): funkcje dane → dane, bez efektów ubocznych. Daty przekazuj parametrem (`now`), nie wołaj `new Date()` w środku.
 - **`db/`** to jedyne miejsce z Dexie; API po encjach (`db.medications.list()`, `add`, `update`…), zwraca typy z `shared/types.ts`.
 - **`shared/`**: czysty TypeScript – bez Reacta i bez DOM (wyjątek: WebCrypto w `shared/crypto/`).
-- **Inna funkcja** importowana tylko przez jej `index.ts`; bez cykli między funkcjami.
+- **Inna funkcja** importowana tylko przez jej `index.ts` – wyjątek: czysta logika (`features/x/x.logic.ts`) może importować cudzy `*.logic.ts` bezpośrednio, żeby testy w Node nie ciągnęły komponentów i bazy. Bez cykli między funkcjami.
 - **`server/`**: cienki. `index.ts` = routing i nagłówki; jeden plik na handler; jedyny stan to sesje przekaźnika w pamięci.
 - **`doctor-app/`**: ten sam podział (komponenty → hooki → logika), stan sesji w jednym hooku / kontekście, nic trwałego.
 
