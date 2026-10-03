@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { BottomSheet } from '../../ui';
+import { BeforeVisitSheet } from './components/BeforeVisitSheet';
 import { NoteForm } from './components/NoteForm';
 import { VISIT_PATH } from './route';
 import styles from './overlay.module.css';
 
-/** "Powiem lekarzowi" from any screen (except the list itself, which has its own form). */
+/**
+ * "Powiem lekarzowi" from any screen (except the list itself, which has its own form),
+ * plus the list opening by itself before a follow-up visit.
+ */
 export default function TellDoctorOverlay() {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
@@ -14,6 +18,7 @@ export default function TellDoctorOverlay() {
   if (pathname === VISIT_PATH) return null;
   return (
     <>
+      <BeforeVisitSheet />
       <button
         type="button"
         className={styles.fab}
