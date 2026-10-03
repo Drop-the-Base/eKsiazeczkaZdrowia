@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { MIN_PASSWORD } from '../../db';
 import { Button, Card, LoadingState, PageHeader, TextField } from '../../ui';
+import { ImportForm } from './components/ImportForm';
 import { useExport } from './useExport';
 import styles from './BackupScreen.module.css';
 
@@ -20,6 +21,7 @@ export function BackupScreen() {
           Twoje dane są tylko na tym telefonie. Zapisz zaszyfrowaną kopię (np. na dysku albo w
           chmurze), żeby przenieść je na nowy telefon albo odzyskać po utracie tego.
         </p>
+        <h2 className={styles.heading}>Zapisz kopię</h2>
         <Card className={styles.warning} role="note">
           <strong>Hasła nie da się odzyskać.</strong> Bez niego kopia jest bezużyteczna – także dla
           nas. Zapisz je w bezpiecznym miejscu.
@@ -55,6 +57,9 @@ export function BackupScreen() {
             </Button>
           </form>
         )}
+
+        <h2 className={styles.heading}>Wczytaj kopię na tym telefonie</h2>
+        <ImportForm />
       </div>
     </>
   );

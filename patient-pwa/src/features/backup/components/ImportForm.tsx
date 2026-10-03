@@ -1,0 +1,64 @@
+import { useState, type FormEvent } from 'react';
+import { Button, Card, LoadingState, TextField } from '../../../ui';
+import { useImport } from '../useImport';
+import styles from '../BackupScreen.module.css';
+
+export function ImportForm() {
+  const imp = useImport();
+  const [file, setFile] = useState<File>();
+  const [password, setPassword] = useState('');
+  const [confirmed, setConfirmed] = useState(false);
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    void imp.run(file, password, confirmed);
+  };
+
+  if (imp.state.step === 'working') return <LoadingState label="Odszyfrowuję kopię…" />;
+  if (imp.state.step === 'done') {
+    const s = imp.state.summary;
+    return (
+      <Card>
+        <p className={styles.success}>✓ Wczytano kopię</p>
+        <p className={styles.lead}>
+          Leki: {s.medications} · badania: {s.exams} · objawy: {s.symptoms} · zdjęcia: {s.photos} ·
+          wizyty: {s.visits}
+        </p>
+      </Card>
+    );
+  }
+  return (
+    <form className={styles.form} onSubmit={submit}>
+      <label className={styles.file}>
+        Plik kopii (.json)
+        <input
+          type="file"
+          accept="application/json,.json"
+          onChange={(e) => setFile(e.target.files?.[0])}
+        />
+      </label>
+      <TextField
+        label="Hasło kopii"
+        type="password"
+        autoComplete="current-password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <label className={styles.check}>
+        <input
+          type="checkbox"
+          checked={confirmed}
+          onChange={(e) => setConfirmed(e.target.checked)}
+        />
+        Zastąp wszystkie dane na tym telefonie danymi z kopii
+      </label>
+      {imp.state.error && (
+        <p className={styles.error} role="alert">
+          {imp.state.error}
+        </p>
+      )}
+      <Button type="submit" block variant="secondary">
+        Wczytaj kopię
+      </Button>
+    </form>
+  );
+}
