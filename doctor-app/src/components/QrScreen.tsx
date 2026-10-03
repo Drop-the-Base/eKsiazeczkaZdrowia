@@ -11,6 +11,7 @@ const PREVIOUS_END_TEXT = {
   ended: 'Wizyta zakończona.',
   expired: 'Sesja wygasła.',
   error: 'Połączenie z pacjentem przerwane.',
+  mismatch: 'Kody weryfikacyjne się nie zgadzały – połączenie przerwane.',
 } as const;
 
 export function QrScreen() {

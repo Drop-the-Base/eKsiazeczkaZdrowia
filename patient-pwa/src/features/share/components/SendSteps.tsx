@@ -5,6 +5,7 @@ import styles from './Steps.module.css';
 type Props = {
   state: Exclude<ShareSessionState, { step: 'scan' }>;
   onSend: () => void;
+  onReject: () => void;
   onEnd: () => void;
   onRescan: () => void;
   onDone: () => void;
@@ -20,7 +21,7 @@ function Code({ code }: { code: string }) {
   );
 }
 
-export function SendSteps({ state, onSend, onEnd, onRescan, onDone }: Props) {
+export function SendSteps({ state, onSend, onReject, onEnd, onRescan, onDone }: Props) {
   switch (state.step) {
     case 'connecting':
       return <LoadingState label="Łączenie z lekarzem…" />;
@@ -33,8 +34,12 @@ export function SendSteps({ state, onSend, onEnd, onRescan, onDone }: Props) {
               {state.error}
             </p>
           )}
+          <p className={styles.lead}>Czy lekarz widzi na swoim ekranie ten sam kod?</p>
           <Button block onClick={onSend}>
-            Wyślij dane lekarzowi
+            Tak, wyślij dane lekarzowi
+          </Button>
+          <Button block variant="danger" onClick={onReject}>
+            Kod się nie zgadza
           </Button>
           <Button block variant="ghost" onClick={onEnd}>
             Anuluj

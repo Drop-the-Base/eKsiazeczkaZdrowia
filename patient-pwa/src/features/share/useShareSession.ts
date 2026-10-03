@@ -74,6 +74,18 @@ export function useShareSession() {
     }
   }, []);
 
+  /** The code on the doctor's screen is different: abort, nothing is sent. */
+  const rejectCode = useCallback(() => {
+    const c = conn.current;
+    conn.current = undefined;
+    c?.rejectVerification();
+    setState({
+      step: 'ended',
+      reason:
+        'Kody się nie zgadzały, więc niczego nie wysłano. Poproś lekarza o nowy kod i zeskanuj go ponownie.',
+    });
+  }, []);
+
   /** "Zakończ udostępnianie": the doctor's tab forgets the data. */
   const end = useCallback(() => {
     const c = conn.current;
@@ -92,5 +104,5 @@ export function useShareSession() {
     setState({ step: 'scan' });
   }, []);
 
-  return { state, join, send, end, rescan };
+  return { state, join, send, end, rescan, rejectCode };
 }

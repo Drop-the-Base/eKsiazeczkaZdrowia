@@ -25,6 +25,7 @@ export function ShareScreen() {
         <SendSteps
           state={state}
           onSend={() => void session.send(snapshot)}
+          onReject={session.rejectCode}
           onEnd={session.end}
           onRescan={session.rescan}
           onDone={() => navigate('/wizyta')}
