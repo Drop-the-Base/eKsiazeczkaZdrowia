@@ -60,6 +60,7 @@ Konkurencja do slajdu: mojeIKP, Bearable (`play.google.com/store/apps/dev?id=897
 
 **Wizyta u lekarza**
 - **Lista na wizytę:** w dowolnej chwili *„powiem lekarzowi, że…”*; przed wizytą lista wyświetla się automatycznie.
+- **Podsumowanie danych:** przy wizycie aplikacja szykuje zestawienie, żeby lekarz od razu zobaczył potrzebne informacje (zmiany od ostatniej wizyty, objawy, regularność leków, nowe badania i zdjęcia).
 - **Widok dla lekarza:** oś czasu, lista pytań i zdjęcia w przeglądarce lekarza (P2P).
 - **Notatka głosowa po wizycie:** *„lekarz zmienił lek na X, kontrola za miesiąc”* → propozycja zmian w lekach i przypomnienia o kontroli do zatwierdzenia.
 
@@ -167,7 +168,8 @@ PhotoSeries   { id, name, bodyPart?, createdAt }
 VisitNoteItem { id, text, createdAt, source: 'manual'|'voice', discussed: boolean, visitId? }  // „powiem lekarzowi”
 Visit         { id, date, doctor?, specialty?, transcript, followUpDate?, appliedChanges[] }   // audio usuwane po transkrypcji
 Reminder      { id, type: 'medication'|'followUp'|'export', at, medicationId?, visitId? }
-ShareSnapshot { profile, medications, intakes, symptoms, diagnoses, exams, photos(miniatury), visitNoteItems, visits, range }
+VisitSummary  { since, medsStarted[], medsStopped[], medsChanged[], adherence: { taken, skipped }, symptoms: { name, count, maxSeverity, firstAt, afterNewMed? }[], newExams[], newPhotos[], visitNoteItems[] }
+ShareSnapshot { summary: VisitSummary, profile, medications, intakes, symptoms, diagnoses, exams, photos(miniatury), visitNoteItems, visits, range }
 QueryFilter   { entity: 'medication'|'symptom'|'exam', atcPrefix?, name?, from?, to?, sort?, limit? }  // wynik LLM
 ```
 
@@ -181,7 +183,7 @@ Każdy robi swoje funkcje **od początku do końca**: ekran + technika pod spode
 
 | | **Osoba A: „Dane i codzienność”** | **Osoba B: „Wizyta i bezpieczeństwo”** |
 |---|---|---|
-| Ekrany PWA | Profil i diagnozy, leki, potwierdzanie leków, objawy, badania, zdjęcia w czasie, **oś czasu**, przypomnienia, **Zapytaj**, import z IKP | Lista „powiem lekarzowi”, **Udostępnij lekarzowi**, **Po wizycie**, **Za granicą**, blokada aplikacji, kopia zapasowa |
+| Ekrany PWA | Profil i diagnozy, leki, potwierdzanie leków, objawy, badania, zdjęcia w czasie, **oś czasu**, przypomnienia, **Zapytaj**, import z IKP | Lista „powiem lekarzowi”, **Podsumowanie na wizytę**, **Udostępnij lekarzowi**, **Po wizycie**, **Za granicą**, blokada aplikacji, kopia zapasowa |
 | Technika | Rozpoznawanie mowy + rozbijanie wpisów, baza leków z RPL, OCR, import PDF, LLM: pytanie → filtr | Baza lokalna + szyfrowanie, serwer sygnalizacyjny, WebRTC, podpisywanie kluczami, TURN, **aplikacja lekarza**, LLM: notatka → zmiany, słowniki ATC/ICD-10, eksport/import z hasłem |
 | Happy path (sekcja 4) | kroki 1, 2, 4, 7 | kroki 3, 5, 6, 8 |
 
@@ -259,7 +261,12 @@ Priorytet: **M** = must (jest w happy path) · **S** = should (wyróżnik) · **
 
 **B: wizyta i za granicą**
 - [ ] **T2.6** (M) **Udostępnij lekarzowi** (ekran pacjenta): wybór zakresu → skan QR → `connect` + `sendSnapshot`; zmniejszanie zdjęć; status „przesłano”.
-- [ ] **T2.7** (M) **Widok lekarza:** nagłówek (pacjent, wiek, alergie, choroby), aktualne leki, **„Pacjent chce powiedzieć”** wysoko, oś czasu (`<Timeline>` od A), galeria zdjęć, badania, poprzednie wizyty. Czytelny w 30 s. Koniec sesji: przycisk + timeout, czyszczenie pamięci. Dane **tylko w pamięci karty** (bez `localStorage` / IndexedDB / cache), nagłówki `no-store` + CSP.
+- [ ] **T2.6b** (M) **Podsumowanie na wizytę:** funkcja `buildVisitSummary(db, od) → VisitSummary`, liczona **lokalnie, bez LLM**, domyślnie od ostatniej wizyty:
+  - leki: nowe, odstawione (z powodem), zmienione; regularność przyjmowania (np. „8 pominięć z 30”),
+  - objawy: lista z liczbą wystąpień, najwyższym nasileniem i datą pierwszego wystąpienia; zaznaczenie objawów, które zaczęły się w ciągu ~14 dni po starcie nowego leku (bez wniosków, tylko zestawienie dat),
+  - nowe badania (z wynikami poza zakresem referencyjnym na górze), nowe zdjęcia, lista „powiem lekarzowi”.
+  Pacjent widzi podsumowanie przed wysłaniem i może odznaczyć sekcje. Podsumowanie jedzie w `ShareSnapshot` i jest **pierwszym ekranem u lekarza** (T2.7). Typ `VisitSummary` dopisać do `shared/types.ts` (uzgodnić z A).
+- [ ] **T2.7** (M) **Widok lekarza:** nagłówek (pacjent, wiek, alergie, choroby), **podsumowanie od ostatniej wizyty (T2.6b)**, aktualne leki, **„Pacjent chce powiedzieć”** wysoko, oś czasu (`<Timeline>` od A), galeria zdjęć, badania, poprzednie wizyty. Czytelny w 30 s. Koniec sesji: przycisk + timeout, czyszczenie pamięci. Dane **tylko w pamięci karty** (bez `localStorage` / IndexedDB / cache), nagłówki `no-store` + CSP.
 - [ ] **T2.8** (M) **Po wizycie:** `VoiceInput mode="postVisit"` → endpoint `POST /llm/visit-note` → `{ stopMeds[], newMeds[], followUpDate? }` → lista zmian z checkboxami → zatwierdź → leki zaktualizowane (z powodem), `createReminder` na kontrolę, nagranie usunięte.
 - [ ] **T2.9** (M) Lista „powiem lekarzowi” **pokazuje się automatycznie przed wizytą** (gdy zbliża się data kontroli).
 - [ ] **T2.10** (M) **Za granicą:** podsumowanie **offline** (alergie, aktualne leki przez substancję czynną + ATC, choroby + ICD-10) w EN/DE/ES; słowniki w `shared/dict/`; widok na ekranie + PDF.
