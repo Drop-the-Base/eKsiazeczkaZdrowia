@@ -20,13 +20,13 @@ function setText(field: HTMLTextAreaElement, text: string): void {
 }
 
 /**
- * Shows an animated cursor ripple at the center of `el`, clicks it, then waits
- * for the animation to finish before returning.
+ * Shows an animated cursor ripple on `el` (its center, or `at` when the center is covered by
+ * something else), clicks it, then waits for the animation to finish before returning.
  */
-async function clickWithEffect(el: HTMLElement): Promise<void> {
+async function clickWithEffect(el: HTMLElement, at?: { x: number; y: number }): Promise<void> {
   const rect = el.getBoundingClientRect();
-  const cx = rect.left + rect.width / 2;
-  const cy = rect.top + rect.height / 2;
+  const cx = at?.x ?? rect.left + rect.width / 2;
+  const cy = at?.y ?? rect.top + rect.height / 2;
   const dot = document.createElement('div');
   dot.className = styles.clickDot ?? '';
   dot.style.left = `${cx}px`;
@@ -38,12 +38,7 @@ async function clickWithEffect(el: HTMLElement): Promise<void> {
   dot.remove();
 }
 
-function animateZoom(
-  el: HTMLElement,
-  from: number,
-  to: number,
-  durationMs: number,
-): Promise<void> {
+function animateZoom(el: HTMLElement, from: number, to: number, durationMs: number): Promise<void> {
   return new Promise((resolve) => {
     const start = performance.now();
     const step = (now: number) => {
@@ -96,25 +91,41 @@ export async function runShowMe(action: ShowMe): Promise<void> {
     }
 
     if (action.action === 'meds-detail') {
-      const medItem = (await waitForTarget('med-item-rpl', 500)) ?? (await waitForTarget('med-item', 500));
-      if (!medItem) throw new Error('Nie znaleziono listy leków');
-      medItem.scrollIntoView({ block: 'center', behavior: 'smooth' });
-      await sleep(200);
-      await clickWithEffect(medItem.querySelector('button') ?? medItem);
+      // The lit supplements group: open the mushroom supplement, the hero of the story.
+      const group = await waitForTarget('supplements');
+      const rows = [...(group?.querySelectorAll<HTMLButtonElement>('li button') ?? [])];
+      const supplement = rows.find((b) => /grzyb/i.test(b.textContent ?? '')) ?? rows[0];
+      if (!supplement) throw new Error('Nie znaleziono suplementów');
+      supplement.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      await sleep(400);
+      await clickWithEffect(supplement);
       await sleep(3000);
+      // Closed the way a person would: a tap on the grey area above the sheet, not on the sheet.
       const backdrop = await waitForTarget('sheet-backdrop');
-      if (backdrop) await clickWithEffect(backdrop);
+      if (backdrop) {
+        const sheetTop = backdrop.querySelector('[role="dialog"]')?.getBoundingClientRect().top;
+        await clickWithEffect(backdrop, { x: window.innerWidth / 2, y: (sheetTop ?? 120) / 2 });
+      }
       await sleep(400);
       return;
     }
 
     if (action.action === 'today-confirm') {
-      const takeBtn = await waitForTarget('dose-take');
-      if (!takeBtn) throw new Error('Nie znaleziono dawki na dziś');
-      takeBtn.scrollIntoView({ block: 'center', behavior: 'smooth' });
-      await sleep(400);
-      await clickWithEffect(takeBtn);
-      await sleep(1500);
+      // One dose taken, the next one skipped, then the as-needed painkiller taken now.
+      // Each click re-renders the list, so the next button is looked up afresh.
+      const steps = ['dose-take', 'dose-skip', 'as-needed-take'];
+      let clicked = 0;
+      for (const target of steps) {
+        const btn = document.querySelector<HTMLElement>(`[data-tour="${target}"]`);
+        if (!btn) continue;
+        btn.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        await sleep(500);
+        await clickWithEffect(btn);
+        await sleep(700);
+        clicked++;
+      }
+      if (clicked === 0) throw new Error('Nie znaleziono dawek na dziś');
+      await sleep(800);
       return;
     }
 
@@ -130,8 +141,8 @@ export async function runShowMe(action: ShowMe): Promise<void> {
         }
       }
       await clickWithEffect(esBtn);
-      // The light then moves to the translated medicines (`targetAfterShowMe`).
-      await sleep(600);
+      // Long enough to read the hint; then the light moves to the translated medicines.
+      await sleep(2200);
       return;
     }
 

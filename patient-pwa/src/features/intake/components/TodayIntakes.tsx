@@ -97,6 +97,7 @@ function DoseRow({
             className={styles.skip}
             onClick={() => onConfirm('skipped')}
             aria-label={`Pominięty: ${dose.medication.name}`}
+            data-tour="dose-skip"
           >
             Pomiń
           </button>
@@ -133,7 +134,7 @@ function AsNeededRow({
           {takenAt.length > 0 && ` · dziś: ${takenAt.join(', ')}`}
         </span>
       </span>
-      <button type="button" className={styles.take} onClick={onTake}>
+      <button type="button" className={styles.take} onClick={onTake} data-tour="as-needed-take">
         Wzięty teraz
       </button>
     </Card>

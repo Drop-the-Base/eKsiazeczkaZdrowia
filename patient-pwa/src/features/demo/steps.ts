@@ -6,11 +6,7 @@ export type ShowMe =
   | { press: string }
   | {
       action:
-        | 'timeline-zoom-scroll'
-        | 'meds-detail'
-        | 'today-confirm'
-        | 'abroad-es'
-        | 'security-fill';
+        'timeline-zoom-scroll' | 'meds-detail' | 'today-confirm' | 'abroad-es' | 'security-fill';
     };
 
 export interface TourStep {
@@ -30,6 +26,8 @@ export interface TourStep {
   /** "Dlaczego to ważne" – the message for whoever is looking. */
   why?: string;
   showMe?: ShowMe;
+  /** Shown on top while the demonstration runs: what the visitor is watching and can do. */
+  showMeHint?: string;
   /** Whole-screen card without the app (start and end). */
   full?: boolean;
 }
@@ -59,6 +57,7 @@ export const STEPS: TourStep[] = [
       'Oś można przybliżać (+ / −, gest uszczypnięcia) i przewijać w poziomie.',
     ],
     showMe: { action: 'timeline-zoom-scroll' },
+    showMeHint: 'Możesz przybliżać oś (+ / −) i przewijać ją w poziomie',
     story: 'Lekarze analizowali wyniki osobno, bez wspólnego kontekstu czasowego.',
     why: 'IKP zawiera leki przepisane przez lekarza. Aplikacja uzupełnia je o to, co pacjent faktycznie przyjmuje.',
   },
@@ -72,6 +71,7 @@ export const STEPS: TourStep[] = [
       'Suplementy są prezentowane na równi z lekami na receptę. Po wybraniu leku wyświetlane są dane z Rejestru Produktów Leczniczych.',
     ],
     showMe: { action: 'meds-detail' },
+    showMeHint: 'Dotknij preparatu, aby zobaczyć szczegóły i dane z Rejestru Produktów Leczniczych',
     story:
       'Pytanie dotyczyło wyłącznie leków, dlatego informacja o suplemencie nie została przekazana.',
     why: 'Aplikacja nie generuje automatycznych ostrzeżeń ani nie sugeruje odstawiania preparatów. Ocena kliniczna należy wyłącznie do lekarza, a aplikacja zapewnia mu pełną informację.',
@@ -85,6 +85,7 @@ export const STEPS: TourStep[] = [
       'Każdą dawkę, również suplementu, pacjent oznacza jako przyjętą lub pominiętą. Ze względu na poufność przypomnienia nie zawierają nazwy leku.',
     ],
     showMe: { action: 'today-confirm' },
+    showMeHint: 'Dawkę oznaczasz jako wziętą lub pominiętą, a lek doraźny jako wzięty teraz',
     why: 'Lekarz otrzymuje dane o regularności przyjmowania, które zwykle są niedostępne.',
   },
   {
@@ -96,6 +97,7 @@ export const STEPS: TourStep[] = [
       'Pytania i obserwacje można zapisać w dowolnym momencie, przycisk jest dostępny na każdym ekranie. Przed wizytą kontrolną aplikacja automatycznie wyświetla listę.',
     ],
     showMe: { say: 'po nowym leku kręci mi się w głowie' },
+    showMeHint: 'Wpisz lub podyktuj sprawę, a trafi na listę do omówienia z lekarzem',
     targetAfterShowMe: 'note-new',
     why: 'Lista spraw jest przygotowana przed wizytą, więc żadna z nich nie zostaje pominięta.',
   },
@@ -119,6 +121,7 @@ export const STEPS: TourStep[] = [
       'Podsumowanie w języku lekarza: alergie, leki i rozpoznania z kodami ATC i ICD-10. Dostępne offline, z możliwością zapisu do PDF.',
     ],
     showMe: { action: 'abroad-es' },
+    showMeHint: 'Wybierz język lekarza: podsumowanie od razu się tłumaczy, z kodami ATC i ICD-10',
     targetAfterShowMe: 'abroad-meds',
     why: 'Leki są opisywane nazwą substancji czynnej, ponieważ nazwy handlowe różnią się między krajami.',
   },
@@ -132,6 +135,7 @@ export const STEPS: TourStep[] = [
       `PIN wersji demonstracyjnej: ${DEMO_PIN}.`,
     ],
     showMe: { action: 'security-fill' },
+    showMeHint: 'Po potwierdzeniu PIN-u przycisk „Włącz” poprosi telefon o odcisk palca lub twarz',
     why: 'Historia zdrowia nie opuszcza urządzenia. Brak centralnej bazy danych eliminuje ryzyko masowego wycieku.',
   },
   {

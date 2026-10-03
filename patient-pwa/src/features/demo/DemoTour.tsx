@@ -127,13 +127,9 @@ export function DemoTour() {
 
   const runDemo = useCallback(async () => {
     if (!step.showMe || tour.showing) return;
-    setCollapsed(true);
-    try {
-      await tour.showMe();
-      setDemonstrated((prev) => new Set(prev).add(step.id));
-    } finally {
-      setCollapsed(false);
-    }
+    // The card stays open: its text explains what the demonstration is doing.
+    await tour.showMe();
+    setDemonstrated((prev) => new Set(prev).add(step.id));
   }, [step.showMe, step.id, tour.showing, tour.showMe]);
 
   const handlePrimaryNext = useCallback(async () => {
@@ -239,12 +235,14 @@ export function DemoTour() {
       {tour.showing && (
         <>
           <div className={styles.inputBlocker} aria-hidden="true" />
-          {step.id === 'timeline' && (
+          {step.showMeHint && (
             <div className={styles.hintBadge} role="status" aria-live="polite">
-              <span className={styles.hintIcon} aria-hidden="true">
-                ↔
-              </span>
-              Możesz przybliżać oś (+ / −) i przewijać ją w poziomie
+              {step.id === 'timeline' && (
+                <span className={styles.hintIcon} aria-hidden="true">
+                  ↔
+                </span>
+              )}
+              {step.showMeHint}
             </div>
           )}
         </>
