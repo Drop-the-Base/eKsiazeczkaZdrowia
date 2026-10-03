@@ -102,6 +102,21 @@ export const STEPS: TourStep[] = [
     why: 'Lista spraw jest przygotowana przed wizytą, więc żadna z nich nie zostaje pominięta.',
   },
   {
+    id: 'ask',
+    path: '/zapytaj',
+    target: 'voice',
+    title: 'Wyszukiwanie w historii',
+    text: [
+      'Pacjent pyta własnymi słowami, np. przed zabiegiem lub wizytą u nowego lekarza: jakie leki przyjmował w danym okresie. Wynik zawiera daty i obejmuje również suplement z grzybów.',
+      'Do modelu językowego trafia wyłącznie treść pytania. Model zwraca kryteria wyszukiwania, a wyszukiwanie odbywa się na telefonie.',
+    ],
+    showMe: { say: 'Jakie leki były przyjmowane w ostatnich 2 miesiącach?' },
+    showMeHint:
+      'Do serwera trafia tylko pytanie. Wraca filtr, a wynik powstaje z danych na telefonie',
+    targetAfterShowMe: 'ask-answer',
+    why: 'Pomoc modelu językowego bez udostępniania danych zdrowotnych: model nie widzi historii leczenia, danych osobowych ani wyników badań.',
+  },
+  {
     id: 'share',
     path: '/wizyta/udostepnij',
     target: 'share-sections',

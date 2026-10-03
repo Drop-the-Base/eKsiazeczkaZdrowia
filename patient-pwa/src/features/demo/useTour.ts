@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { restoreBaseScreen } from './baseScreen';
-import { runShowMe } from './showMe';
+import { runShowMe, waitForTarget } from './showMe';
 import { STEPS } from './steps';
 import { clampIndex, parseTourState, type TourState } from './tour.logic';
 
@@ -121,6 +121,10 @@ export function useTour() {
       await restoreBaseScreen(step, previousRun, pathname, navigate, TARGET_TOP);
       lastRuns.current.set(step.id, new Date().toISOString());
       await runShowMe(step.showMe);
+      // The result may come a moment later (e.g. the server's answer): wait for it, then let it be read.
+      if (step.targetAfterShowMe && (await waitForTarget(step.targetAfterShowMe, 8000))) {
+        await new Promise((r) => setTimeout(r, 1200));
+      }
       setShownStep(step.id);
     } catch (err) {
       setError(
