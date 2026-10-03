@@ -13,6 +13,7 @@ import {
   PageHeader,
 } from '../ui';
 import { DrugPicker } from '../features/drugs';
+import { VoiceInput } from '../features/voice';
 
 /** Podgląd komponentów `ui/` pod `/dev/ui` (bez zakładki w nawigacji). */
 export function DevUi() {
@@ -20,6 +21,7 @@ export function DevUi() {
   const [listening, setListening] = useState(false);
   const [selected, setSelected] = useState('30');
   const [picked, setPicked] = useState('');
+  const [said, setSaid] = useState('');
 
   return (
     <>
@@ -61,6 +63,11 @@ export function DevUi() {
             }
           />
           {picked && <p>Wybrano: {picked}</p>}
+        </Card>
+
+        <Card>
+          <VoiceInput mode="entry" onSubmit={setSaid} />
+          {said && <p>Wysłano: {said}</p>}
         </Card>
 
         <List>
