@@ -66,6 +66,7 @@ describe('server', () => {
   it('accepts WebSocket upgrades only on /relay', async () => {
     const msg = await new Promise<string>((resolve, reject) => {
       const ws = new WebSocket(`${base.replace('http', 'ws')}/relay`);
+      ws.on('open', () => ws.send('nie json'));
       ws.on('message', (data) => resolve(String(data)));
       ws.on('error', reject);
     });

@@ -1,9 +1,9 @@
 import { createServer, type Server } from 'node:http';
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, type WebSocket } from 'ws';
 import { LLM_QUERY_PATH, RELAY_MAX_MESSAGE_BYTES, RELAY_PATH } from '@ez/shared';
 import { COMMON_HEADERS, DOCTOR_HEADERS } from './headers.js';
 import { handleJson, sendJson, type JsonHandler } from './json.js';
-import { handleRelayConnection } from './relay.js';
+import { createRelay, type RelayOptions } from './relay.js';
 import { serveStatic } from './static.js';
 
 /** Doctor app is served under this prefix (its Vite `base`), the patient PWA at the root. */
@@ -13,11 +13,31 @@ export interface AppOptions {
   patientDist: string;
   doctorDist: string;
   llmQuery: JsonHandler;
+  relay?: RelayOptions;
 }
+
+/** Dead connections (phone asleep, network switch) are dropped after one missed ping. */
+const HEARTBEAT_MS = 30_000;
 
 export function createApp(opts: AppOptions): Server {
   const wss = new WebSocketServer({ noServer: true, maxPayload: RELAY_MAX_MESSAGE_BYTES });
-  wss.on('connection', handleRelayConnection);
+  const relay = createRelay(opts.relay);
+  const alive = new WeakSet<WebSocket>();
+  wss.on('connection', (ws) => {
+    alive.add(ws);
+    ws.on('pong', () => alive.add(ws));
+    relay.handleConnection(ws);
+  });
+  const heartbeat = setInterval(() => {
+    for (const ws of wss.clients) {
+      if (!alive.has(ws)) ws.terminate();
+      else {
+        alive.delete(ws);
+        ws.ping();
+      }
+    }
+  }, HEARTBEAT_MS);
+  heartbeat.unref();
 
   const server = createServer((req, res) => {
     const path = new URL(req.url ?? '/', 'http://x').pathname;
@@ -55,6 +75,11 @@ export function createApp(opts: AppOptions): Server {
     const path = new URL(req.url ?? '/', 'http://x').pathname;
     if (path !== RELAY_PATH) return void socket.destroy();
     wss.handleUpgrade(req, socket, head, (ws) => wss.emit('connection', ws, req));
+  });
+
+  server.on('close', () => {
+    clearInterval(heartbeat);
+    relay.close();
   });
 
   return server;
