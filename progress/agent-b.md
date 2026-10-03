@@ -13,3 +13,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B09] shared/crypto: ECDH → HKDF → AES-256-GCM + kod weryfikacyjny · issue #21 · 2026-10-03 17:52 · atrapy: brak
 - [x] [B10] shared/transport: zaszyfrowany snapshot w kawałkach · issue #23 · 2026-10-03 17:56 · atrapy: brak
 - [x] [B11] Aplikacja lekarza: ekran z QR i status połączenia · issue #25 · 2026-10-03 18:00 · atrapy: po odebraniu danych tymczasowe podsumowanie (widok w B18)
+- [x] [B12] Symulator pacjenta + test end-to-end w dwóch kartach · issue #27 · 2026-10-03 18:04 · atrapy: summary w createDemoSnapshot uproszczone do B15
