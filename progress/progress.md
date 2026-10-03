@@ -108,3 +108,4 @@ Zmergowane taski (dopisuje agent po każdym merge, patrz `CLAUDE.md`).
 - [x] [D22] Demo: krok „Wyszukiwanie w historii” (Zapytaj) · issue #223 · 2026-10-04 00:44 · atrapy: brak
 - [x] [D23] Demo: karta końcowa – bez linku do pełnej wersji, ikona retry · issue #225 · 2026-10-04 00:54 · atrapy: brak
 - [x] [D24] Demo: informacja o zalecanym oglądaniu na komputerze · issue #227 · 2026-10-04 00:57 · atrapy: brak
+- [x] [B42] Inne karty po zmianie klucza bazy (wipe/setup): blokada i przeładowanie · issue #229 · 2026-10-04 01:00 · atrapy: brak

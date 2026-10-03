@@ -27,6 +27,7 @@ export function createVault(dexie: HealthDatabase) {
   let key: CryptoKey | null = null;
   let status: VaultStatus = 'checking';
   const listeners = new Set<(s: VaultStatus) => void>();
+  const rekeyListeners = new Set<(kind: 'setup' | 'wipe') => void>();
   let waiters: ((k: CryptoKey) => void)[] = [];
 
   const setStatus = (s: VaultStatus) => {
@@ -100,6 +101,7 @@ export function createVault(dexie: HealthDatabase) {
       });
       await sealLegacyRows(k);
       open(k);
+      rekeyListeners.forEach((l) => l('setup'));
     },
     async unlock(pin: string): Promise<void> {
       const k = await keyFromPin(pin);
@@ -123,6 +125,14 @@ export function createVault(dexie: HealthDatabase) {
         [...dexie.entityTables(), dexie.meta, dexie.biometric].map((t) => t.clear()),
       );
       setStatus('no-pin');
+      rekeyListeners.forEach((l) => l('wipe'));
+    },
+    /** After `setup` or `wipe` in this tab: the old key no longer opens the data. */
+    onRekey(cb: (kind: 'setup' | 'wipe') => void): () => void {
+      rekeyListeners.add(cb);
+      return () => {
+        rekeyListeners.delete(cb);
+      };
     },
   };
 }
