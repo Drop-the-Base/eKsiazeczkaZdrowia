@@ -21,3 +21,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [B18] Widok lekarza: pasek górny, nagłówek, lewa kolumna · issue #40 · 2026-10-03 18:24 · atrapy: prawa kolumna pusta do B19
 - [x] [B19] Widok lekarza: „Od ostatniej wizyty”, oś czasu, zakładki · issue #42 · 2026-10-03 18:29 · atrapy: TimelineStandIn zamiast <Timeline> od A (B37)
 - [x] [prośba #116] VoiceInput w „powiem lekarzowi” · issue #116 · 2026-10-03 18:32 · atrapy: brak (Po wizycie użyje VoiceInput w B22)
+- [x] [B20] Widok lekarza: tylko pamięć, koniec sesji, nagłówki, wąski ekran · issue #44 · 2026-10-03 18:37 · atrapy: brak

@@ -79,6 +79,10 @@ describe('transport (doctor ↔ relay ↔ patient)', () => {
 
     patient.close();
     await waitFor(doctor.onStatus, 'ended');
+    // Nothing replays the patient's data after the session ended.
+    let late: ShareSnapshot | undefined;
+    doctor.onSnapshot((s) => (late = s));
+    expect(late).toBeUndefined();
   });
 
   it('keeps the data at the doctor when the phone only disconnects', async () => {

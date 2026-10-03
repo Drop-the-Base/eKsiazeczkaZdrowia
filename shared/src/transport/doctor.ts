@@ -42,6 +42,9 @@ export async function createSession(
       finished = true;
       sessionKey = undefined;
       incoming = undefined;
+      // Signals replay their last value; the patient's data must not outlive the session.
+      snapshot.clear();
+      code.clear();
       socket.close();
       status.emit(s);
     };

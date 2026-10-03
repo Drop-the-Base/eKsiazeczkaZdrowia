@@ -1,5 +1,5 @@
 import { QrScreen } from './components/QrScreen';
-import { StatusScreen } from './components/StatusScreen';
+import { StatusScreen, type StatusScreenStatus } from './components/StatusScreen';
 import { TopBar } from './components/TopBar';
 import { PatientView } from './patient/PatientView';
 import { SessionProvider, useSession } from './session/SessionContext';
@@ -8,7 +8,14 @@ function Screen() {
   const { status, snapshot } = useSession();
   if (status === 'waiting-for-patient') return <QrScreen />;
   if (status === 'received' && snapshot) return <PatientView snapshot={snapshot} />;
-  return <StatusScreen status={status === 'received' ? 'transferring' : status} />;
+  // 'ended' / 'expired' reload the tab (useDoctorSession), so they are never rendered.
+  const shown: StatusScreenStatus =
+    status === 'received'
+      ? 'transferring'
+      : status === 'ended' || status === 'expired'
+        ? 'connecting'
+        : status;
+  return <StatusScreen status={shown} />;
 }
 
 export function App() {

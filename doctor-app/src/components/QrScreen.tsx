@@ -7,12 +7,23 @@ import styles from './Screens.module.css';
 /** Link to the patient simulator: in dev, or with `?dev` (e.g. a demo without a phone). */
 const showSimulator = import.meta.env.DEV || new URLSearchParams(window.location.search).has('dev');
 
+const PREVIOUS_END_TEXT = {
+  ended: 'Wizyta zakończona.',
+  expired: 'Sesja wygasła.',
+  error: 'Połączenie z pacjentem przerwane.',
+} as const;
+
 export function QrScreen() {
-  const { qrPayload, expiresAt } = useSession();
+  const { qrPayload, expiresAt, previousEnd } = useSession();
   const qr = useQrImage(qrPayload);
   const now = useNow();
   return (
     <section className={styles.center}>
+      {previousEnd && (
+        <p className={styles.notice} role="status">
+          {PREVIOUS_END_TEXT[previousEnd]} Dane pacjenta usunięte z pamięci tej karty.
+        </p>
+      )}
       <h1 className={styles.title}>Zeskanuj kod telefonem pacjenta</h1>
       <p className={styles.lead}>
         W aplikacji pacjenta: <strong>Wizyta → Udostępnij lekarzowi</strong>. Dane są szyfrowane na
