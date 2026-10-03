@@ -23,3 +23,4 @@ Zmergowane taski (dopisuje agent B po każdym merge, patrz `CLAUDE.md`).
 - [x] [prośba #116] VoiceInput w „powiem lekarzowi” · issue #116 · 2026-10-03 18:32 · atrapy: brak (Po wizycie użyje VoiceInput w B22)
 - [x] [B20] Widok lekarza: tylko pamięć, koniec sesji, nagłówki, wąski ekran · issue #44 · 2026-10-03 18:37 · atrapy: brak
 - [x] [B21] Serwer: POST /llm/visit-note → zmiany w lekach · issue #46 · 2026-10-03 18:40 · atrapy: reguły zamiast LLM (B38 po A23)
+- [x] [B22] Ekran „Po wizycie”: notatka → zmiany do zatwierdzenia · issue #48 · 2026-10-03 18:45 · atrapy: createReminder (A26) → zapis do db.reminders
