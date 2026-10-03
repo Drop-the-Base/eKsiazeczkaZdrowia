@@ -2,5 +2,13 @@
   "name": "@ez/data",
   "version": "0.0.0",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p .",
+    "drugs": "tsx src/build-drugs.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.16",
+    "tsx": "^4.19.2"
+  }
 }

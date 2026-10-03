@@ -8,3 +8,4 @@ Zmergowane taski (dopisuje agent A po każdym merge, patrz `CLAUDE.md`).
 - [x] [A04] README: uruchomienie lokalne i na telefonie · issue #10 · 2026-10-03 17:42 · atrapy: sekcja tunelu czeka na B06; dodatkowo scripts/ship.sh
 - [x] [A05] Profil: dane, alergie, grupa krwi · issue #15 · 2026-10-03 17:46 · atrapy: brak
 - [x] [A06] Diagnozy aktualne i przebyte · issue #16 · 2026-10-03 17:49 · atrapy: brak
+- [x] [A07] Skrypt RPL → kompaktowy drugs.json · issue #17 · 2026-10-03 17:52 · atrapy: brak
