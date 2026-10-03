@@ -19,6 +19,11 @@ export function TopBar() {
         <span className={styles.meta}>sesja wygasa za {formatRemaining(expiresAt, now)}</span>
       )}
       <span className={styles.spacer} />
+      {status === 'received' && (
+        <button type="button" className={styles.print} onClick={() => window.print()}>
+          Drukuj
+        </button>
+      )}
       {live && (
         <button type="button" className={styles.end} onClick={end}>
           Zakończ wizytę
