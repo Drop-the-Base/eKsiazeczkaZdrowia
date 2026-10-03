@@ -10,8 +10,8 @@ import {
   type TransportStatus,
 } from '@ez/shared';
 import { createApp } from './app';
-import { handleVisitNote } from './llm/visit-note';
-import { handleQueryStub } from './queryStub';
+import { createVisitNoteHandler } from './llm/visit-note';
+import { createQueryHandler } from './llm/query';
 
 const cleanups: (() => void)[] = [];
 afterEach(() => cleanups.splice(0).forEach((c) => c()));
@@ -20,8 +20,8 @@ async function startRelay(): Promise<string> {
   const server = createApp({
     patientDist: '/nope',
     doctorDist: '/nope',
-    llmQuery: handleQueryStub,
-    llmVisitNote: handleVisitNote,
+    llmQuery: createQueryHandler(null),
+    llmVisitNote: createVisitNoteHandler(null),
   });
   await new Promise<void>((r) => server.listen(0, '127.0.0.1', r));
   cleanups.push(() => server.close());
