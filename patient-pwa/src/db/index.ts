@@ -10,6 +10,18 @@ const dexie = new HealthDatabase(isDemo ? 'eksiazeczka-zdrowia-demo' : undefined
 /** Database key from the PIN (only in memory). The lock screen sets it up and unlocks it. */
 export const vault = createVault(dexie);
 
+// Another tab wiped the data or set a new PIN (e.g. a second `/demo` tab starting afresh): the key
+// held here no longer fits. On a wipe stop using it (lock), once the new key exists start over.
+// Reloading only after `setup` avoids two tabs wiping each other's fresh start in turn.
+if (typeof BroadcastChannel !== 'undefined') {
+  const rekeyChannel = new BroadcastChannel(`vault-rekey:${dexie.name}`);
+  vault.onRekey((kind) => rekeyChannel.postMessage(kind));
+  rekeyChannel.onmessage = (e: MessageEvent<unknown>) => {
+    if (e.data === 'setup') window.location.reload();
+    else vault.lock();
+  };
+}
+
 /** Optional fingerprint / face unlock (passkey with PRF), on top of the PIN. */
 export const biometric = createBiometric(dexie, vault);
 
