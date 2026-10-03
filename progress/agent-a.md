@@ -23,3 +23,4 @@ Zmergowane taski (dopisuje agent A po każdym merge, patrz `CLAUDE.md`).
 - [x] [A19] <Timeline>: badania, objawy, wizyty, zdjęcia, potwierdzenia · issue #41 · 2026-10-03 18:38 · atrapy: brak
 - [x] [A20] Ekran „Oś czasu” w PWA · issue #43 · 2026-10-03 18:41 · atrapy: brak
 - [x] [A17] parseEntry lokalnie + zatwierdzanie wpisu jednym dotknięciem · issue #37 · 2026-10-03 18:46 · atrapy: brak
+- [x] [A23] Serwer: LlmClient + POST /llm/query (z atrapą) · issue #49 · 2026-10-03 18:49 · atrapy: reguły zamiast modelu bez LLM_HOST; podpięcie w index.ts – prośba do B
