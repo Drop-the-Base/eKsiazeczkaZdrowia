@@ -1,0 +1,54 @@
+/* Same palette as the patient PWA (patient-pwa/src/ui/tokens.css), desktop sizes. */
+:root {
+  --color-bg: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-surface-muted: #eef1f4;
+  --color-border: #e3e6ea;
+  --color-text: #1b1f24;
+  --color-text-muted: #5f6b7a;
+  --color-primary: #0f766e;
+  --color-primary-soft: #d9f0ed;
+  --color-primary-contrast: #ffffff;
+  --color-danger: #b42318;
+  --color-danger-soft: #fde8e7;
+  --color-warning: #b54708;
+
+  --color-rx: #2563eb;
+  --color-otc: #d97706;
+  --color-supplement: #7c3aed;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 40px;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.75rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-md);
+  line-height: 1.4;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
