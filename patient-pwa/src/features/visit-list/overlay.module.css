@@ -1,0 +1,27 @@
+.fab {
+  position: fixed;
+  right: max(var(--space-4), calc(50% - 280px + var(--space-4)));
+  bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + var(--space-4));
+  z-index: 11;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  box-shadow: var(--shadow-fab);
+}
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + 88px);
+  transform: translateX(-50%);
+  z-index: 11;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-text);
+  color: var(--color-surface);
+  font-size: var(--font-size-sm);
+}
