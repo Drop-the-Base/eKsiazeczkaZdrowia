@@ -235,12 +235,7 @@ Każdy robi swoje funkcje **od początku do końca**: ekran + technika pod spode
 
 ### Własność folderów
 
-| Osoba A | Osoba B | Wspólne (zmiana = uzgodnienie na głos) |
-|---|---|---|
-| `patient-pwa/src/features/{profile,meds,intake,symptoms,exams,photos,timeline,reminders,ask,ikp-import,voice,drugs,ocr}/` | `patient-pwa/src/features/{visit-list,share,post-visit,abroad,lock,backup}/` | `patient-pwa/src/app/` (nawigacja, routing) |
-| `data/` (skrypt RPL) | `patient-pwa/src/db/` (baza + szyfrowanie) | `patient-pwa/src/ui/` (wspólne komponenty) |
-| `server/src/llm/query.ts` | `server/` (reszta), `doctor-app/` | `shared/types.ts`, `shared/demo-data.ts` |
-| | `shared/transport/`, `shared/crypto/`, `shared/dict/` | |
+Aktualna tabela i zasady (bez folderów „wspólnych”): **`CLAUDE.md`**. W skrócie: `app/`, `ui/` i pliki root należą do A; `shared/types.ts`, `shared/contracts.ts`, `shared/demo-data.ts` do B. Zmiana w cudzym pliku = issue `[prośba] ...` z etykietą właściciela. Routing przez `features/*/route.tsx` + `import.meta.glob`, więc nowy ekran nie wymaga zmiany w `app/`.
 
 ### Gdzie się stykamy (kontrakty z T0.3)
 
@@ -388,10 +383,11 @@ Priorytet: **M** = must (jest w happy path) · **S** = should (wyróżnik) · **
 
 ## 10. Zasady pracy
 
-- **Każdy edytuje tylko swoje foldery** (tabela w sekcji 7). Wtedy merge prawie nigdy nie ma konfliktów.
-- `shared/types.ts` i `shared/demo-data.ts`: zmiana tylko po uzgodnieniu na głos, w osobnym małym commicie, od razu na `main`.
-- `main` zawsze działa; gałęzie `a/...` i `b/...`; merge często i na każdej synchronizacji. Przed merge: `git pull`, uruchomić, sprawdzić.
-- Gdy moduł od drugiej osoby nie jest gotowy, nie czekamy: atrapa zgodna z sygnaturą z T0.3 i robimy dalej.
-- Jeśli „M” nie jest gotowe, porzucamy „S/C”.
-- Przed przerwą: push i krótka notatka „co działa / co dalej”.
-- Każdy ma Claude Code w swojej kopii repo; `CLAUDE.md` mówi mu, które foldery należą do kogo.
+Pracują dwa agenty Claude Code (A u jednej osoby, B u drugiej). Pełny workflow: **`CLAUDE.md`** + skill **`/next-task`**.
+
+- Każdy task to **issue na GitHubie** (`[A07] ...`, etykiety `agent-a|agent-b`, `prio-*`, `faza-*`); taski są atomowe i dotykają tylko folderów jednego agenta.
+- Gałąź na task (`a/A07-...`, `b/B12-...`) → PR z `Closes #N` → rebase na `main` + build → squash merge przez agenta.
+- Po każdym merge agent dopisuje linię do **swojego** `progress/agent-a.md` / `progress/agent-b.md` (lista zrobionych tasków, zero konfliktów).
+- Każdy edytuje tylko swoje foldery; potrzeba zmiany u drugiego = issue `[prośba] ...`, a do tego czasu atrapa zgodna z kontraktem.
+- `main` zawsze się buduje. Jeśli „M” nie jest gotowe, porzucamy „S/C”.
+- Etykieta `human`: zadania dla ludzi (treść zadania, dane przypadku, LLM, hosting, wideo, wysyłka).
