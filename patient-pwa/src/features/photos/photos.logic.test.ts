@@ -1,6 +1,6 @@
 import type { PhotoMeta, PhotoSeries } from '@ez/shared';
 import { describe, expect, it } from 'vitest';
-import { fitWithin, groupBySeries } from './photos.logic';
+import { daysBetween, fitWithin, groupBySeries, toggleCompare } from './photos.logic';
 
 describe('fitWithin', () => {
   it('scales the longer side down and never up', () => {
@@ -34,5 +34,14 @@ describe('groupBySeries', () => {
     );
     expect(groups.map((g) => g.series?.name ?? '-')).toEqual(['Kolano', 'Wysypka', '-']);
     expect(groups[1]!.photos.map((x) => x.id)).toEqual(['b', 'a']);
+  });
+});
+
+describe('compare helpers', () => {
+  it('counts whole days and keeps at most two selected', () => {
+    expect(daysBetween('2026-09-01T10:00:00Z', '2026-09-15T09:00:00Z')).toBe(14);
+    expect(toggleCompare([], 'a')).toEqual(['a']);
+    expect(toggleCompare(['a', 'b'], 'c')).toEqual(['b', 'c']);
+    expect(toggleCompare(['a', 'b'], 'a')).toEqual(['b']);
   });
 });
