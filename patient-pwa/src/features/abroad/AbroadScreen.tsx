@@ -58,7 +58,7 @@ function Summary({ s }: { s: AbroadSummary }) {
         </p>
       </section>
 
-      <section>
+      <section data-tour="abroad-meds">
         <h3>{l.medications}</h3>
         {s.medications.map((g) => (
           <div key={g.category} className={styles.group}>

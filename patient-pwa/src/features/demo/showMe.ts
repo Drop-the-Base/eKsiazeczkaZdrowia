@@ -133,17 +133,17 @@ export async function runShowMe(action: ShowMe): Promise<void> {
     if (action.action === 'abroad-es') {
       const esBtn = await waitForTarget('lang-es');
       if (!esBtn) throw new Error('Nie znaleziono wyboru języka');
-      const enBtn = await waitForTarget('lang-en');
-      if (esBtn.getAttribute('aria-pressed') === 'true' && enBtn) {
-        await clickWithEffect(enBtn);
-        await sleep(400);
+      // Spanish may be remembered from before: switch away first, so the change is visible.
+      if (esBtn.getAttribute('aria-pressed') === 'true') {
+        const other = await waitForTarget('lang-en');
+        if (other) {
+          await clickWithEffect(other);
+          await sleep(900);
+        }
       }
       await clickWithEffect(esBtn);
-      await sleep(500);
-      window.scrollBy({ top: 250, behavior: 'smooth' });
-      await sleep(1400);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      await sleep(400);
+      // The light then moves to the translated medicines (`targetAfterShowMe`).
+      await sleep(600);
       return;
     }
 
