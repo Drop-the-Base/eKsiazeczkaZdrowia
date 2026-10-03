@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { restoreBaseScreen } from './baseScreen';
 import { runShowMe } from './showMe';
 import { STEPS } from './steps';
 import { clampIndex, parseTourState, type TourState } from './tour.logic';
@@ -62,6 +63,8 @@ export function useTour() {
   const step = STEPS[state.index] ?? STEPS[0]!;
   // Id of the step whose demonstration has finished: its light follows the result.
   const [shownStep, setShownStep] = useState<string>();
+  // Start of each step's last demonstration: a repeat removes what that run added.
+  const lastRuns = useRef(new Map<string, string>());
   const after = shownStep === step.id ? step.targetAfterShowMe : undefined;
   const target = after ?? step.target;
 
@@ -112,7 +115,11 @@ export function useTour() {
     if (!step.showMe) return;
     setShowing(true);
     setError(undefined);
+    setShownStep(undefined);
     try {
+      const previousRun = lastRuns.current.get(step.id);
+      await restoreBaseScreen(step, previousRun, pathname, navigate, TARGET_TOP);
+      lastRuns.current.set(step.id, new Date().toISOString());
       await runShowMe(step.showMe);
       setShownStep(step.id);
     } catch (err) {
