@@ -1,3 +1,6 @@
+import { RouterProvider } from 'react-router-dom';
+import { router } from './router';
+
 export function App() {
-  return <main>eKsiazeczkaZdrowia</main>;
+  return <RouterProvider router={router} />;
 }
