@@ -3,7 +3,6 @@ import { DOCTOR_DEMO_PATH, restartDemo } from '../../demoMode';
 import { Button, todayIso } from '../../ui';
 import { dismissBeforeVisit } from '../visit-list';
 import type { TourStep } from './steps';
-import { useScrollLock } from './useScrollLock';
 import { useTour, type Spot } from './useTour';
 import styles from './DemoTour.module.css';
 
@@ -39,9 +38,7 @@ function StepBody({ step }: { step: TourStep }) {
       )}
       {step.why && (
         <div className={styles.why}>
-          <span className={styles.label}>
-            {step.full ? 'Informacje wstępne' : 'Znaczenie'}
-          </span>
+          <span className={styles.label}>{step.full ? 'Informacje wstępne' : 'Znaczenie'}</span>
           <p>{step.why}</p>
         </div>
       )}
@@ -81,7 +78,6 @@ export function DemoTour() {
   const [collapsed, setCollapsed] = useState(false);
   const { step, index, total } = tour;
   const last = index === total - 1;
-  useScrollLock(tour.open);
 
   useEffect(() => dismissBeforeVisit(DEMO_FOLLOW_UP, todayIso()), []);
   useEffect(() => setCollapsed(false), [index]);
@@ -108,7 +104,9 @@ export function DemoTour() {
     return (
       <div className={styles.fullDim} role="dialog" aria-modal="true" aria-label={step.title}>
         <div className={styles.fullCard}>
-          <p className={styles.kicker}>{index === 0 ? 'Prezentacja · 3 minuty' : 'Koniec prezentacji'}</p>
+          <p className={styles.kicker}>
+            {index === 0 ? 'Prezentacja · 3 minuty' : 'Koniec prezentacji'}
+          </p>
           <StepBody step={step} />
           <div className={styles.actions}>
             {index === 0 ? (
@@ -180,7 +178,7 @@ export function DemoTour() {
         {collapsed ? (
           <h2 className={styles.title}>{step.title}</h2>
         ) : (
-          <div className={styles.body} data-allow-scroll>
+          <div className={styles.body}>
             <StepBody step={step} />
             {step.id === 'share' && <DoctorLink>Otwórz widok lekarza w nowej karcie</DoctorLink>}
             {tour.error && (

@@ -111,7 +111,9 @@ export function AskScreen() {
           ))}
         </div>
 
-        {state.status === 'asking' && <p className={styles.muted}>Wyszukiwanie: „{state.question}”…</p>}
+        {state.status === 'asking' && (
+          <p className={styles.muted}>Wyszukiwanie: „{state.question}”…</p>
+        )}
         {state.status === 'error' && (
           <p className={styles.error} role="alert">
             {state.message}

@@ -4,7 +4,6 @@ import { useDemoPhone } from './DemoPhone';
 import { useQrChannel } from './useQrChannel';
 import { PATIENT_DEMO_PATH } from './demoMode';
 import { GUIDE_TOTAL, QR_STEP, VERIFY_STEP, VIEW_STEPS, type GuideStep } from './steps';
-import { useScrollLock } from './useScrollLock';
 import { useSpot, type Spot } from './useSpot';
 import styles from './DemoGuide.module.css';
 
@@ -86,7 +85,6 @@ export function DemoGuide() {
   const index = stage === 'qr' ? 0 : stage === 'verify' ? 1 : 2 + view;
   const shown = open && step !== undefined;
 
-  useScrollLock(shown);
   const spot = useSpot(shown ? step?.target : undefined, step);
 
   // The step's section tab. All sections stay rendered, so the lit element exists right away.
@@ -130,7 +128,7 @@ export function DemoGuide() {
             ×
           </button>
         </div>
-        <div className={styles.body} data-allow-scroll>
+        <div className={styles.body}>
           <StepBody step={step} />
           {phone.error && (
             <p className={styles.error} role="alert">

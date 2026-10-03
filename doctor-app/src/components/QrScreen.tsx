@@ -40,7 +40,8 @@ export function QrScreen() {
       )}
       {expiresAt && (
         <p className={styles.muted}>
-          Kod ważny przez {formatRemaining(expiresAt, now)}. Po tym czasie zostanie odświeżony automatycznie.
+          Kod ważny przez {formatRemaining(expiresAt, now)}. Po tym czasie zostanie odświeżony
+          automatycznie.
         </p>
       )}
     </section>

@@ -19,7 +19,8 @@ export function BackupScreen() {
       <div className={styles.content}>
         <p className={styles.lead}>
           Dane są przechowywane wyłącznie na tym urządzeniu. Zaszyfrowana kopia zapasowa (np. na
-          dysku lub w chmurze) umożliwia przeniesienie danych na nowe urządzenie lub ich odtworzenie.
+          dysku lub w chmurze) umożliwia przeniesienie danych na nowe urządzenie lub ich
+          odtworzenie.
         </p>
         <h2 className={styles.heading}>Utwórz kopię</h2>
         <Card className={styles.warning} role="note">

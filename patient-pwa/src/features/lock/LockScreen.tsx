@@ -67,8 +67,8 @@ function UnlockPin({ lock }: { lock: ReturnType<typeof useLock> }) {
       ) : (
         <div className={styles.forgot}>
           <p>
-            Dane są zaszyfrowane PIN-em i nie można ich odczytać bez niego. Możesz usunąć dane z tego
-            urządzenia i skonfigurować aplikację ponownie, a następnie wczytać kopię zapasową.
+            Dane są zaszyfrowane PIN-em i nie można ich odczytać bez niego. Możesz usunąć dane z
+            tego urządzenia i skonfigurować aplikację ponownie, a następnie wczytać kopię zapasową.
           </p>
           <Button block variant="danger" onClick={lock.wipe} disabled={lock.busy}>
             Usuń wszystkie dane

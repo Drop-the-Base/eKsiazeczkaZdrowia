@@ -16,7 +16,8 @@ export function SummaryStep({ onContinue }: Props) {
   if (share.status === 'no-profile' || !share.full || !share.selected) {
     return (
       <EmptyState title="Najpierw uzupełnij profil">
-        Podsumowanie dla lekarza obejmuje imię, wiek i alergie. <Link to="/profil">Przejdź do profilu</Link>
+        Podsumowanie dla lekarza obejmuje imię, wiek i alergie.{' '}
+        <Link to="/profil">Przejdź do profilu</Link>
       </EmptyState>
     );
   }
