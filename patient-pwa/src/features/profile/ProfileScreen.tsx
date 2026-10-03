@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Button, EmptyState, LoadingState, PageHeader } from '../../ui';
+import { useNavigate } from 'react-router-dom';
+import { Button, EmptyState, List, ListItem, LoadingState, PageHeader } from '../../ui';
 import { DemoDataCard } from './components/DemoDataCard';
 import { DiagnosesSection } from './components/DiagnosesSection';
 import { ProfileCard } from './components/ProfileCard';
@@ -10,6 +11,7 @@ import styles from './ProfileScreen.module.css';
 export function ProfileScreen() {
   const profile = useProfile();
   const [editing, setEditing] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -24,6 +26,14 @@ export function ProfileScreen() {
             <Button onClick={() => setEditing(true)}>Uzupełnij profil</Button>
           </EmptyState>
         )}
+        <List>
+          <ListItem
+            title="Leki i suplementy"
+            subtitle="Wszystko, co przyjmujesz"
+            trailing="›"
+            onClick={() => navigate('/leki')}
+          />
+        </List>
         <DiagnosesSection />
         <DemoDataCard />
       </div>
