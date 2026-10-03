@@ -8,8 +8,8 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'eKsiazeczkaZdrowia',
-        short_name: 'eKsiazeczka',
+        name: 'Prywatna Karta Zdrowia',
+        short_name: 'Karta Zdrowia',
         description: 'Prywatna oś czasu zdrowia na telefonie',
         lang: 'pl',
         start_url: '/',

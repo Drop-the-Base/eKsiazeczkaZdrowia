@@ -35,3 +35,4 @@ Zmergowane taski (dopisuje agent A po każdym merge, patrz `CLAUDE.md`).
 - [x] [A28] Web Share Target (Chrome Android) dla importu · issue #59 · 2026-10-03 19:23 · atrapy: brak
 - [x] [prośba #143] Profil: przycisk „Zablokuj aplikację” · issue #143 · 2026-10-03 19:26 · atrapy: brak
 - [x] [A29] OCR zdjęcia wyniku (Tesseract pol) → formularz badania · issue #61 · 2026-10-03 19:30 · atrapy: brak
+- [x] [A34] Zmiana nazwy na „Prywatna Karta Zdrowia” (manifest, tytuł, README) · issue #148 · 2026-10-03 19:32 · atrapy: brak

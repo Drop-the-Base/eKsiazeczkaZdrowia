@@ -1,4 +1,4 @@
-# eKsiazeczkaZdrowia
+# Prywatna Karta Zdrowia
 
 Prywatna oś czasu zdrowia na telefonie pacjenta, uzupełniana głosem, którą w kilka sekund można bezpiecznie pokazać dowolnemu lekarzowi. HackYeah 2026, Sport & Healthcare.
 
