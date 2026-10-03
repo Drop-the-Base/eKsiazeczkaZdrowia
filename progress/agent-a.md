@@ -10,3 +10,4 @@ Zmergowane taski (dopisuje agent A po każdym merge, patrz `CLAUDE.md`).
 - [x] [A06] Diagnozy aktualne i przebyte · issue #16 · 2026-10-03 17:49 · atrapy: brak
 - [x] [A07] Skrypt RPL → kompaktowy drugs.json · issue #17 · 2026-10-03 17:52 · atrapy: brak
 - [x] [prośba #86] vite.config PWA: SW bez /lekarz /llm /relay /health, proxy /llm i /relay w dev · issue #86 · 2026-10-03 17:54 · atrapy: brak
+- [x] [A08] searchDrugs + <DrugPicker> · issue #18 · 2026-10-03 17:56 · atrapy: brak
