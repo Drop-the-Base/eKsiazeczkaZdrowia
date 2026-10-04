@@ -2,20 +2,36 @@
 <html lang="pl">
   <head>
     <meta charset="UTF-8" />
-    <title>eKsiazeczkaZdrowia – HackYeah 2026</title>
-    <!-- 10 slajdów 1280×720. PDF: node scripts/slides/build-pdf.mjs. Zrzuty: scripts/slides/capture.mjs -->
+    <title>eKsiążeczkaZdrowia – HackYeah 2026</title>
+    <!-- 10 slajdów 1280×720. PDF + PPTX: node scripts/slides/build-pdf.mjs. Zrzuty: scripts/slides/capture.mjs -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
-        --bg: #f6f7f9;
-        --surface: #fff;
-        --text: #1b1f24;
-        --muted: #5f6b7a;
-        --primary: #0f766e;
-        --primary-soft: #d9f0ed;
+        --ink: #0a1517;
+        --ink-2: #13252a;
+        --ink-line: #24393f;
+        --paper: #ffffff;
+        --paper-2: #f2f5f4;
+        --line: #dfe5e3;
+        --text: #10201f;
+        --muted: #5b6b6c;
+        --muted-dark: #9fb2b5;
+        --teal: #0f766e;
+        --teal-2: #14b8a6;
+        --teal-soft: #d6efeb;
         --rx: #2563eb;
         --otc: #d97706;
-        --supp: #7c3aed;
-        --danger: #b42318;
+        --supp: #8b5cf6;
+        --supp-deep: #6d28d9;
+        --supp-soft: #ede7fe;
+        --bad: #ef4444;
+        --serif: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
       }
       @page {
         size: 1280px 720px;
@@ -26,20 +42,34 @@
       }
       body {
         margin: 0;
-        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        font-family: var(--sans);
         color: var(--text);
-        background: #ccc;
+        background: #888;
+        -webkit-font-smoothing: antialiased;
       }
       .slide {
         position: relative;
         width: 1280px;
         height: 720px;
         margin: 0 auto 24px;
-        padding: 56px 72px;
+        padding: 60px 80px;
         overflow: hidden;
-        background: var(--bg);
+        background: var(--paper);
         page-break-after: always;
         break-after: page;
+      }
+      .slide.dark {
+        background:
+          radial-gradient(900px 600px at 85% 30%, rgb(139 92 246 / 0.16), transparent 60%),
+          radial-gradient(700px 500px at 0% 100%, rgb(20 184 166 / 0.12), transparent 60%),
+          var(--ink);
+        color: #eef4f3;
+      }
+      .slide.dark.teal {
+        background:
+          radial-gradient(900px 600px at 70% 40%, rgb(20 184 166 / 0.2), transparent 60%),
+          radial-gradient(600px 400px at 0% 0%, rgb(139 92 246 / 0.1), transparent 60%),
+          var(--ink);
       }
       @media print {
         body {
@@ -49,387 +79,1384 @@
           margin: 0;
         }
       }
+
+      .notes {
+        display: none;
+      }
+
+      /* Typografia */
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--teal);
+      }
+      .dark .kicker {
+        color: var(--teal-2);
+      }
+      .kicker .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      h1,
+      h2,
+      .serif {
+        font-family: var(--serif);
+        font-weight: 700;
+        letter-spacing: -0.035em;
+      }
       h1 {
-        margin: 0 0 12px;
-        font-size: 56px;
-        line-height: 1.05;
+        margin: 0;
+        font-size: 92px;
+        line-height: 0.95;
       }
       h2 {
-        margin: 0 0 28px;
+        margin: 14px 0 0;
         font-size: 40px;
+        line-height: 1.06;
       }
-      h3 {
-        margin: 0 0 8px;
-        font-size: 22px;
-      }
-      p,
-      li {
-        font-size: 22px;
-        line-height: 1.4;
-      }
-      ul {
+      p {
         margin: 0;
-        padding-left: 1.1em;
       }
-      li + li {
-        margin-top: 10px;
+      .purple {
+        color: var(--supp);
       }
-      .lead {
-        font-size: 28px;
-        color: var(--muted);
+      .dark .purple {
+        color: #b79bff;
       }
       .muted {
         color: var(--muted);
       }
-      .accent {
-        color: var(--primary);
+      .dark .muted {
+        color: var(--muted-dark);
       }
-      .num {
+      em.hl {
+        font-style: normal;
+        background: linear-gradient(transparent 62%, rgb(139 92 246 / 0.28) 62%);
+      }
+
+      /* Stopka */
+      .foot {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        bottom: 26px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .dark .foot {
+        color: #6f8487;
+      }
+      .foot b {
+        font-weight: 700;
+        color: var(--teal);
+      }
+      .dark .foot b {
+        color: var(--teal-2);
+      }
+      .foot .n {
+        font-family: var(--serif);
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      /* Telefon */
+      .phone {
+        position: relative;
+        width: 230px;
+        padding: 9px;
+        border-radius: 13.5% / 6.3%;
+        container-type: inline-size;
+        background: #0c0f10;
+        box-shadow:
+          0 0 0 1.5px #2b3335,
+          0 30px 60px -12px rgb(0 0 0 / 0.45),
+          0 12px 24px -8px rgb(0 0 0 / 0.3);
+      }
+      .phone img {
+        display: block;
+        width: 100%;
+        height: auto;
+        padding: 10.5cqw 0 2cqw;
+        border-radius: 10.5% / 4.9%;
+        background: #f5f6f8;
+      }
+
+      .phone::before {
+        content: '';
+        position: absolute;
+        top: calc(9px + 2.5cqw);
+        left: 50%;
+        width: 30cqw;
+        height: 7.5cqw;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        background: #0c0f10;
+      }
+
+      /* Laptop */
+      .laptop .screen {
+        padding: 12px;
+        border-radius: 18px 18px 0 0;
+        background: #0c0f10;
+        box-shadow:
+          0 0 0 1.5px #2b3335,
+          0 40px 80px -20px rgb(0 0 0 / 0.6);
+      }
+      .laptop .screen img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 2880 / 1560;
+        object-fit: cover;
+        object-position: top;
+        border-radius: 6px;
+      }
+      .laptop .base {
+        position: relative;
+        height: 16px;
+        margin: 0 -48px;
+        border-radius: 0 0 22px 22px;
+        background: linear-gradient(#c9ced0, #8d9496);
+      }
+      .laptop .base::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 120px;
+        height: 7px;
+        transform: translateX(-50%);
+        border-radius: 0 0 8px 8px;
+        background: #7c8385;
+      }
+
+      /* Ikony */
+      .ic {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--teal-soft);
+        color: var(--teal);
+      }
+      .ic svg {
+        width: 22px;
+        height: 22px;
+      }
+      .ic.p {
+        background: var(--supp-soft);
+        color: var(--supp-deep);
+      }
+      .dark .ic {
+        background: rgb(20 184 166 / 0.14);
+        color: var(--teal-2);
+      }
+      .dark .ic.p {
+        background: rgb(139 92 246 / 0.18);
+        color: #c4b0ff;
+      }
+
+      /* Slajd 1 */
+      .s1 .left {
+        position: absolute;
+        left: 80px;
+        top: 96px;
+        width: 620px;
+      }
+      .s1 h1 span {
+        color: var(--teal-2);
+      }
+      .s1 .tag {
+        margin-top: 34px;
+        font-size: 27px;
+        line-height: 1.4;
+        color: #d3dfdd;
+      }
+      .s1 .tag b {
+        color: #fff;
+        font-weight: 600;
+      }
+      .s1 .team {
+        margin-top: 56px;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        font-size: 17px;
+        color: var(--muted-dark);
+      }
+      .s1 .team strong {
+        color: #fff;
+        font-weight: 700;
+      }
+      .s1 .team .sep {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #4e6467;
+      }
+      .s1 .glow {
         position: absolute;
         right: 40px;
-        bottom: 24px;
-        font-size: 16px;
-        color: var(--muted);
+        top: 80px;
+        width: 520px;
+        height: 520px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgb(139 92 246 / 0.45), rgb(20 184 166 / 0.15) 50%, transparent 70%);
+        filter: blur(20px);
       }
-      .brand {
+      .s1 .ph-back {
         position: absolute;
-        left: 72px;
-        bottom: 24px;
-        font-size: 16px;
-        font-weight: 700;
-        color: var(--primary);
+        right: 270px;
+        top: 120px;
+        width: 236px;
+        transform: rotate(-8deg);
+        opacity: 0.9;
       }
-      .row {
+      .s1 .ph-front {
+        position: absolute;
+        right: 70px;
+        top: 66px;
+        width: 268px;
+        transform: rotate(4deg);
+      }
+
+      /* Slajdy 2–3: historia */
+      .story .left {
+        position: absolute;
+        left: 80px;
+        top: 60px;
+        width: 470px;
+      }
+      .story .chart {
+        position: absolute;
+        right: 64px;
+        top: 150px;
+        width: 640px;
+        height: 420px;
+        padding: 26px 24px 18px;
+        border-radius: 24px;
+        background: rgb(255 255 255 / 0.035);
+        border: 1px solid var(--ink-line);
+      }
+      .story .chart-title {
         display: flex;
-        gap: 40px;
-        align-items: flex-start;
+        justify-content: space-between;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted-dark);
       }
-      .grow {
-        flex: 1;
+      .bubbles {
+        margin-top: 44px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
       }
-      .phone {
-        height: 540px;
-        border-radius: 28px;
-        border: 6px solid #1b1f24;
-        box-shadow: 0 12px 32px rgb(0 0 0 / 0.18);
-        background: #fff;
+      .bubble {
+        max-width: 400px;
+        padding: 16px 22px;
+        border-radius: 22px;
+        font-size: 21px;
+        line-height: 1.35;
       }
-      .phone.sm {
-        height: 470px;
-      }
-      .crop {
-        height: 360px;
-        overflow: hidden;
-        border-radius: 12px;
-        border: 1px solid #d0d5db;
-        box-shadow: 0 12px 32px rgb(0 0 0 / 0.15);
-      }
-      .crop img {
-        width: 100%;
+      .bubble small {
         display: block;
+        margin-bottom: 4px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.7;
       }
-      .desk {
-        width: 100%;
-        border-radius: 12px;
-        border: 1px solid #d0d5db;
-        box-shadow: 0 12px 32px rgb(0 0 0 / 0.15);
+      .bubble.doc {
+        align-self: flex-start;
+        border-bottom-left-radius: 6px;
+        background: #e8eeed;
+        color: var(--text);
       }
-      .card {
-        padding: 20px 24px;
-        border-radius: 16px;
-        background: var(--surface);
-        border: 1px solid #e3e6ea;
+      .bubble.pat {
+        align-self: flex-end;
+        border-bottom-right-radius: 6px;
+        background: var(--teal);
+        color: #fff;
       }
-      .grid2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+      .story .note {
+        margin-top: 20px;
+        font-size: 16px;
+        color: var(--muted-dark);
+      }
+      .reveal-list {
+        margin-top: 34px;
+        display: flex;
+        flex-direction: column;
         gap: 20px;
       }
-      .tag {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 999px;
-        background: var(--primary-soft);
-        color: var(--primary);
-        font-weight: 600;
-        font-size: 18px;
-      }
-      .quote {
-        padding: 24px 28px;
-        border-left: 6px solid var(--primary);
-        background: var(--surface);
-        border-radius: 0 16px 16px 0;
-        font-size: 26px;
-        line-height: 1.45;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
+      .reveal-list .row {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
         font-size: 19px;
+        line-height: 1.4;
+        color: #d3dfdd;
       }
-      th,
-      td {
-        padding: 9px 12px;
-        border-bottom: 1px solid #e3e6ea;
+      .reveal-list .row b {
+        color: #fff;
+        font-weight: 600;
+      }
+      .punch {
+        position: absolute;
+        left: 80px;
+        right: 64px;
+        bottom: 64px;
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 500;
+        font-size: 28px;
+        line-height: 1.3;
+        color: #fff;
+      }
+      .punch::before {
+        content: '„';
+        color: #b79bff;
+      }
+      .punch::after {
+        content: '”';
+        color: #b79bff;
+      }
+
+      /* Slajd 4: skala */
+      .s4 .ice {
+        position: absolute;
+        left: 60px;
+        top: 168px;
+        width: 560px;
+      }
+      .s4 .stats {
+        position: absolute;
+        left: 676px;
+        top: 232px;
+        width: 524px;
+        display: flex;
+        flex-direction: column;
+        gap: 26px;
+      }
+      .stat {
+        display: flex;
+        gap: 24px;
+        align-items: center;
+      }
+      .stat .big {
+        flex: none;
+        width: 190px;
+        font-family: var(--serif);
+        font-size: 64px;
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        color: var(--supp-deep);
+      }
+      .stat .lbl {
+        font-size: 19px;
+        line-height: 1.4;
+      }
+      .stat .lbl b {
+        font-weight: 700;
+      }
+      .src {
+        position: absolute;
+        left: 676px;
+        right: 80px;
+        bottom: 62px;
+        font-size: 11.5px;
+        line-height: 1.45;
+        color: var(--muted);
+      }
+
+      /* Slajd 5: rozwiązanie */
+      .s5 .three {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        top: 168px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 48px;
+      }
+      .s5 .shot {
+        position: relative;
+        width: 150px;
+        margin-bottom: 20px;
+      }
+      .s5 .phone {
+        width: 150px;
+      }
+      .s5 .ring {
+        left: 4%;
+        top: 155px;
+        width: 92%;
+        height: 30px;
+        border-radius: 8px;
+      }
+      .s5 .callout {
+        left: 128px;
+        top: 186px;
+        font-size: 13.5px;
+        white-space: nowrap;
+      }
+      .s5 .num {
+        font-family: var(--serif);
+        font-size: 34px;
+        font-weight: 600;
+        line-height: 1;
+        color: var(--teal);
+      }
+      .s5 h3 {
+        display: flex;
+        gap: 12px;
+        align-items: baseline;
+        margin: 0 0 6px;
+        font-size: 21px;
+        font-weight: 700;
+      }
+      .s5 .col p {
+        font-size: 16px;
+        line-height: 1.45;
+        color: var(--muted);
+      }
+      .s5 .fine {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        bottom: 62px;
+        padding-top: 14px;
+        border-top: 1px solid var(--line);
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .callout {
+        position: absolute;
+        padding: 10px 16px;
+        border-radius: 14px;
+        background: var(--supp-deep);
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.3;
+        box-shadow: 0 12px 28px -8px rgb(109 40 217 / 0.6);
+        z-index: 5;
+      }
+      .ring {
+        position: absolute;
+        border: 3px solid var(--supp);
+        border-radius: 14px;
+        box-shadow: 0 0 0 6px rgb(139 92 246 / 0.22);
+        z-index: 4;
+      }
+
+      /* Slajd 6: lekarz */
+      .s7 .laptop {
+        position: absolute;
+        left: 80px;
+        top: 222px;
+        width: 680px;
+      }
+      .s7 .side {
+        position: absolute;
+        left: 860px;
+        top: 222px;
+        width: 330px;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+      }
+      .s7 .step {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+      }
+      .s7 .step h4 {
+        margin: 0 0 4px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .s7 .step p {
+        font-size: 15px;
+        line-height: 1.4;
+        color: var(--muted-dark);
+      }
+      .code {
+        display: inline-flex;
+        gap: 6px;
+        margin-top: 8px;
+      }
+      .code span {
+        width: 30px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        font-family: var(--serif);
+        font-size: 22px;
+        font-weight: 700;
+      }
+
+      /* Slajd 8: porównanie */
+      table.cmp {
+        position: absolute;
+        left: 80px;
+        top: 176px;
+        width: 1120px;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 17px;
+      }
+      .cmp th {
+        padding: 0 14px 12px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+        text-align: center;
+      }
+      .cmp th:first-child {
         text-align: left;
       }
-      th {
+      .cmp td {
+        padding: 14px;
+        border-top: 1px solid var(--line);
+        text-align: center;
         color: var(--muted);
-        font-weight: 600;
       }
-      td.c {
-        text-align: center;
+      .cmp td:first-child {
+        text-align: left;
+        color: var(--text);
+        font-weight: 500;
       }
-      .flow {
+      .cmp .us {
+        background: var(--teal-soft);
+        color: var(--teal);
+        font-weight: 800;
+      }
+      .cmp th.us {
+        border-radius: 14px 14px 0 0;
+        padding-top: 12px;
+        color: var(--teal);
+      }
+      .cmp tr:last-child td.us {
+        border-radius: 0 0 14px 14px;
+      }
+      .cmp .no {
+        color: #b9c4c2;
+        font-size: 18px;
+      }
+      .s8 .status {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        top: 418px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .s8 .box {
+        padding: 20px 22px;
+        border-radius: 18px;
+        background: var(--paper-2);
+      }
+      .s8 .box h4 {
         display: flex;
+        gap: 12px;
         align-items: center;
-        gap: 16px;
-        margin: 20px 0 8px;
+        margin: 0 0 12px;
+        font-size: 18px;
+        font-weight: 700;
       }
-      .box {
-        padding: 16px 20px;
-        border-radius: 14px;
-        background: var(--surface);
-        border: 2px solid #e3e6ea;
-        font-size: 20px;
-        text-align: center;
+      .s8 .box .ic {
+        width: 36px;
+        height: 36px;
       }
-      .box.key {
-        border-color: var(--primary);
+      .s8 .box .ic svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .s8 .box ul {
+        margin: 0;
+        padding-left: 20px;
+        font-size: 15.5px;
+        line-height: 1.55;
+        color: var(--muted);
+      }
+
+      /* Slajd 9: wdrożenie */
+      .s9 .cards {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        top: 176px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .s9 .card {
+        padding: 32px 30px;
+        border-radius: 20px;
+        background: rgb(255 255 255 / 0.04);
+        border: 1px solid var(--ink-line);
+      }
+      .s9 .card h4 {
+        margin: 22px 0 10px;
+        font-size: 21px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .s9 .card p {
+        font-size: 18.5px;
+        line-height: 1.45;
+        color: var(--muted-dark);
+      }
+      .s9 .facts {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        top: 500px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .s9 .facts > span {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        padding: 18px 22px;
+        border-radius: 16px;
+        background: rgb(20 184 166 / 0.1);
+        font-size: 17px;
+        font-weight: 600;
+        line-height: 1.35;
+        color: #fff;
+      }
+      .s9 .card .ic {
+        width: 54px;
+        height: 54px;
+      }
+      .s9 .card .ic svg {
+        width: 26px;
+        height: 26px;
+      }
+      .s9 .facts .ic {
+        width: 38px;
+        height: 38px;
+      }
+
+      /* Hook */
+      .hook {
+        padding-top: 96px;
+      }
+      .ghost-bar {
+        position: absolute;
+        left: 640px;
+        right: -80px;
+        top: 300px;
+        height: 70px;
+        border-radius: 999px;
+        background: #8b5cf6;
+        opacity: 0.35;
+        filter: blur(38px);
+      }
+      .hq {
+        position: relative;
+        margin-top: 26px;
+        font-family: var(--serif);
+        font-size: 104px;
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: #fff;
+      }
+      .hsub {
+        position: relative;
+        margin-top: 34px;
+        max-width: 900px;
+        font-size: 26px;
+        line-height: 1.45;
+        color: #d3dfdd;
+      }
+      .hbrand {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        bottom: 52px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding-top: 22px;
+        border-top: 1px solid var(--ink-line);
+      }
+      .hbrand .name {
+        font-family: var(--serif);
+        font-size: 30px;
+        font-weight: 600;
+        color: #fff;
+      }
+      .hbrand .name span {
+        color: var(--teal-2);
+      }
+      .hbrand .meta {
+        font-size: 16px;
+        color: var(--muted-dark);
+      }
+      .hbrand .meta strong {
+        color: #fff;
+      }
+
+      /* Slajd 7: prywatność */
+      .slide.dark.leak {
+        background:
+          radial-gradient(800px 500px at 20% 70%, rgb(239 68 68 / 0.16), transparent 60%),
+          radial-gradient(600px 400px at 100% 0%, rgb(139 92 246 / 0.1), transparent 60%),
+          var(--ink);
+      }
+      .leak .kicker {
+        color: #ff8a8a;
+      }
+      .leak-big {
+        position: absolute;
+        left: 80px;
+        top: 250px;
+        width: 470px;
+      }
+      .leak-big .num {
+        font-family: var(--serif);
+        font-size: 88px;
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        color: #ff6b6b;
+      }
+      .leak-big p {
+        margin-top: 18px;
+        font-size: 19px;
+        line-height: 1.45;
+        color: #d3dfdd;
+      }
+      .pipe-v {
+        position: absolute;
+        left: 640px;
+        right: 80px;
+        top: 168px;
+        display: flex;
+        flex-direction: column;
+      }
+      .pnode {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        padding: 14px 18px;
+        border-radius: 18px;
+        background: rgb(255 255 255 / 0.04);
+        border: 1px solid var(--ink-line);
+      }
+      .pnode.mid {
+        border: 1.5px dashed #4e6467;
+        background: transparent;
+      }
+      .pnode h4 {
+        margin: 0 0 2px;
+        font-size: 16.5px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .pnode p {
+        font-size: 14px;
+        line-height: 1.35;
+        color: var(--muted-dark);
       }
       .arrow {
-        font-size: 28px;
-        color: var(--muted);
+        display: grid;
+        place-items: center;
+        height: 34px;
       }
-      .steps {
-        counter-reset: s;
-        list-style: none;
-        padding: 0;
-      }
-      .steps li {
-        counter-increment: s;
-        position: relative;
-        padding-left: 44px;
-        font-size: 21px;
-      }
-      .steps li::before {
-        content: counter(s);
-        position: absolute;
-        left: 0;
-        top: 0;
+      .arrow svg {
         width: 30px;
         height: 30px;
-        border-radius: 50%;
-        background: var(--primary);
+        transform: rotate(90deg);
+      }
+      .ai-strip {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        margin-top: 22px;
+        padding: 12px 18px;
+        border-radius: 16px;
+        background: rgb(139 92 246 / 0.16);
+      }
+      .ai-strip .ic {
+        width: 38px;
+        height: 38px;
+        background: rgb(139 92 246 / 0.25);
+        color: #c4b0ff;
+      }
+      .ai-strip p {
+        font-size: 15px;
+        line-height: 1.4;
+        color: #e4dcff;
+      }
+      .ai-strip b {
         color: #fff;
-        font-size: 17px;
+      }
+
+      /* Slajd 10: demo */
+      .dh {
+        font-size: 58px;
+      }
+      .dlead {
+        margin-top: 22px;
+        width: 560px;
+        font-size: 20px;
+        line-height: 1.45;
+        color: #d3dfdd;
+      }
+      .dlead span {
+        color: #b79bff;
+        font-weight: 600;
+      }
+      .ask {
+        margin-top: 26px;
+        width: 560px;
+        padding: 12px 18px;
+        border-left: 4px solid var(--teal-2);
+        border-radius: 0 12px 12px 0;
+        background: rgb(20 184 166 / 0.12);
+        font-size: 19px;
+        font-weight: 600;
+        line-height: 1.4;
+        color: #fff;
+      }
+      .dlink {
+        position: absolute;
+        left: 80px;
+        top: 392px;
+        width: 560px;
+        display: flex;
+        gap: 22px;
+        align-items: center;
+        padding: 18px;
+        border-radius: 22px;
+        background: rgb(255 255 255 / 0.05);
+        border: 1px solid var(--ink-line);
+        text-decoration: none;
+      }
+      .dlink .qr {
+        flex: none;
+        width: 132px;
+        height: 132px;
+        border-radius: 12px;
+      }
+      .dl-text {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .dlink .url {
+        font-size: 24px;
         font-weight: 700;
-        text-align: center;
-        line-height: 30px;
+        color: var(--teal-2);
+      }
+      .dlink .hint {
+        font-size: 15px;
+        line-height: 1.45;
+        color: var(--muted-dark);
+      }
+      .dlap {
+        position: absolute;
+        left: 720px;
+        top: 150px;
+        width: 480px;
+      }
+      .dphone {
+        position: absolute;
+        left: 660px;
+        top: 300px;
+        width: 160px;
+      }
+      .demo .bottom {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        bottom: 40px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 15px;
+        color: var(--muted-dark);
+      }
+      .demo .bottom strong {
+        color: #fff;
+      }
+
+      /* Slajd 10 */
+      .s10 .big {
+        position: absolute;
+        left: 80px;
+        top: 112px;
+        width: 1080px;
+        font-family: var(--serif);
+        font-size: 52px;
+        font-weight: 600;
+        line-height: 1.08;
+        letter-spacing: -0.025em;
+      }
+      .s10 .big span {
+        color: #b79bff;
+      }
+      .s10 .tiles {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        top: 380px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+      .tile {
+        padding: 22px 22px 20px;
+        border-radius: 20px;
+        background: rgb(255 255 255 / 0.04);
+        border: 1px solid var(--ink-line);
+      }
+      .tile .v {
+        font-family: var(--serif);
+        font-size: 46px;
+        font-weight: 600;
+        line-height: 1;
+        color: #fff;
+      }
+      .tile .v small {
+        font-size: 24px;
+      }
+      .tile p {
+        margin-top: 10px;
+        font-size: 15px;
+        line-height: 1.4;
+        color: var(--muted-dark);
+      }
+      .s10 .bottom {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        bottom: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        font-size: 16px;
+        color: var(--muted-dark);
+      }
+      .s10 .bottom strong {
+        color: #fff;
       }
     </style>
   </head>
   <body>
-    <!-- 1. Tytuł -->
-    <section class="slide">
-      <div class="row">
-        <div class="grow" style="padding-top: 70px">
-          <span class="tag">HackYeah 2026 · Sport &amp; Healthcare</span>
-          <h1 style="margin-top: 28px">eKsiazeczka<br />Zdrowia</h1>
-          <p class="lead">
-            Prywatna oś czasu zdrowia na telefonie pacjenta, uzupełniana głosem, którą w kilka
-            sekund można bezpiecznie pokazać dowolnemu lekarzowi – także za granicą.
-          </p>
-          <p style="margin-top: 48px"><strong>Zespół Drop the Base</strong></p>
-          <p class="muted">[członkowie zespołu]</p>
-        </div>
-        <img class="phone" src="img/os-czasu.png" alt="" />
+    <!-- 1. Hook -->
+    <section class="slide dark hook">
+      <div class="ghost-bar"></div>
+      <span class="kicker"><span class="dot"></span>Prawdziwy przypadek</span>
+      <p class="hq">„Jakie leki<br />pani przyjmuje?”</p>
+      <p class="hsub">Pacjentka odpowiedziała zgodnie z prawdą. Mimo to lekarze przepisali jej trzy różne leki, zanim zrozumieli, co się dzieje.</p>
+      <div class="hbrand">
+        <span class="name">eKsiążeczka<span>Zdrowia</span></span>
+        <span class="meta">HackYeah 2026 · Sport &amp; Healthcare · <strong>DropTheBase;</strong></span>
       </div>
-      <span class="num">1</span>
+      <aside class="notes">Jakie leki pani przyjmuje? Każdy z nas słyszał to pytanie u lekarza. Pewna pacjentka odpowiedziała na nie zgodnie z prawdą, a mimo to lekarze przepisali jej trzy różne leki, zanim zrozumieli, co się dzieje. Jesteśmy DropTheBase; i opowiemy wam, co poszło nie tak.</aside>
     </section>
 
-    <!-- 2. Przypadek z życia -->
-    <section class="slide">
-      <h2>Pacjent nie wie, co jest istotne</h2>
-      <div class="quote">
-        Pacjentka leczona na nowotwór krwi. Lekarze kolejno zmieniali leki, a po każdym wyniki krwi
-        były złe. Nikt nie wiedział dlaczego.<br /><br />
-        Nie uznała za istotne, żeby wspomnieć o <strong>suplemencie z grzybów</strong>, który brała
-        codziennie. Lekarze dowiedzieli się o nim przypadkiem – od jej córki.
+    <!-- 2. Prawdziwy przypadek -->
+    <section class="slide dark story">
+      <div class="left">
+        <span class="kicker"><span class="dot"></span>Prawdziwy przypadek</span>
+        <h2>Po każdym nowym leku<br />wyniki krwi były złe</h2>
+        <div class="bubbles">
+          <div class="bubble doc"><small>Lekarz</small>Jakie leki pani przyjmuje?</div>
+          <div class="bubble pat"><small>Pani Anna</small>Te, które pan doktor przepisał.</div>
+        </div>
+        <p class="note">Lekarze szukali przyczyny w lekach, bo tylko o nich wiedzieli.</p>
       </div>
-      <p class="lead" style="margin-top: 36px">
-        → Zapisujemy <strong>wszystko</strong>, co pacjent bierze – także suplementy i zioła – i
-        pokazujemy to lekarzowi <strong>na równi</strong> z lekami z recepty.
+      <div class="chart">
+        <div class="chart-title"><span>Leczenie białaczki · 2026</span><span>Co widzi lekarz</span></div>
+        <svg class="timeline" data-reveal="0" viewBox="0 0 592 360" width="592" height="360"></svg>
+      </div>
+      <div class="foot"><span>Case study z medycznej konferencji naukowej. Imię, daty i wyniki zmienione.</span><span class="n">02</span></div>
+      <aside class="notes">To prawdziwy przypadek, przedstawiony na konferencji medycznej. Pacjentka leczona na białaczkę. Po każdym nowym leku morfologia wychodziła źle. Lekarze pytali, jakie leki bierze, a ona odpowiadała: te, które przepisał pan doktor. Więc szukali przyczyny w lekach, bo tylko o nich wiedzieli.</aside>
+    </section>
+
+    <!-- 3. Zwrot akcji -->
+    <section class="slide dark story">
+      <div class="left">
+        <span class="kicker"><span class="dot"></span>Czego zabrakło w wywiadzie</span>
+        <h2>Przez cały czas brała<br /><span class="purple">suplement z grzybów</span></h2>
+        <div class="reveal-list">
+          <div class="row">
+            <span class="ic p" data-icon="pill"></span>
+            <span><b>Codziennie od marca</b>. Nie uważała go za lek, więc nie wspomniala o nim w wywiadzie.</span>
+          </div>
+          <div class="row">
+            <span class="ic p" data-icon="users"></span>
+            <span>Lekarze dowiedzieli się o nim <b>przypadkiem, od jej córki</b>.</span>
+          </div>
+          <div class="row">
+            <span class="ic p" data-icon="zap"></span>
+            <span>Okazało się, że każdy kolejny lek <b>wchodził z nim w interakcję</b>.</span>
+          </div>
+        </div>
+      </div>
+      <div class="chart">
+        <div class="chart-title"><span>Leczenie białaczki · 2026</span><span style="color: #b79bff">Pełny obraz</span></div>
+        <svg class="timeline" data-reveal="1" viewBox="0 0 592 360" width="592" height="360"></svg>
+      </div>
+      <p class="punch">Lekarz pytał o leki, więc usłyszał o lekach.</p>
+      <aside class="notes">Brakowało jednej rzeczy. Od marca codziennie brała suplement z grzybów. Nie traktowała go jak leku, więc nawet nie pomyślała, żeby o nim wspomnieć. Lekarze dowiedzieli się o nim przypadkiem, od jej córki. I okazało się, że każdy kolejny lek wchodził z tym suplementem w interakcję. Nikt tu nie kłamał. Lekarz pytał o leki, więc usłyszał o lekach.</aside>
+    </section>
+
+    <!-- 4. Skala problemu -->
+    <section class="slide s4">
+      <span class="kicker"><span class="dot"></span>To zdarza się często</span>
+      <h2>IKP zna recepty.<br />Reszty lekarz zwykle nie widzi.</h2>
+      <svg class="ice" viewBox="0 0 560 470" width="560" height="470" aria-hidden="true">
+        <defs>
+          <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#e3f1ef" />
+            <stop offset="1" stop-color="#c4e2de" />
+          </linearGradient>
+          <linearGradient id="berg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#a68af5" />
+            <stop offset="1" stop-color="#6d28d9" />
+          </linearGradient>
+        </defs>
+        <rect x="0" y="118" width="560" height="352" rx="24" fill="url(#water)" />
+        <path d="M228 118 L262 46 L286 64 L304 30 L344 118 Z" fill="#ffffff" stroke="#0f766e" stroke-width="2.5" stroke-linejoin="round" />
+        <path d="M228 118 L344 118 L420 168 L478 262 L452 360 L380 430 L250 446 L142 404 L92 300 L118 196 Z" fill="url(#berg)" opacity="0.95" />
+        <path d="M0 118 Q 35 110 70 118 T 140 118 T 210 118 T 280 118 T 350 118 T 420 118 T 490 118 T 560 118" fill="none" stroke="#0f766e" stroke-width="2" />
+        <text x="358" y="60" font-family="Inter" font-size="15" font-weight="700" fill="#0f766e">RECEPTY</text>
+        <text x="358" y="80" font-family="Inter" font-size="14" fill="#5b6b6c">to widzi IKP</text>
+        <g font-family="Inter" fill="#ffffff" text-anchor="middle">
+          <text x="285" y="186" font-size="20" font-weight="700">suplementy i zioła</text>
+          <text x="285" y="226" font-size="18" font-weight="600">leki bez recepty</text>
+          <text x="285" y="264" font-size="18" font-weight="600">objawy i samopoczucie</text>
+          <text x="285" y="302" font-size="18" font-weight="600">czy dawki są brane</text>
+          <text x="285" y="340" font-size="18" font-weight="600">zmiany skórne w czasie</text>
+          <text x="285" y="378" font-size="18" font-weight="600">„powiem lekarzowi…”</text>
+        </g>
+      </svg>
+      <div class="stats">
+        <div class="stat">
+          <div class="big">70,6%</div>
+          <p class="lbl"><b>dorosłych Polaków</b> bierze suplementy, regularnie albo od czasu do czasu</p>
+        </div>
+        <div class="stat">
+          <div class="big">1 na 5</div>
+          <p class="lbl">pacjentów <b>mówi lekarzowi</b> o tym, co bierze bez recepty</p>
+        </div>
+        <div class="stat">
+          <div class="big">~50%</div>
+          <p class="lbl">osób biorących suplementy <b>łączy je z lekami na receptę</b></p>
+        </div>
+      </div>
+      <p class="src">
+        Źródła: 70,6% – S. Sierpiński, badanie na reprezentatywnej próbie 5006 dorosłych Polaków, XII 2024 (za leki.pl).
+        1 na 5 i ~50% – Gdański Uniwersytet Medyczny, „Scientific Reports”, 2026, ok. 800 uczestników (za tvn24.pl).
       </p>
-      <span class="brand">eKsiazeczkaZdrowia</span><span class="num">2</span>
+      <div class="foot"><span><b>eKsiążeczkaZdrowia</b></span><span class="n">04</span></div>
+      <aside class="notes">I to nie jest wyjątek. Ponad 70 procent dorosłych Polaków bierze suplementy. Tylko co piąty pacjent mówi lekarzowi o tym, co bierze bez recepty. A mniej więcej połowa łączy suplementy z lekami na receptę. IKP zna recepty, ale nie wie o suplementach, ziołach, objawach ani o tym, czy pacjent w ogóle bierze leki.</aside>
     </section>
 
-    <!-- 3. Problem -->
-    <section class="slide">
-      <h2>Problem: dane o zdrowiu są rozproszone</h2>
-      <div class="grid2">
-        <div class="card">
-          <h3>Rozproszenie</h3>
-          <p>
-            Przychodnie, szpitale, laboratoria, aplikacje, papier. IKP zna recepty, ale nie wie, co
-            pacjent <em>faktycznie</em> bierze, kupuje bez recepty i jak się czuje.
-          </p>
+    <!-- 5. Rozwiązanie -->
+    <section class="slide s5">
+      <span class="kicker"><span class="dot"></span>Rozwiązanie</span>
+      <h2>Aplikacja pyta o to, o czym pacjent by nie wspomniał</h2>
+      <div class="three">
+        <div class="col">
+          <div class="shot">
+            <div class="phone"><img src="img/leki.png" alt="" /></div>
+            <div class="ring"></div>
+            <div class="callout">Suplementy<br />i inne rzeczy</div>
+          </div>
+          <div>
+            <h3><span class="num">1</span>„Bierzesz coś jeszcze?”</h3>
+            <p> Przy dodawaniu leku aplikacja dopytuje o suplementy, zioła i herbatki.</p>
+          </div>
         </div>
-        <div class="card">
-          <h3>Łatwo zapomnieć</h3>
-          <p>Dawki, daty badań, objawy, zalecenia z wizyty – w 10-minutowej wizycie wszystko ucieka.</p>
+        <div class="col">
+          <div class="shot"><div class="phone"><img src="img/os-czasu.png" alt="" /></div></div>
+          <div>
+            <h3><span class="num">2</span>Wszystko na jednej osi czasu</h3>
+            <p>Leki z recepty, suplementy, objawy i wyniki badań.</p>
+          </div>
         </div>
-        <div class="card">
-          <h3>Brak osi czasu</h3>
-          <p>Trudno zobaczyć, że objaw zaczął się kilka dni po nowym leku albo że jedyną stałą jest suplement.</p>
-        </div>
-        <div class="card">
-          <h3>Za granicą</h3>
-          <p>Lekarz nie ma dostępu do historii, a pacjent nie umie jej opisać w obcym języku.</p>
+        <div class="col">
+          <div class="shot"><div class="phone"><img src="img/udostepnij.png" alt="" /></div></div>
+          <div>
+            <h3><span class="num">3</span>Pokazujesz lekarzowi</h3>
+            <p>Skan kodu QR, bez konta i instalacji po stronie lekarza.</p>
+          </div>
         </div>
       </div>
-      <span class="brand">eKsiazeczkaZdrowia</span><span class="num">3</span>
+      <p class="fine">Rejestr 20 248 leków działa offline · import dokumentów z IKP · zdjęcie wyniku z kartki</p>
+      <div class="foot"><span><b>eKsiążeczkaZdrowia</b></span><span class="n">05</span></div>
+      <aside class="notes">Dlatego zrobiliśmy aplikację, w której pacjent nie musi się zastanawiać, co jest ważne. Najważniejsze jest to, o co aplikacja pyta. Kiedy dodajesz lek, dopytuje: bierzesz coś jeszcze, może jakieś zioła albo herbatki? Wystarczy powiedzieć jedno zdanie, a suplement trafia na tę samą listę co leki z recepty. Wszystko ląduje na jednej osi czasu: leki, suplementy, objawy i wyniki badań. Mamy w telefonie cały rejestr leków, ponad 20 tysięcy pozycji, działa bez internetu. Dokumenty z IKP można dodać jednym kliknięciem, a wynik z kartki po prostu sfotografować. A u lekarza wystarczy zeskanować kod QR.</aside>
     </section>
 
-    <!-- 4. Rozwiązanie / Pani Anna -->
-    <section class="slide">
-      <h2>Pani Anna i jej telefon</h2>
-      <div class="row">
-        <ol class="steps grow">
-          <li>Dodaje leki z rejestru i – zapytana wprost – <strong>suplement</strong>, który uważa za nieistotny.</li>
-          <li>Codziennie potwierdza leki jednym dotknięciem; mówi: <em>„od rana boli mnie głowa, wzięłam ibuprom”</em>.</li>
-          <li>Wyniki krwi (import z IKP, zdjęcie wydruku) lądują na osi czasu obok leków.</li>
-          <li><em>„Powiem lekarzowi, że po nowym leku kręci mi się w głowie”</em> → lista na wizytę.</li>
-          <li>U lekarza skanuje QR – lekarz w 30 s widzi wszystko, także suplement.</li>
-          <li>Po wizycie: notatka → zmiany w lekach i kontrola w kalendarzu.</li>
-          <li>Przed oddaniem krwi pyta: <em>„jakie leki brałam w ostatnich 2 miesiącach?”</em></li>
-          <li>W Hiszpanii pokazuje podsumowanie po hiszpańsku – offline.</li>
-        </ol>
+    <!-- 6. U lekarza -->
+    <section class="slide dark teal s7">
+      <span class="kicker"><span class="dot"></span>Wizyta</span>
+      <h2>Lekarz od razu widzi<br />historię pacjenta.</h2>
+      <div class="laptop">
+        <div class="screen"><img src="img/lekarz-os.png" alt="" /></div>
+        <div class="base"></div>
       </div>
-      <span class="brand">eKsiazeczkaZdrowia</span><span class="num">4</span>
+      <div class="ring" style="left: 406px; top: 447px; width: 320px; height: 28px; border-radius: 12px"></div>
+      <div class="callout" style="left: 196px; top: 480px">Suplement brany przez<br />całe leczenie</div>
+      <div class="side">
+        <div class="step">
+          <span class="ic" data-icon="qr"></span>
+          <div>
+            <h4>Lekarz otwiera stronę</h4>
+            <p>Wystarczy zwykła przeglądarka w gabinecie. Bez konta i bez instalowania czegokolwiek.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="ic" data-icon="smartphone"></span>
+          <div>
+            <h4>Pacjent skanuje kod QR</h4>
+            <p>Na obu ekranach pojawia się ten sam kod. Jeśli się zgadza, nikt się nie podpiął po drodze.</p>
+            <div class="code"><span>6</span><span>1</span><span>2</span><span>3</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <span class="ic" data-icon="eye"></span>
+          <div>
+            <h4>Po wizycie dane znikają</h4>
+            <p>Lekarz widzi sprawy od pacjenta, leki i oś czasu. Po zamknięciu karty nic u niego nie zostaje.</p>
+          </div>
+        </div>
+      </div>
+      <div class="foot"><span><b>eKsiążeczkaZdrowia</b></span><span class="n">06</span></div>
+      <aside class="notes">[Tu pokazujemy 30–60 s demo na żywo: skan QR, ten sam kod 4-cyfrowy na obu ekranach, fioletowy pasek suplementu u lekarza.] W gabinecie lekarz otwiera zwykłą stronę w przeglądarce, bez zakładania konta. Pacjent skanuje kod QR i na obu ekranach pojawia się ten sam czterocyfrowy kod, co potwierdza, że nikt się nie podpiął po drodze. Lekarz od razu widzi, o czym pacjent chce porozmawiać, co bierze i oś czasu. Ten fioletowy pasek to suplement. Pani Anna miałaby go na ekranie lekarza od pierwszej wizyty. Po zamknięciu karty dane znikają.</aside>
     </section>
 
-    <!-- 5. Zbieranie danych -->
-    <section class="slide">
-      <div class="row">
-        <div class="grow">
-          <h2>Zbieranie bez wysiłku</h2>
+    <!-- 7. Prywatność -->
+    <section class="slide dark leak">
+      <span class="kicker"><span class="dot"></span>Zostaje jedno pytanie</span>
+      <h2>Prosimy o wszystko, więc nie trzymamy <span class="purple">niczego</span></h2>
+      <div class="leak-big">
+        <div class="num">18,8 mln</div>
+        <p>Polaków, których może dotyczyć wyciek z systemu MyDr (sierpień 2026). PESEL, wizyty, recepty, ok. 12 tys. placówek.</p>
+      </div>
+      <div class="pipe-v">
+        <div class="pnode">
+          <span class="ic" data-icon="smartphone"></span>
+          <div><h4>Telefon pacjenta</h4><p>Jedyne miejsce z danymi. Baza zaszyfrowana kluczem z PIN-u.</p></div>
+        </div>
+        <div class="arrow" data-arrow></div>
+        <div class="pnode mid">
+          <span class="ic p" data-icon="mail"></span>
+          <div><h4>Serwer jak listonosz</h4><p>Przenosi zaklejoną kopertę. Nie ma klucza i nic nie zapisuje.</p></div>
+        </div>
+        <div class="arrow" data-arrow></div>
+        <div class="pnode">
+          <span class="ic" data-icon="monitor"></span>
+          <div><h4>Przeglądarka lekarza</h4><p>Dane są tylko w otwartej karcie.</p></div>
+        </div>
+        <div class="ai-strip">
+          <span class="ic" data-icon="bot"></span>
+          <p><b>AI też nie dostaje danych:</b> model zamienia pytanie na filtr, wyszukiwanie odbywa się w telefonie.</p>
+        </div>
+      </div>
+      <div class="foot"><span>Źródła: cyberdefence24.pl, zaufanatrzeciastrona.pl, komunikat Ministerstwa Cyfryzacji</span><span class="n">07</span></div>
+      <aside class="notes">Chcemy, żeby pacjent zapisywał wszystko, nawet to, czego nie powiedziałby lekarzowi. Musi więc mieć pewność, że te dane nigdzie nie wyciekną. W sierpniu wyciek z MyDr mógł objąć 18,8 miliona Polaków. Im więcej danych w jednym miejscu, tym większy łup. Dlatego u nas takiego miejsca nie ma: dane są tylko w telefonie, zaszyfrowane kluczem z PIN-u. Serwer działa jak listonosz z zaklejoną kopertą: nie ma klucza i nic nie zapisuje. U lekarza dane żyją tylko w otwartej karcie. Nawet AI nie widzi danych, zwraca tylko filtr.</aside>
+    </section>
+
+    <!-- 8. Porównanie -->
+    <section class="slide s8">
+      <span class="kicker"><span class="dot"></span>Czym się różnimy</span>
+      <h2>Nikt nie łączy tych trzech rzeczy</h2>
+      <table class="cmp">
+        <thead>
+          <tr><th></th><th>mojeIKP</th><th>Bearable, CareClinic</th><th class="us">eKsiążeczkaZdrowia</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Widok dla lekarza przez QR, bez konta i instalacji</td><td class="no">✕</td><td>eksport PDF</td><td class="us">✓</td></tr>
+          <tr><td>Dane tylko w telefonie, bez centralnej bazy</td><td class="no">✕</td><td>chmura</td><td class="us">✓</td></tr>
+          <tr><td>Leki z recepty i suplementy na jednej osi czasu</td><td class="no">✕</td><td>częściowo</td><td class="us">✓</td></tr>
+        </tbody>
+      </table>
+      <div class="status">
+        <div class="box">
+          <h4><span class="ic" data-icon="check"></span>Działa dziś</h4>
           <ul>
-            <li><strong>Głos:</strong> jedno zdanie → objaw + przyjęty lek, zatwierdzenie jednym dotknięciem (zdanie rozbijane na telefonie).</li>
-            <li><strong>Rejestr Produktów Leczniczych:</strong> 20 248 leków offline – substancja, moc, ATC, ulotka.</li>
-            <li><strong>Import z IKP:</strong> PDF z „Udostępnij” → diagnozy, wyniki, leki do zatwierdzenia.</li>
-            <li><strong>Zdjęcie wydruku:</strong> OCR na telefonie → gotowy formularz badania.</li>
-            <li><strong>„Czy bierzesz coś jeszcze?”</strong> – suplementy i zioła na równi z lekami.</li>
+            <li>Rejestr 20 248 leków działa offline</li>
+            <li>Baza w telefonie zaszyfrowana kluczem z PIN-u</li>
+            <li>Przekazanie lekarzowi przez QR z kodem weryfikacyjnym</li>
+            <li>Widok lekarza w zwykłej przeglądarce</li>
+            <li>Wpisy i pytania o historię głosem</li>
           </ul>
         </div>
-        <img class="phone sm" src="img/dodaj.png" alt="" />
-        <img class="phone sm" src="img/leki.png" alt="" />
-      </div>
-      <span class="brand">eKsiazeczkaZdrowia</span><span class="num">5</span>
-    </section>
-
-    <!-- 6. Oś czasu -->
-    <section class="slide">
-      <div class="row">
-        <img class="phone" src="img/os-czasu.png" alt="" />
-        <div class="grow" style="padding-top: 40px">
-          <h2>Wszystko na jednej osi czasu</h2>
+        <div class="box">
+          <h4><span class="ic p" data-icon="arrow"></span>Następny krok</h4>
           <ul>
-            <li>Leki jako paski – w trzech grupach: <span style="color: var(--rx)">na receptę</span>, <span style="color: var(--otc)">bez recepty</span>, <span style="color: var(--supp)">suplementy i zioła</span>.</li>
-            <li>Pod spodem wyniki badań (poza normą ↓↑), objawy, wizyty, zdjęcia, dokumenty.</li>
-            <li>Widać, że <strong>suplement trwa przez cały okres złych wyników</strong>, a zawroty zaczęły się po nowym leku.</li>
-            <li class="muted">Bez interpretacji i ostrzeżeń – wnioski wyciąga lekarz.</li>
-          </ul>
-        </div>
-      </div>
-      <span class="num">6</span>
-    </section>
-
-    <!-- 7. Wizyta -->
-    <section class="slide">
-      <h2>U lekarza: QR, 30 sekund, zero instalacji</h2>
-      <div class="row">
-        <img class="phone sm" src="img/powiem-lekarzowi.png" alt="" />
-        <div class="grow">
-          <div class="crop"><img src="img/lekarz.png" alt="" /></div>
-          <p style="margin-top: 16px">
-            Lekarz otwiera stronę w przeglądarce, pacjentka skanuje QR → dane płyną
-            <strong>zaszyfrowane end-to-end</strong>. „Pacjent chce powiedzieć”, wszystko, co
-            przyjmuje (na równi) i podsumowanie od ostatniej wizyty na start, dalej oś czasu w zakładkach. Dane tylko w pamięci
-            karty – znikają po „Zakończ wizytę”.
-          </p>
-        </div>
-      </div>
-      <span class="brand">eKsiazeczkaZdrowia</span><span class="num">7</span>
-    </section>
-
-    <!-- 8. Zapytaj + Za granicą -->
-    <section class="slide">
-      <div class="row">
-        <div class="grow">
-          <h2>Pytania o przeszłość i za granicą</h2>
-          <ul>
-            <li><em>„Jakie leki brałam w ostatnich 2 miesiącach?”</em>, <em>„Kiedy ostatnio brałam leki przeciwzakrzepowe?”</em>, <em>„Od kiedy mam te bóle głowy?”</em></li>
-            <li>Model językowy dostaje <strong>tylko pytanie</strong> i zamienia je na filtr – odpowiedź liczy się na telefonie.</li>
-            <li><strong>Za granicą:</strong> podsumowanie po angielsku, niemiecku, hiszpańsku – leki przez substancję czynną + ATC, choroby z ICD-10. Offline, z wydrukiem do PDF.</li>
-          </ul>
-        </div>
-        <img class="phone sm" src="img/zapytaj.png" alt="" />
-        <img class="phone sm" src="img/za-granica.png" alt="" />
-      </div>
-      <span class="brand">eKsiazeczkaZdrowia</span><span class="num">8</span>
-    </section>
-
-    <!-- 9. Prywatność -->
-    <section class="slide">
-      <h2>Prywatność: historia zdrowia nie opuszcza telefonu</h2>
-      <div class="flow">
-        <div class="box key">Telefon pacjenta<br /><small class="muted">baza AES-256-GCM, klucz z PIN-u</small></div>
-        <span class="arrow">→</span>
-        <div class="box">Serwer = listonosz<br /><small class="muted">przekazuje zaklejoną kopertę</small></div>
-        <span class="arrow">→</span>
-        <div class="box key">Przeglądarka lekarza<br /><small class="muted">tylko w pamięci karty</small></div>
-      </div>
-      <div class="grid2" style="margin-top: 20px">
-        <ul>
-          <li>Przesył: jednorazowe klucze ECDH → AES-256-GCM; serwer nie ma klucza.</li>
-          <li>4-cyfrowy kod weryfikacyjny na obu ekranach – podmiana klucza wychodzi od razu.</li>
-          <li>Kopia zapasowa: plik szyfrowany hasłem (Argon2id), pacjent decyduje, gdzie go trzyma.</li>
-        </ul>
-        <ul>
-          <li>Rozpoznawanie wpisów, wyszukiwanie leków, OCR, import PDF – lokalnie.</li>
-          <li>Do modelu językowego: tylko jedno zdanie pytania, anonimowo, bez historii.</li>
-          <li class="muted">Uczciwie: dyktowanie w Chrome korzysta z usługi Google – w aplikacji mobilnej rozpoznawanie na urządzeniu.</li>
-        </ul>
-      </div>
-      <span class="brand">eKsiazeczkaZdrowia</span><span class="num">9</span>
-    </section>
-
-    <!-- 10. Konkurencja + rozwój -->
-    <section class="slide">
-      <div class="row">
-        <div class="grow">
-          <h2>Dlaczego my</h2>
-          <table>
-            <tr><th></th><th>mojeIKP</th><th>Bearable / CareClinic</th><th>eKsiazeczkaZdrowia</th></tr>
-            <tr><td>Faktycznie przyjmowane, OTC, suplementy</td><td class="c">✗</td><td class="c">✓</td><td class="c">✓</td></tr>
-            <tr><td>Jedna oś: leki + objawy + badania + wizyty</td><td class="c">✗</td><td class="c">częściowo</td><td class="c">✓</td></tr>
-            <tr><td>Głos: wpisy i pytania o przeszłość</td><td class="c">✗</td><td class="c">✗</td><td class="c">✓</td></tr>
-            <tr><td>Widok dla lekarza przez QR, bez konta</td><td class="c">✗</td><td class="c">PDF</td><td class="c">✓</td></tr>
-            <tr><td>Dane tylko na telefonie, przesył E2E</td><td class="c">✗</td><td class="c">chmura</td><td class="c">✓</td></tr>
-            <tr><td>Podsumowanie offline w języku lekarza</td><td class="c">częściowo</td><td class="c">✗</td><td class="c">✓</td></tr>
-          </table>
-        </div>
-        <div class="card" style="width: 360px">
-          <h3>Co dalej</h3>
-          <ul>
-            <li>Aplikacja mobilna z tego kodu (Capacitor): SQLCipher, Keystore/Keychain, blokada zrzutów, lokalne powiadomienia.</li>
-            <li>Integracja z IKP i MyHealth@EU.</li>
-            <li>Rozpoznawanie mowy na urządzeniu.</li>
+            <li>Pilotaż w poradni z pacjentami, którzy biorą wiele leków</li>
+            <li>Aplikacja natywna: powiadomienia i rozpoznawanie mowy w telefonie</li>
+            <li>Integracja z IKP, gdy udostępni API</li>
+            <li>MyHealth@EU dla wizyt za granicą</li>
           </ul>
         </div>
       </div>
-      <span class="brand">eKsiazeczkaZdrowia</span><span class="num">10</span>
+      <div class="foot"><span><b>eKsiążeczkaZdrowia</b></span><span class="n">08</span></div>
+      <aside class="notes">Tego połączenia nie ma ani mojeIKP, ani aplikacje do dziennika objawów. mojeIKP nie pokaże lekarzowi suplementów, a Bearable czy CareClinic trzymają dane w chmurze i dają lekarzowi najwyżej eksport PDF. U nas lekarz skanuje kod QR bez konta i instalacji, dane są tylko w telefonie, a leki z recepty i suplementy leżą na jednej osi czasu.</aside>
     </section>
+
+    <!-- 9. Wdrożenie -->
+    <section class="slide dark teal s9">
+      <span class="kicker"><span class="dot"></span>Wdrożenie</span>
+      <h2>Zaczynamy od pacjentów, którzy biorą najwięcej&nbsp;leków</h2>
+      <div class="cards">
+        <div class="card">
+          <span class="ic p" data-icon="pill"></span>
+          <h4>Pacjenci z wielolekowością</h4>
+          <p>Onkologia, hematologia, choroby przewlekłe. Tam interakcje są najgroźniejsze.</p>
+        </div>
+        <div class="card">
+          <span class="ic" data-icon="users"></span>
+          <h4>Opiekunowie</h4>
+          <p>W historii Pani Anny o suplemencie wiedziała córka. Opiekun może prowadzić książeczkę za rodzica.</p>
+        </div>
+        <div class="card">
+          <span class="ic" data-icon="stethoscope"></span>
+          <h4>Lekarz jako kanał</h4>
+          <p>Lekarz prowadzący poleca aplikację, bo skraca mu wywiad.</p>
+        </div>
+      </div>
+      <div class="facts">
+        <span><span class="ic" data-icon="server"></span>Prawie zerowy koszt utrzymania – serwer niczego&nbsp;nie&nbsp;przechowuje</span>
+        <span><span class="ic" data-icon="eye"></span>Nie diagnozujemy, pokazujemy – decyzja zostaje u lekarza</span>
+      </div>
+      <div class="foot"><span><b>eKsiążeczkaZdrowia</b></span><span class="n">09</span></div>
+      <aside class="notes">Zaczynamy od pacjentów, którzy biorą najwięcej leków: onkologia, hematologia, choroby przewlekłe. Tam interakcje są najgroźniejsze. Drugą grupą są opiekunowie, bo często to oni wiedzą, co rodzic naprawdę bierze. Trzecim kanałem jest lekarz prowadzący, któremu aplikacja skraca wywiad. Jedno robimy świadomie: aplikacja nie wydaje ostrzeżeń o interakcjach. Program, który ocenia ryzyko leczenia, jest w Unii wyrobem medycznym w rozumieniu MDR i wymaga certyfikacji. My pokazujemy lekarzowi pełny obraz, a ocena interakcji należy do niego.</aside>
+    </section>
+
+    <!-- 10. Demo -->
+    <section class="slide dark teal demo">
+      <span class="kicker"><span class="dot"></span>Demo</span>
+      <h2 class="dh">Zobaczcie to sami</h2>
+      <p class="dlead">Gdyby Pani Anna miała eKsiążeczkęZdrowia, lekarz zobaczyłby suplement <span>już na pierwszej wizycie</span>.</p>
+      <p class="ask">Szukamy poradni, w której przetestujemy aplikację z lekarzami i pacjentami.</p>
+      <a class="dlink" href="https://eksiazeczka.mikrus.dev/demo">
+        <img class="qr" src="img/demo-qr.png" alt="Kod QR do demo" />
+        <span class="dl-text">
+          <span class="url">eksiazeczka.mikrus.dev/demo</span>
+          <span class="hint">Działa w przeglądarce, bez instalacji i logowania. Najlepiej na komputerze: widok pacjentki i lekarza otwiera się w dwóch kartach.</span>
+        </span>
+      </a>
+      <div class="laptop dlap">
+        <div class="screen"><img src="img/lekarz-os.png" alt="" /></div>
+        <div class="base"></div>
+      </div>
+      <div class="phone dphone"><img src="img/os-czasu.png" alt="" /></div>
+      <div class="bottom">
+        <span>Zobaczycie telefon Pani Anny, połączenie z lekarzem przez kod QR i to, co lekarz widzi na ekranie.</span>
+        <span><strong>DropTheBase;</strong></span>
+      </div>
+      <aside class="notes">Gdyby Pani Anna miała naszą aplikację, lekarz zobaczyłby suplement już na pierwszej wizycie, a nie po dwóch nieudanych zmianach leczenia. Zapraszamy do obejrzenia trzyminutowego demo z przewodnikiem pod adresem eksiazeczka.mikrus.dev/demo. Najlepiej otworzyć je na komputerze: widok pacjentki i lekarza otwiera się w dwóch kartach. Szukamy poradni, w której przetestujemy aplikację z lekarzami i pacjentami.</aside>
+    </section>
+
+    <script>
+      // Ikony (obrys, 24×24) wstawiane w <span data-icon>.
+      const ICONS = {
+        mic: '<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/>',
+        pill: '<path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/>',
+        file: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8"/><path d="M16 17H8"/>',
+        help: '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
+        lock: '<rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+        mail: '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+        monitor: '<rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/>',
+        smartphone: '<rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/>',
+        bot: '<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>',
+        qr: '<rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/>',
+        eye: '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+        users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+        zap: '<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>',
+        check: '<path d="M20 6 9 17l-5-5"/>',
+        arrow: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+        stethoscope: '<path d="M11 2v2"/><path d="M5 2v2"/><path d="M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/>',
+        server: '<rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6 6h.01"/><path d="M6 18h.01"/>',
+      };
+      for (const el of document.querySelectorAll('[data-icon]')) {
+        el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[el.dataset.icon]}</svg>`;
+      }
+      for (const el of document.querySelectorAll('[data-arrow]')) {
+        el.innerHTML =
+          '<svg viewBox="0 0 64 30"><path d="M6 15h46" stroke="#0f766e" stroke-width="2.5" stroke-dasharray="5 5"/><path d="m46 8 8 7-8 7" fill="none" stroke="#0f766e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      }
+
+      // Oś czasu Pani Anny (slajdy 2 i 3): ten sam wykres, na 3. odsłonięty suplement.
+      const MONTHS = ['mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź'];
+      const X0 = 118, X1 = 588, mx = (m) => X0 + (m / MONTHS.length) * (X1 - X0);
+      function timeline(reveal) {
+        let s = '';
+        MONTHS.forEach((m, i) => {
+          const x = mx(i + 0.5);
+          s += `<line x1="${mx(i)}" y1="28" x2="${mx(i)}" y2="350" stroke="#1f3338" stroke-width="1"/>`;
+          s += `<text x="${x}" y="16" text-anchor="middle" font-size="13" fill="#7f9497" font-family="Inter">${m}</text>`;
+        });
+        const label = (y, t, c = '#c9d6d8', w = 500) =>
+          `<text x="0" y="${y + 5}" font-size="15" font-weight="${w}" fill="${c}" font-family="Inter">${t}</text>`;
+        const bar = (y, a, b, c, txt = '') =>
+          `<rect x="${mx(a)}" y="${y - 11}" width="${mx(b) - mx(a)}" height="22" rx="11" fill="${c}"/>` +
+          (txt ? `<text x="${mx(a) + 12}" y="${y + 5}" font-size="13" font-weight="600" fill="#fff" font-family="Inter">${txt}</text>` : '');
+        [['Imatynib', 62, 1.4, 3.5], ['Nilotynib', 104, 3.5, 6.1], ['Dazatynib', 146, 6.1, 8]].forEach(([n, y, a, b]) => {
+          s += label(y, n) + bar(y, a, b, '#2563eb');
+        });
+        // Morfologia: po każdym leku poza normą.
+        s += label(206, 'Morfologia');
+        [[2.6, '9,1'], [4.9, '8,7'], [7.4, '8,9']].forEach(([m, v]) => {
+          const x = mx(m);
+          s += `<rect x="${x - 9}" y="197" width="18" height="18" rx="3" transform="rotate(45 ${x} 206)" fill="#ef4444"/>`;
+          s += `<text x="${x}" y="240" text-anchor="middle" font-size="13" font-weight="700" fill="#ff8a8a" font-family="Inter">HGB ${v}↓</text>`;
+        });
+        // Suplement.
+        const y = 300;
+        if (reveal) {
+          s += `<defs><filter id="glow" x="-20%" y="-200%" width="140%" height="500%"><feGaussianBlur stdDeviation="8"/></filter></defs>`;
+          s += label(y, 'Suplement', '#c4b0ff', 700);
+          s += `<rect x="${mx(0.55)}" y="${y - 13}" width="${mx(8) - mx(0.55)}" height="26" rx="13" fill="#8b5cf6" filter="url(#glow)" opacity="0.9"/>`;
+          s += `<rect x="${mx(0.55)}" y="${y - 13}" width="${mx(8) - mx(0.55)}" height="26" rx="13" fill="#8b5cf6"/>`;
+          s += `<text x="${mx(0.55) + 14}" y="${y + 5}" font-size="14" font-weight="700" fill="#fff" font-family="Inter">z grzybów · codziennie, od marca</text>`;
+        } else {
+          s += label(y, '?', '#5d7276', 700);
+          s += `<rect x="${mx(0.55)}" y="${y - 13}" width="${mx(8) - mx(0.55)}" height="26" rx="13" fill="none" stroke="#33494e" stroke-width="1.5" stroke-dasharray="6 6"/>`;
+          s += `<text x="${(mx(0.55) + mx(8)) / 2}" y="${y + 5}" text-anchor="middle" font-size="13" fill="#5d7276" font-family="Inter">brak informacji</text>`;
+        }
+        return s;
+      }
+      for (const svg of document.querySelectorAll('svg.timeline')) {
+        svg.innerHTML = timeline(svg.dataset.reveal === '1');
+      }
+    </script>
   </body>
 </html>

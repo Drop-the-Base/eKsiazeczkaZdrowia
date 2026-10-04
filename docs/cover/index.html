@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <title>eKsiążeczkaZdrowia – okładka</title>
+    <!-- Okładka 1600×900. PNG: node scripts/slides/cover.mjs -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --text: #10201f;
+        --muted: #5b6b6c;
+        --line: #dfe5e3;
+        --teal: #0f766e;
+        --teal-soft: #d6efeb;
+        --supp: #8b5cf6;
+        --sans: 'Inter', system-ui, sans-serif;
+      }
+      * { box-sizing: border-box; margin: 0; }
+      html, body { width: 1600px; height: 900px; }
+      body {
+        font-family: var(--sans);
+        color: var(--text);
+        background: radial-gradient(circle at 78% 40%, #e3f3ef 0, #f2f5f4 55%);
+        -webkit-font-smoothing: antialiased;
+        position: relative;
+        overflow: hidden;
+      }
+      .left { position: absolute; left: 96px; top: 0; bottom: 0; width: 600px; display: flex; flex-direction: column; justify-content: center; }
+      .brand { font-weight: 700; font-size: 26px; color: var(--teal); display: flex; align-items: center; gap: 12px; }
+      .brand i { width: 14px; height: 14px; border-radius: 50%; background: var(--teal); }
+      h1 { font-weight: 800; font-size: 72px; line-height: 1.08; letter-spacing: -0.035em; margin: 28px 0 26px; }
+      h1 em { font-style: normal; color: var(--teal); }
+      .lead { font-size: 24px; line-height: 1.45; color: var(--muted); margin-bottom: 40px; }
+      .points { list-style: none; padding: 0; display: grid; gap: 16px; }
+      .points li { display: flex; align-items: center; gap: 16px; font-size: 22px; font-weight: 500; }
+      .points svg { flex: none; width: 40px; height: 40px; padding: 9px; border-radius: 12px; background: var(--teal-soft); color: var(--teal); }
+
+      .browser {
+        position: absolute; right: 60px; top: 150px; width: 760px;
+        background: #fff; border-radius: 16px; overflow: hidden;
+        box-shadow: 0 30px 70px rgba(16, 32, 31, 0.18), 0 0 0 1px var(--line);
+      }
+      .bar { height: 38px; display: flex; align-items: center; gap: 8px; padding: 0 16px; background: #eef2f1; border-bottom: 1px solid var(--line); }
+      .bar i { width: 11px; height: 11px; border-radius: 50%; background: #cfd8d6; }
+      .bar span { margin-left: 14px; font-size: 13px; color: var(--muted); font-weight: 500; }
+      .crop { height: 300px; overflow: hidden; }
+      .crop img { display: block; width: 760px; margin-top: -97px; }
+      .caption { position: absolute; font-size: 16px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+      .phone {
+        position: absolute; left: 760px; top: 250px; width: 290px; height: 610px;
+        border-radius: 42px; background: #10201f; padding: 10px;
+        box-shadow: 0 40px 80px rgba(16, 32, 31, 0.28);
+      }
+      .phone img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 33px; }
+
+      .badge {
+        position: absolute; left: 1090px; top: 520px;
+        display: flex; align-items: center; gap: 14px;
+        background: var(--teal); color: #fff; padding: 16px 24px; border-radius: 18px;
+        box-shadow: 0 20px 40px rgba(15, 118, 110, 0.35);
+      }
+      .badge svg { width: 30px; height: 30px; }
+      .badge b { display: block; font-size: 20px; }
+      .badge small { display: block; font-size: 15px; opacity: 0.85; margin-top: 2px; }
+    </style>
+  </head>
+  <body>
+    <div class="left">
+      <div class="brand"><i></i>eKsiążeczkaZdrowia</div>
+      <h1><em>Twoje</em> zdrowie.<br /><em>Twój</em> telefon.<br /><em>Twoje</em> dane.</h1>
+      <p class="lead">Leki, suplementy, objawy i badania na jednej&nbsp;osi&nbsp;czasu.</p>
+      <ul class="points">
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></svg>
+          Wpisy i pytania głosem
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg>
+          Dane tylko na telefonie pacjenta
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3M21 14v7h-7"/></svg>
+          Lekarz skanuje QR i widzi wszystko
+        </li>
+      </ul>
+    </div>
+
+    <div class="caption" style="right: 60px; top: 112px">Widok lekarza · przeglądarka</div>
+    <div class="browser">
+      <div class="bar"><i></i><i></i><i></i><span>bez instalacji · dane tylko w pamięci karty</span></div>
+      <div class="crop"><img src="../slides/img/lekarz-os.png" alt="" /></div>
+    </div>
+
+    <div class="phone"><img src="../slides/img/os-czasu.png" alt="" /></div>
+
+    <div class="badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      <b>Szyfrowanie danych</b>
+    </div>
+  </body>
+</html>
