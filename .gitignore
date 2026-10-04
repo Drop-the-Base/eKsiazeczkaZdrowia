@@ -3,8 +3,12 @@ dist/
 .env
 .env.*
 !.env.example
-CLAUDE.local.md
-.claude/settings.local.json
 *.log
 .DS_Store
 docs/slides/preview-*.png
+
+# Claude / agenci
+.claude/
+.agents/
+CLAUDE.md
+CLAUDE.local.md
